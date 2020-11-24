@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAsync
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan("cn.hit.edu.spat.*.mapper")
+@MapperScan("cn.edu.hit.spat.*.mapper")
 public class GWARBMSApp {
 
     public static void main(String[] args) {
