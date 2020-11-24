@@ -3,7 +3,7 @@ package cn.edu.hit.spat.common.properties;
 import lombok.Data;
 
 /**
- * @author MrBird
+ * @author XuJian
  */
 @Data
 public class ShiroProperties {

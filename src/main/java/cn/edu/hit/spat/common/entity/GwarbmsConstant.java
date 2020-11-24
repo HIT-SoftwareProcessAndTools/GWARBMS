@@ -3,7 +3,7 @@ package cn.edu.hit.spat.common.entity;
 /**
  * 常量
  *
- * @author MrBird
+ * @author XuJian
  */
 public interface GwarbmsConstant {
 
