@@ -13,17 +13,15 @@
     <link rel="icon" th:href="@{gwarbms/images/favicon.ico}" type="image/x-icon"/>
 </head>
 <body>
-<div class="layui-fluid" id="gwarbms-error-404" lay-title="页面不存在">
+<div class="layui-fluid" id="gwarbms-error-403" lay-title="403">
     <div class="layui-row layui-col-space10" style="margin-top:100px">
         <div class="layui-col-xs3 layui-col-xs-offset2">
-            <img data-th-src="@{gwarbms/images/error/404.svg}" alt="" width="85%"/>
+            <img data-th-src="@{gwarbms/images/error/403.svg}" alt="" width="85%"/>
         </div>
         <div class="layui-col-xs7">
-            <h1 style="font-size: 60px">404</h1>
-            <h2 class="gwarbms-mar-b20 gwarbms-c-gray">抱歉，你访问的页面不存在</h2>
-            <button class="layui-btn layui-btn-normal">
-                返回首页
-            </button>
+            <h1 style="font-size: 60px">403</h1>
+            <h2 class="gwarbms-mar-b20 gwarbms-c-gray">抱歉，你无权访问该页面</h2>
+            <button class="layui-btn layui-btn-normal" id="home">返回首页</button>
         </div>
     </div>
 </div>
@@ -32,7 +30,7 @@
     layui.use(['jquery'], function () {
         var $ = layui.jquery,
             ctx = [[@{/}]],
-            $view = $('#gwarbms-error-404');
+            $view = $('#gwarbms-error-403');
         $view.on('click', 'button', function () {
             window.location.href = ctx + 'index';
         });

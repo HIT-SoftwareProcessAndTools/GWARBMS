@@ -1,0 +1,229 @@
+<div class="layui-fluid layui-anim gwarbms-anim" id="gwarbms-order" lay-title="归档订单">
+    <div class="layui-row gwarbms-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body gwarbms-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="order-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">订单号</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="orderId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">创建时间</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="time" id="order-createTime" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">销售人ID</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="salesId" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">客户姓名</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="customerName" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">客户电话</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="customerPhone" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">车辆ID</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="vehicleId" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">车辆价格</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="price" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="status">
+                                                <option value=""></option>
+                                                <option value="待审核">待审核</option>
+                                                <option value="已审核">已审核</option>
+                                                <option value="已付款">已付款</option>
+                                                <option value="已交付">已交付</option>
+                                                <option value="已归档">已归档</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary gwarbms-button-blue-plain table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary gwarbms-button-green-plain table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action " id="archive"
+                                     shiro:hasAnyPermissions="order:view">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="orderTable" lay-data="{id: 'orderTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="order-status">
+    {{#
+    var status = {
+    待审核: {title: '待审核', color: 'green'},
+    已审核: {title: '已审核', color: 'blue'},
+    已付款: {title: '已付款', color: 'orange'},
+    已交付: {title: '已交付', color: 'volcano'},
+    已归档: {title: '已归档', color: 'red'}
+    }[d.status];
+    }}
+    <span class="layui-badge gwarbms-bg-{{status.color}}">{{ status.title }}</span>
+</script>
+<script type="text/html" id="order-option">
+    <span shiro:lacksPermission="order:view">
+        <span class="layui-badge-dot gwarbms-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="detail" shiro:hasPermission="order:view"><i
+            class="layui-icon gwarbms-edit-area gwarbms-green">&#xe7a5;</i></a>
+    <a lay-event="archive" shiro:hasPermission="order:archive"><i
+            class="layui-icon gwarbms-edit-area gwarbms-blue">&#xe7a4;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'gwarbms', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            laydate = layui.laydate,
+            gwarbms = layui.gwarbms,
+            form = layui.form,
+            table = layui.table,
+            treeSelect = layui.treeSelect,
+            $view = $('#gwarbms-order'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $archive=$view.find('#archive'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns,
+            createTimeFrom,
+            createTimeTo;
+
+        form.render();
+        initTable();
+
+        laydate.render({
+            elem: '#order-createTime',
+            range: true,
+            trigger: 'click'
+        });
+
+        table.on('tool(orderTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+                gwarbms.modal.view('订单信息', 'system/order/detail/' + data.vehicleId, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+            if (layEvent === 'archive') {
+                gwarbms.modal.confirm('归档订单', '确定归档该订单？', function () {
+                    gwarbms.post(ctx + 'order/archive/' + data.orderId, null, function () {
+                        gwarbms.alert.success('归档订单成功');
+                        $query.click();
+                    });
+                });
+            }
+        });
+
+        table.on('sort(orderTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            treeSelect.revokeNode('dept');
+            sortObject.type = 'null';
+            createTimeTo = null;
+            createTimeFrom = null;
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        $archive.on('click', function () {
+            var checkStatus = table.checkStatus('orderTable');
+            if (!checkStatus.data.length) {
+                gwarbms.alert.warn('请选择需要归档的订单');
+            } else {
+                gwarbms.modal.confirm('归档订单', '确定归档选中订单？', function () {
+                    var orderIds = [];
+                    layui.each(checkStatus.data, function (key, item) {
+                        orderIds.push(item.orderId)
+                    });
+                    gwarbms.post(ctx + 'order/archive/' + orderIds.join(','), null, function () {
+                        gwarbms.alert.success('订单归档成功');
+                        $query.click();
+                    });
+                });
+            }
+        });
+
+        function initTable() {
+            tableIns = gwarbms.table.init({
+                elem: $view.find('table'),
+                id: 'orderTable',
+                url: ctx + 'order/list/' + currentUser.username,
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'orderId', title: '订单号', minWidth: 100},
+                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
+                    {field: 'salesId', title: '销售人员ID'},
+                    {field: 'customerName', title: '客户姓名', minWidth: 165},
+                    {field: 'customerPhone', title: '客户手机', minWidth: 180},
+                    {field: 'vehicleId', title: '车辆ID'},
+                    {field: 'price', title: '价格'},
+                    {field: 'status', title: '状态', templet: '#order-status'},
+                    {title: '操作', toolbar: '#order-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+            var params = $searchForm.serializeJson();
+            var createTime = params.time;
+            if (createTime) {
+                createTimeFrom = createTime.split(' - ')[0];
+                createTimeTo = createTime.split(' - ')[1];
+            }
+            params.invalidate_ie_cache = new Date();
+            params.createTimeFrom = createTimeFrom;
+            params.createTimeTo = createTimeTo;
+            return params;
+        }
+    })
+</script>

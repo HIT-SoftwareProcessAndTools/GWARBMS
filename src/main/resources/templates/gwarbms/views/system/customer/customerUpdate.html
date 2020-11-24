@@ -1,0 +1,105 @@
+<style>
+    #customer-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #customer-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+
+    #customer-update #data-permission-tree-block {
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 3px 0;
+    }
+
+    #customer-update  .layui-treeSelect .ztree li span.button.switch {
+        top: 1px;
+        left: 3px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: visible !important;
+    }
+</style>
+<div class="layui-fluid" id="customer-update">
+    <form class="layui-form" action="" lay-filter="customer-update-form">
+        <div class="layui-form-item gwarbms-hide">
+            <label class="layui-form-label gwarbms-form-item-require">客户id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="customerId" data-th-value="${customer.customerId}" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label gwarbms-form-item-require">客户姓名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" data-th-id="${customer.name}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label gwarbms-form-item-require">联系电话：</label>
+            <div class="layui-input-block">
+                <input type="tel" name="phone" lay-verify="phone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label gwarbms-form-item-require">性别：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="gender" value="0" title="男性">
+                <input type="radio" name="gender" value="1" title="女性">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">车辆 ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="vehicleId" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item gwarbms-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="customer-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['gwarbms', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
+        var $ = layui.$,
+            gwarbms = layui.gwarbms,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            customer = [[${customer}]],
+            $view = $('#customer-update'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initCustomerValue();
+
+        formSelects.render();
+
+        function initCustomerValue() {
+            form.val("customer-update-form", {
+                "customerId": customer.customerId,
+                "name": customer.name,
+                "phone": customer.phone,
+                "gender": customer.gender,
+                "vehicleId": customer.vehicleId
+            });
+        }
+
+        form.on('submit(customer-update-form-submit)', function (data) {
+            if (gwarbms.nativeEqual(data.field, customer)) {
+                gwarbms.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            gwarbms.post(ctx + 'customer/update', data.field, function () {
+                layer.closeAll();
+                gwarbms.alert.success(customer.name + ' 客户数据修改成功');
+                $('#gwarbms-customer').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>
