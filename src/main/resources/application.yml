@@ -1,0 +1,37 @@
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: utf-8
+
+spring:
+  profiles:
+    active: dev
+
+  thymeleaf:
+    cache: false
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  aop:
+    proxy-target-class: true
+
+mybatis-plus:
+  type-aliases-package: cn.edu.cn.spat.*.entity
+  mapper-locations: classpath:mapper/*/*.xml
+  configuration:
+    jdbc-type-for-null: null
+  global-config:
+    banner: false
+    db-config:
+      select-strategy: not_empty
+
+logging:
+  level:
+    com:
+      baomidou:
+        mybatisplus:
+          core:
+            metadata:
+              TableInfoHelper: error
