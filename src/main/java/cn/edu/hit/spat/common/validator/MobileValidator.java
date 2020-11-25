@@ -2,7 +2,7 @@ package cn.edu.hit.spat.common.validator;
 
 import cn.edu.hit.spat.common.annotation.IsMobile;
 import cn.edu.hit.spat.common.entity.Regexp;
-import cn.edu.hit.spat.common.utils.FebsUtil;
+import cn.edu.hit.spat.common.utils.GwarbmsUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
@@ -26,7 +26,7 @@ public class MobileValidator implements ConstraintValidator<IsMobile, String> {
                 return true;
             } else {
                 String regex = Regexp.MOBILE_REG;
-                return FebsUtil.match(regex, s);
+                return GwarbmsUtil.match(regex, s);
             }
         } catch (Exception e) {
             return false;

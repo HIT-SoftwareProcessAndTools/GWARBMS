@@ -1,9 +1,9 @@
 package cn.edu.hit.spat.common.service;
 
-import cn.edu.hit.spat.common.entity.FebsConstant;
+import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.entity.ImageType;
-import cn.edu.hit.spat.common.exception.FebsException;
-import cn.edu.hit.spat.common.properties.FebsProperties;
+import cn.edu.hit.spat.common.exception.GwarbmsException;
+import cn.edu.hit.spat.common.properties.GwarbmsProperties;
 import cn.edu.hit.spat.common.properties.ValidateCodeProperties;
 import com.wf.captcha.GifCaptcha;
 import com.wf.captcha.SpecCaptcha;
@@ -29,7 +29,7 @@ import java.io.IOException;
 public class ValidateCodeService {
 
     private final RedisService redisService;
-    private final FebsProperties properties;
+    private final GwarbmsProperties properties;
 
     public void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
@@ -38,21 +38,21 @@ public class ValidateCodeService {
         setHeader(response, code.getType());
 
         Captcha captcha = createCaptcha(code);
-        redisService.set(FebsConstant.CODE_PREFIX  + key, StringUtils.lowerCase(captcha.text()), code.getTime());
+        redisService.set(GwarbmsConstant.CODE_PREFIX  + key, StringUtils.lowerCase(captcha.text()), code.getTime());
         captcha.out(response.getOutputStream());
     }
 
     
-    public void check(String key, String value) throws FebsException {
-        Object codeInRedis = redisService.get(FebsConstant.CODE_PREFIX + key);
+    public void check(String key, String value) throws GwarbmsException {
+        Object codeInRedis = redisService.get(GwarbmsConstant.CODE_PREFIX + key);
         if (StringUtils.isBlank(value)) {
-            throw new FebsException("请输入验证码");
+            throw new GwarbmsException("请输入验证码");
         }
         if (codeInRedis == null) {
-            throw new FebsException("验证码已过期");
+            throw new GwarbmsException("验证码已过期");
         }
         if (!StringUtils.equalsIgnoreCase(value, String.valueOf(codeInRedis))) {
-            throw new FebsException("验证码不正确");
+            throw new GwarbmsException("验证码不正确");
         }
     }
 
