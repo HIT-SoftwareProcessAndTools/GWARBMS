@@ -1,5 +1,6 @@
 package cn.edu.hit.spat.job.util;
 
+import cn.edu.hit.spat.job.entity.Job;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 
