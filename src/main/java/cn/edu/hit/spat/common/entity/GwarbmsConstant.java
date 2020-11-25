@@ -25,12 +25,12 @@ public interface GwarbmsConstant {
     /**
      * 前端页面路径前缀
      */
-    String VIEW_PREFIX = "febs/views/";
+    String VIEW_PREFIX = "gwarbms/views/";
 
     /**
      * 验证码 Session Key
      */
-    String CODE_PREFIX = "febs_captcha_";
+    String CODE_PREFIX = "gwarbms_captcha_";
 
     /**
      * 允许下载的文件类型，根据需求自己添加（小写）
@@ -40,7 +40,7 @@ public interface GwarbmsConstant {
     /**
      * 异步线程池名称
      */
-    String ASYNC_POOL = "febsAsyncThreadPool";
+    String ASYNC_POOL = "gwarbmsAsyncThreadPool";
 
     /**
      * 开发环境

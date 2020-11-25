@@ -1,8 +1,8 @@
-<div class="layui-fluid layui-anim febs-anim" id="febs-menu" lay-title="菜单管理">
-    <div class="layui-row layui-col-space8 febs-container">
+<div class="layui-fluid layui-anim gwarbms-anim" id="gwarbms-menu" lay-title="菜单管理">
+    <div class="layui-row layui-col-space8 gwarbms-container">
         <div class="layui-col-md6 layui-col-sm6 layui-col-xs12">
             <div class="layui-card">
-                <div class="layui-card-body febs-table-full">
+                <div class="layui-card-body gwarbms-table-full">
                     <form class="layui-form layui-table-form" lay-filter="menu-table-form" id="menu-table-form">
                         <div class="layui-row">
                             <div class="layui-col-md8 layui-col-sm9 layui-col-xs9">
@@ -16,10 +16,10 @@
                                 </div>
                             </div>
                             <div class="layui-col-md4 layui-col-sm12 layui-col-xs12 table-action-area">
-                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain  table-action" id="query">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary gwarbms-button-blue-plain  table-action" id="query">
                                     <i class="layui-icon">&#xe848;</i>
                                 </div>
-                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain  table-action" id="reset">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary gwarbms-button-green-plain  table-action" id="reset">
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
@@ -36,10 +36,10 @@
         <div class="layui-col-md6 layui-col-sm6 layui-col-xs12">
             <div class="layui-card">
                 <div class="layui-card-header" id="form-header">新增菜单</div>
-                <div class="layui-card-body febs-table-full">
+                <div class="layui-card-body gwarbms-table-full">
                     <form class="layui-form layui-table-form" action="" lay-filter="menu-form">
-                        <div class="layui-form-item febs-hide">
-                            <label class="layui-form-label febs-form-item-require">ID：</label>
+                        <div class="layui-form-item gwarbms-hide">
+                            <label class="layui-form-label gwarbms-form-item-require">ID：</label>
                             <div class="layui-input-block">
                                 <input type="text" name="menuId" class="layui-input">
                             </div>
@@ -51,14 +51,14 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label febs-form-item-require">名称：</label>
+                            <label class="layui-form-label gwarbms-form-item-require">名称：</label>
                             <div class="layui-input-block">
                                 <input type="text" name="menuName" autocomplete="off" class="layui-input"
                                        minlength="2" maxlength="10" lay-verify="range">
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <label class="layui-form-label febs-form-item-require">类型：</label>
+                            <label class="layui-form-label gwarbms-form-item-require">类型：</label>
                             <div class="layui-input-block">
                                 <input type="radio" name="type" lay-filter="menu-type" value="0" title="菜单" checked="">
                                 <input type="radio" name="type" lay-filter="menu-type" value="1" title="按钮">
@@ -92,8 +92,8 @@
                                        lay-verify="number">
                             </div>
                         </div>
-                        <button type="reset" class="layui-btn febs-hide" id="reset-form"></button>
-                        <button class="layui-btn febs-hide" lay-submit="" lay-filter="menu-form-submit"
+                        <button type="reset" class="layui-btn gwarbms-hide" id="reset-form"></button>
+                        <button class="layui-btn gwarbms-hide" lay-submit="" lay-filter="menu-form-submit"
                                 id="submit-form"></button>
                     </form>
                 </div>
@@ -105,15 +105,15 @@
     </div>
 </div>
 <script data-th-inline="none" type="text/javascript">
-    layui.use(['dropdown', 'jquery', 'laydate', 'febs', 'form', 'eleTree', 'validate'], function () {
+    layui.use(['dropdown', 'jquery', 'laydate', 'gwarbms', 'form', 'eleTree', 'validate'], function () {
         var $ = layui.jquery,
             laydate = layui.laydate,
-            febs = layui.febs,
+            gwarbms = layui.gwarbms,
             form = layui.form,
             validate = layui.validate,
             eleTree = layui.eleTree,
             dropdown = layui.dropdown,
-            $view = $('#febs-menu'),
+            $view = $('#gwarbms-menu'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $submit = $view.find('#submit'),
@@ -142,11 +142,11 @@
                     reset();
                     var selected = _menuTree.getChecked(false, true);
                     if (selected.length > 1) {
-                        febs.alert.warn('只能选择一个节点作为父级！');
+                        gwarbms.alert.warn('只能选择一个节点作为父级！');
                         return;
                     }
                     if (selected[0] && selected[0].type === '1') {
-                        febs.alert.warn('不能选择按钮作为父级！');
+                        gwarbms.alert.warn('不能选择按钮作为父级！');
                         return;
                     }
                     form.val("menu-form", {
@@ -156,23 +156,23 @@
                 if (name === 'delete') {
                     var checked = _menuTree.getChecked(false, true);
                     if (checked.length < 1) {
-                        febs.alert.warn('请勾选需要删除的菜单或按钮');
+                        gwarbms.alert.warn('请勾选需要删除的菜单或按钮');
                         return;
                     }
                     var menuIds = [];
                     layui.each(checked, function (key, item) {
                         menuIds.push(item.id)
                     });
-                    febs.modal.confirm('提示', '当您点击确定按钮后，这些记录将会被彻底删除，如果其包含子记录，也将一并删除！', function () {
-                        febs.get(ctx + 'menu/delete/' + menuIds.join(','), null, function () {
-                            febs.alert.success('删除成功！');
+                    gwarbms.modal.confirm('提示', '当您点击确定按钮后，这些记录将会被彻底删除，如果其包含子记录，也将一并删除！', function () {
+                        gwarbms.get(ctx + 'menu/delete/' + menuIds.join(','), null, function () {
+                            gwarbms.alert.success('删除成功！');
                             reloadMenuTree();
                             reset();
                         })
                     });
                 }
                 if (name === 'export') {
-                    febs.download(ctx + 'menu/excel', {
+                    gwarbms.download(ctx + 'menu/excel', {
                         "menuName": $menuName.val().trim()
                     }, '菜单信息表.xlsx');
                 }
@@ -237,10 +237,10 @@
         });
 
         $icon.focus(function () {
-            febs.modal.open('图标选择', 'others/febs/icon', {
+            gwarbms.modal.open('图标选择', 'others/gwarbms/icon', {
                 btn: ['确定'],
                 yes: function () {
-                    var icon = $('#febs-icon').find('.icon-active .icon-name').text();
+                    var icon = $('#gwarbms-icon').find('.icon-active .icon-name').text();
                     if (icon) {
                         form.val("menu-form", {
                             "icon": 'layui-icon-' + icon
@@ -315,18 +315,18 @@
 
         form.on('submit(menu-form-submit)', function (data) {
             if (data.field.menuId && $header.text().indexOf('修改') !== -1) {
-                if (febs.nativeEqual(data.field, _currentMenuData)) {
-                    febs.alert.warn('数据未作任何修改！');
+                if (gwarbms.nativeEqual(data.field, _currentMenuData)) {
+                    gwarbms.alert.warn('数据未作任何修改！');
                     return false;
                 }
-                febs.post(ctx + 'menu/update', data.field, function () {
-                    febs.alert.success('修改成功');
+                gwarbms.post(ctx + 'menu/update', data.field, function () {
+                    gwarbms.alert.success('修改成功');
                     reloadMenuTree();
                     reset();
                 })
             } else {
-                febs.post(ctx + 'menu', data.field, function () {
-                    febs.alert.success('新增成功');
+                gwarbms.post(ctx + 'menu', data.field, function () {
+                    gwarbms.alert.success('新增成功');
                     reloadMenuTree();
                     reset();
                 })
