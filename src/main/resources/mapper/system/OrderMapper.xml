@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hit.spat.system.mapper.OrderMapper">
+    <sql id="countOrderDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        ordertable o
+        WHERE 1 = 1
+        <if test="order.orderId != null and order.orderId != ''">
+            AND o.order_id = #{order.orderId}
+        </if>
+        <if test="order.salesId != null and order.salesId != ''">
+            AND o.sales_id = #{order.salesId}
+        </if>
+        <if test="order.customerName != null and order.customerName != ''">
+            AND o.customer_name = #{order.customerName}
+        </if>
+        <if test="order.customerPhone != null and order.customerPhone != ''">
+            AND o.customer_Phone = #{order.customerPhone}
+        </if>
+        <if test="order.vehicleId != null and order.vehicleId != ''">
+            AND o.vehicle_id = #{order.vehicleId}
+        </if>
+        <if test="order.price != null and order.price != ''">
+            AND o.price = #{order.price}
+        </if>
+        <if test="order.status != null and order.status != ''">
+            AND o.status = #{order.status}
+        </if>
+        <if test="order.createTimeFrom != null and order.createTimeFrom !=''">
+            And o.create_time &gt; #{order.createTimeFrom}
+        </if>
+        <if test="order.createTimeTo!= null and order.createTimeTo !=''">
+            And o.create_time &lt; #{order.createTimeTo}
+        </if>
+    </sql>
+
+    <sql id="findOrderDetailSql">
+        SELECT
+        o.order_id orderId,
+        o.create_time createTime,
+        o.sales_id salesId,
+        o.customer_name customerName,
+        o.customer_phone customerPhone,
+        o.vehicle_id vehicleId,
+        o.price,
+        o.status
+        FROM
+        ordertable o
+        WHERE 1 = 1
+        <if test="order.orderId != null and order.orderId != ''">
+            AND o.order_id = #{order.orderId}
+        </if>
+        <if test="order.salesId != null and order.salesId != ''">
+            AND o.sales_id = #{order.salesId}
+        </if>
+        <if test="order.customerName != null and order.customerName != ''">
+            AND o.customer_name = #{order.customerName}
+        </if>
+        <if test="order.customerPhone != null and order.customerPhone != ''">
+            AND o.customer_Phone = #{order.customerPhone}
+        </if>
+        <if test="order.vehicleId != null and order.vehicleId != ''">
+            AND o.vehicle_id = #{order.vehicleId}
+        </if>
+        <if test="order.price != null and order.price != ''">
+            AND o.price = #{order.price}
+        </if>
+        <if test="order.status != null and order.status != ''">
+            AND o.status = #{order.status}
+        </if>
+        <if test="order.createTimeFrom != null and order.createTimeFrom !=''">
+            And o.create_time &gt; #{order.createTimeFrom}
+        </if>
+        <if test="order.createTimeTo!= null and order.createTimeTo !=''">
+            And o.create_time &lt; #{order.createTimeTo}
+        </if>
+    </sql>
+
+    <select id="countOrderDetail" parameterType="cn.edu.hit.spat.system.entity.Order" resultType="long">
+        <include refid="countOrderDetailSql"/>
+    </select>
+
+    <select id="findOrderDetailPage" parameterType="cn.edu.hit.spat.system.entity.Order" resultType="cn.edu.hit.spat.system.entity.Order">
+        <include refid="findOrderDetailSql"/>
+    </select>
+
+    <select id="findOrderDetail" parameterType="cn.edu.hit.spat.system.entity.Order" resultType="cn.edu.hit.spat.system.entity.Order">
+        <include refid="findOrderDetailSql"/>
+    </select>
+
+    <select id="findByOrderId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.Order">
+        SELECT
+        o.order_id orderId,
+        o.create_time createTime,
+        o.sales_id salesId,
+        o.customer_name customerName,
+        o.customer_phone customerPhone,
+        o.vehicle_id vehicleId,
+        o.price,
+        o.status
+        FROM
+        ordertable o
+        WHERE  o.order_id = #{orderId}
+    </select>
+
+
+    <sql id="countOrderDetailWithUserIdSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        ordertable o
+        WHERE o.sales_id = #{userId}
+        <if test="order.orderId != null and order.orderId != ''">
+            AND o.order_id = #{order.orderId}
+        </if>
+        <if test="order.salesId != null and order.salesId != ''">
+            AND o.sales_id = #{order.salesId}
+        </if>
+        <if test="order.customerName != null and order.customerName != ''">
+            AND o.customer_name = #{order.customerName}
+        </if>
+        <if test="order.customerPhone != null and order.customerPhone != ''">
+            AND o.customer_Phone = #{order.customerPhone}
+        </if>
+        <if test="order.vehicleId != null and order.vehicleId != ''">
+            AND o.vehicle_id = #{order.vehicleId}
+        </if>
+        <if test="order.price != null and order.price != ''">
+            AND o.price = #{order.price}
+        </if>
+        <if test="order.status != null and order.status != ''">
+            AND o.status = #{order.status}
+        </if>
+        <if test="order.createTimeFrom != null and order.createTimeFrom !=''">
+            And o.create_time &gt; #{order.createTimeFrom}
+        </if>
+        <if test="order.createTimeTo!= null and order.createTimeTo !=''">
+            And o.create_time &lt; #{order.createTimeTo}
+        </if>
+    </sql>
+
+    <sql id="findOrderDetailWithUserIdSql">
+        SELECT
+        o.order_id orderId,
+        o.create_time createTime,
+        o.sales_id salesId,
+        o.customer_name customerName,
+        o.customer_phone customerPhone,
+        o.vehicle_id vehicleId,
+        o.price,
+        o.status
+        FROM
+        ordertable o
+        WHERE o.sales_id = #{userId}
+        <if test="order.orderId != null and order.orderId != ''">
+            AND o.order_id = #{order.orderId}
+        </if>
+        <if test="order.salesId != null and order.salesId != ''">
+            AND o.sales_id = #{order.salesId}
+        </if>
+        <if test="order.customerName != null and order.customerName != ''">
+            AND o.customer_name = #{order.customerName}
+        </if>
+        <if test="order.customerPhone != null and order.customerPhone != ''">
+            AND o.customer_Phone = #{order.customerPhone}
+        </if>
+        <if test="order.vehicleId != null and order.vehicleId != ''">
+            AND o.vehicle_id = #{order.vehicleId}
+        </if>
+        <if test="order.price != null and order.price != ''">
+            AND o.price = #{order.price}
+        </if>
+        <if test="order.status != null and order.status != ''">
+            AND o.status = #{order.status}
+        </if>
+        <if test="order.createTimeFrom != null and order.createTimeFrom !=''">
+            And o.create_time &gt; #{order.createTimeFrom}
+        </if>
+        <if test="order.createTimeTo!= null and order.createTimeTo !=''">
+            And o.create_time &lt; #{order.createTimeTo}
+        </if>
+    </sql>
+
+    <select id="countOrderDetailWithUserId" resultType="long">
+        <include refid="countOrderDetailWithUserIdSql"/>
+    </select>
+
+    <select id="findOrderDetailPageWithUserId" resultType="cn.edu.hit.spat.system.entity.Order">
+        <include refid="findOrderDetailWithUserIdSql"/>
+    </select>
+
+    <select id="findOrderDetailWithUserId" resultType="cn.edu.hit.spat.system.entity.Order">
+        <include refid="findOrderDetailWithUserIdSql"/>
+    </select>
+</mapper>

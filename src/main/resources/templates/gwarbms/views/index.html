@@ -296,7 +296,7 @@
                 '周末要不要去看电影？'
             ];
             var index = Math.floor((Math.random() * welcomeArr.length));
-            var welcomeMessage = time + '，<a id="gwarbms-index-user">' + currentUser.username + '</a>，' + welcomeArr[index];
+            var welcomeMessage = time + '，<a id="gwarbms-index-user">' + currentUser.username + '</a>，' + welcomeArr[index1];
             $view.find('#today-ip').text(data.todayIp).end()
                 .find('#today-visit-count').text(data.todayVisitCount).end()
                 .find('#total-visit-count').text(data.totalVisitCount).end()

@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author XuJian
+ * @author MrBird
  */
 @Data
 @TableName("t_role")

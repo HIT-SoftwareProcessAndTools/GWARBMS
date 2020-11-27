@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 
 /**
- * @author XuJian
+ * @author MrBird
  */
 public interface IRoleService extends IService<Role> {
 

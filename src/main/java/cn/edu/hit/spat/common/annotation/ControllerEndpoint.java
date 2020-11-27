@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 public @interface ControllerEndpoint {
 
     String operation() default "";
-    String exceptionMessage() default "FEBS系统内部异常";
+    String exceptionMessage() default "GWARBMS系统内部异常";
 }

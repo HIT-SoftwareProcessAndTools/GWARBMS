@@ -136,7 +136,7 @@ public class ShiroConfig {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
         // rememberMe cookie 加密的密钥
-        String encryptKey = "gwarbms_shiro_key";
+        String encryptKey = "febs_shiro_key";
         byte[] encryptKeyBytes = encryptKey.getBytes(StandardCharsets.UTF_8);
         String rememberKey = Base64Utils.encodeToString(Arrays.copyOf(encryptKeyBytes, 16));
         cookieRememberMeManager.setCipherKey(Base64.decode(rememberKey));

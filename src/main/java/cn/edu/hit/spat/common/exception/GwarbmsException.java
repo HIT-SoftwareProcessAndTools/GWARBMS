@@ -1,7 +1,7 @@
 package cn.edu.hit.spat.common.exception;
 
 /**
- * FEBS系统内部异常
+ * GWARBMS系统内部异常
  *
  * @author MrBird
  */
