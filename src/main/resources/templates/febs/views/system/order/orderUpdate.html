@@ -1,0 +1,111 @@
+<style>
+    #order-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #order-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+
+    #order-update #data-permission-tree-block {
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 3px 0;
+    }
+
+    #order-update  .layui-treeSelect .ztree li span.button.switch {
+        top: 1px;
+        left: 3px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: visible !important;
+    }
+</style>
+<div class="layui-fluid" id="order-update" lay-title="修改订单">
+    <form class="layui-form" action="" lay-filter="order-update-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">订单号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="orderId" data-th-value="${order.orderId}" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">销售人ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="salesId" data-th-id="${order.salesId}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">客户姓名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="customerName" data-th-id="${order.customerName}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">客户电话：</label>
+            <div class="layui-input-block">
+                <input type="tel" name="customerPhone" lay-verify="phone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">车辆ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="vehicleId" data-th-id="${order.vehicleId}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">车辆价格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="price" data-th-id="${order.price}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="order-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            order = [[${order}]],
+            $view = $('#order-update'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initOrderValue();
+
+        function initOrderValue() {
+            form.val("order-update-form", {
+                "orderId": order.orderId,
+                "salesId": order.salesId,
+                "customerName": order.customerName,
+                "customerPhone": order.customerPhone,
+                "vehicleId": order.vehicleId,
+                "price": order.price,
+            });
+        }
+
+        form.on('submit(order-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, order)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'order/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(+ '订单 ' + order.orderId +' 的数据修改成功！');
+                $('#febs-order').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

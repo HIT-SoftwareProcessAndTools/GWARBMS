@@ -25,7 +25,7 @@ public interface GwarbmsConstant {
     /**
      * 前端页面路径前缀
      */
-    String VIEW_PREFIX = "gwarbms/views/";
+    String VIEW_PREFIX = "febs/views/";
 
     /**
      * 验证码 Session Key

@@ -1,0 +1,221 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-goods" lay-title="货品管理">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="goods-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">货品 ID</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="goodsId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">货品名</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="name" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">货品价格</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="price" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">货品库存</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="inventory" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="goods:view,goods:create,goods:sale,goods:maintenance">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="goodsTable" lay-data="{id: 'goodsTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="goods-option">
+    <span shiro:lacksPermission="goods:view">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="detail" shiro:hasPermission="goods:view"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="edit" shiro:hasPermission="goods:modify"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="del" shiro:hasPermission="goods:modify"><i
+            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            laydate = layui.laydate,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            treeSelect = layui.treeSelect,
+            dropdown = layui.dropdown,
+            $view = $('#febs-goods'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns,
+            manufactureDateFrom,
+            manufactureDateTo;
+
+        form.render();
+
+        initTable();
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('goodsTable');
+                if (name === 'create') {
+                    febs.modal.open('新增货品', 'system/goods/create', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        offset: '30px',
+                        yes: function (index, layero) {
+                            $('#goods-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#goods-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'sale') {
+                    var checkStatus = table.checkStatus('goodsTable');
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要出售的货品');
+                    } else {
+                        febs.modal.confirm('出售货品', '确定出售选中货品？', function () {
+                            var goodsIds = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                goodsIds.push(item.goodsId)
+                            });
+                            febs.post(ctx + 'goods/sale/' + goodsIds.join(','), null, function () {
+                                febs.alert.success('货品出售成功');
+                                $query.click();
+                            });
+                        });
+                    }
+                }
+            },
+            options: [{
+                name: 'create',
+                title: '新增货品',
+                perms: 'goods:create'
+            }, {
+                name: 'sale',
+                title: '出售货品',
+                perms: 'goods:sale'
+            }]
+        });
+
+        table.on('tool(goodsTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+                febs.modal.view('货品信息', 'system/goods/detail/' + data.goodsId, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+            if (layEvent === 'edit') {
+                febs.modal.open('修改货品', 'system/goods/update/' + data.goodsId, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    offset: '30px',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#goods-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除货品', '确定删除选中货品？', function () {
+                    febs.get(ctx + 'goods/delete/' + data.goodsId, null, function () {
+                        febs.alert.success('删除货品成功');
+                        $query.click();
+                    });
+                });
+            }
+        });
+
+        table.on('sort(goodsTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            treeSelect.revokeNode('dept');
+            sortObject.type = 'null';
+            manufactureDateTo = null;
+            manufactureDateFrom = null;
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'goodsTable',
+                url: ctx + 'goods/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'goodsId', title: '货品 ID', minWidth: 100},
+                    {field: 'name', title: '货品名'},
+                    {field: 'price', title: '价格'},
+                    {field: 'inventory', title: '货品库存'},
+                    {title: '操作', toolbar: '#goods-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+            var params = $searchForm.serializeJson();
+            var manufactureDate = params.time;
+            if (manufactureDate) {
+                manufactureDateFrom = manufactureDate.split(' - ')[0];
+                manufactureDateTo = manufactureDate.split(' - ')[1];
+            }
+            params.invalidate_ie_cache = new Date();
+            params.manufactureDateFrom = manufactureDateFrom;
+            params.manufactureDateTo = manufactureDateTo;
+            return params;
+        }
+    })
+</script>

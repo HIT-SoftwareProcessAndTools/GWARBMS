@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.edu.hit.spat.system.mapper.CustomerMapper">
+<mapper namespace="cc.mrbird.febs.system.mapper.CustomerMapper">
     <sql id="countCustomerDetailSql" >
         SELECT
         COUNT(1)
         FROM
-        customertable c
+        t_customer c
         WHERE 1 = 1
         <if test="customer.customerId != null and customer.customerId != ''">
             AND c.customer_id = #{customer.customerId}
@@ -18,15 +18,6 @@
         </if>
         <if test="customer.phone != null and customer.phone != ''">
             AND c.phone = #{customer.phone}
-        </if>
-        <if test="customer.vehicleId != null and customer.vehicleId != ''">
-            AND c.vehicle_id = #{customer.vehicleId}
-        </if>
-        <if test="customer.purchasingDateFrom != null and customer.purchasingDateFrom !=''">
-            And c.purchasing_date &gt; #{customer.purchasingDateFrom}
-        </if>
-        <if test="customer.purchasingDateTo != null and customer.purchasingDateTo !=''">
-            And c.purchasing_date &lt; #{customer.purchasingDateTo}
         </if>
     </sql>
 
@@ -35,11 +26,9 @@
         c.customer_id customerId,
         c.name,
         c.gender,
-        c.phone,
-        c.purchasing_date purchasingDate,
-        c.vehicle_id vehicleId
+        c.phone
         FROM
-        customertable c
+        t_customer c
         WHERE 1 = 1
         <if test="customer.customerId != null and customer.customerId != ''">
             AND c.customer_id = #{customer.customerId}
@@ -53,39 +42,28 @@
         <if test="customer.phone != null and customer.phone != ''">
             AND c.phone = #{customer.phone}
         </if>
-        <if test="customer.vehicleId != null and customer.vehicleId != ''">
-            AND c.vehicle_id = #{customer.vehicleId}
-        </if>
-        <if test="customer.purchasingDateFrom != null and customer.purchasingDateFrom !=''">
-            And c.purchasing_date &gt; #{customer.purchasingDateFrom}
-        </if>
-        <if test="customer.purchasingDateTo != null and customer.purchasingDateTo !=''">
-            And c.purchasing_date &lt; #{customer.purchasingDateTo}
-        </if>
     </sql>
 
-    <select id="countCustomerDetail" parameterType="cn.edu.hit.spat.system.entity.Customer" resultType="long">
+    <select id="countCustomerDetail" parameterType="customer" resultType="long">
         <include refid="countCustomerDetailSql"/>
     </select>
 
-    <select id="findCustomerDetailPage" parameterType="cn.edu.hit.spat.system.entity.Customer" resultType="cn.edu.hit.spat.system.entity.Customer">
+    <select id="findCustomerDetailPage" parameterType="customer" resultType="customer">
         <include refid="findCustomerDetailSql"/>
     </select>
 
-    <select id="findCustomerDetail" parameterType="cn.edu.hit.spat.system.entity.Customer" resultType="cn.edu.hit.spat.system.entity.Customer">
+    <select id="findCustomerDetail" parameterType="customer" resultType="customer">
         <include refid="findCustomerDetailSql"/>
     </select>
 
-    <select id="findByCustomerId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.Customer">
+    <select id="findByCustomerId" parameterType="long" resultType="customer">
         SELECT
         c.customer_id customerId,
         c.name,
         c.gender,
-        c.phone,
-        c.purchasing_date purchasingDate,
-        c.vehicle_id vehicleId
+        c.phone
         FROM
-        customertable c
+        t_customer c
         WHERE  c.customer_id = #{customerId}
     </select>
 </mapper>

@@ -1,0 +1,60 @@
+<style>
+    #febs-order-detail #order-img, #febs-order-detail .order-info {
+        display: inline-block;
+        float: left;
+        margin-left: 15px;
+    }
+
+    #febs-order-detail #order-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-order-detail .order-info div {
+        margin: 10px 15px;
+        max-width: 19rem;
+    }
+
+    #febs-order-detail #options-wrapper a {
+        padding: 4px 6px;
+        color: rgba(0, 0, 0, 0.65);
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+    }
+
+    #febs-order-detail #options-wrapper a:hover {
+        color: #40a9ff;
+        border-color: #40a9ff;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-order-detail" lay-title="订单信息">
+    <div id="order-info-wrapper">
+        <div class="order-info">
+            <div><span class="layui-icon layui-icon-read"></span> 订单号：
+                [[${order.orderId}]]
+            </div>
+            <div><span class="layui-icon layui-icon-time-circle"></span> 创建时间：
+                [[${order.createTime}]]
+            </div>
+            <div><span class="layui-icon layui-icon-user"></span> 销售人员ID：
+                [[${order.salesId}]]
+            </div>
+            <div><span class="layui-icon layui-icon-user"></span> 客户姓名：
+                [[${order.customerName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-phone"></span> 客户电话：
+                [[${order.customerPhone}]]
+            </div>
+            <div><span class="layui-icon layui-icon-car"></span> 车辆ID：
+                [[${order.vehicleId}]]
+            </div>
+            <div><span class="layui-icon layui-icon-read"></span> 价格：
+                [[${order.price}]]
+            </div>
+            <div><span class="layui-icon layui-icon-star"></span> 订单状态：
+                [[${order.status}]]
+            </div>
+        </div>
+    </div>
+</div>

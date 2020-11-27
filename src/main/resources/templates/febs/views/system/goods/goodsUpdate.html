@@ -1,0 +1,116 @@
+<style>
+    #vehicle-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #vehicle-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+
+    #vehicle-update #data-permission-tree-block {
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 3px 0;
+    }
+
+    #vehicle-update  .layui-treeSelect .ztree li span.button.switch {
+        top: 1px;
+        left: 3px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: visible !important;
+    }
+</style>
+<div class="layui-fluid" id="vehicle-update" lay-title="修改车辆">
+    <form class="layui-form" action="" lay-filter="vehicle-update-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">车辆ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="vehicleId" data-th-value="${vehicle.vehicleId}" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">车型：</label>
+            <div class="layui-input-block">
+                <input type="text" name="type" data-th-id="${vehicle.type}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">颜色：</label>
+            <div class="layui-input-block">
+                <input type="text" name="color" data-th-id="${vehicle.color}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">车重：</label>
+            <div class="layui-input-block">
+                <input type="text" name="deadWeight" data-th-id="${vehicle.deadWeight}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">最低价格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="lowestPrice" data-th-id="${vehicle.lowestPrice}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">保养次数：</label>
+            <div class="layui-input-block">
+                <input type="text" name="maintenanceTimes" data-th-id="${vehicle.maintenanceTimes}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="已出售">
+                <input type="radio" name="status" value="0" title="未出售" checked="">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="vehicle-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            vehicle = [[${vehicle}]],
+            $view = $('#vehicle-update');
+
+        form.render();
+        initVehicleValue();
+
+        function initVehicleValue() {
+            form.val("vehicle-update-form", {
+                "vehicleId": vehicle.vehicleId,
+                "type": vehicle.type,
+                "color": vehicle.color,
+                "deadWeight": vehicle.deadWeight,
+                "lowestPrice": vehicle.lowestPrice,
+                "maintenanceTimes": vehicle.maintenanceTimes,
+            });
+        }
+
+        form.on('submit(vehicle-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, vehicle)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'vehicle/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(+ '车辆 ' + vehicle.vehicleId +' 的数据修改成功！');
+                $('#febs-vehicle').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

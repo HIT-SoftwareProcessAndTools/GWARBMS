@@ -11,7 +11,6 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,11 +33,11 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
 
     @Override
     public IPage<Customer> findCustomerDetailList(Customer customer, QueryRequest request) {
-        if (StringUtils.isNotBlank(customer.getPurchasingDateFrom()) &&
-                StringUtils.equals(customer.getPurchasingDateFrom(), customer.getPurchasingDateTo())) {
-            customer.setPurchasingDateFrom(customer.getPurchasingDateFrom() + " 00:00:00");
-            customer.setPurchasingDateTo(customer.getPurchasingDateTo() + " 23:59:59");
-        }
+//        if (StringUtils.isNotBlank(customer.getPurchasingDateFrom()) &&
+//                StringUtils.equals(customer.getPurchasingDateFrom(), customer.getPurchasingDateTo())) {
+//            customer.setPurchasingDateFrom(customer.getPurchasingDateFrom() + " 00:00:00");
+//            customer.setPurchasingDateTo(customer.getPurchasingDateTo() + " 23:59:59");
+//        }
         Page<Customer> page = new Page<>(request.getPageNum(), request.getPageSize());
         page.setSearchCount(false);
         page.setTotal(baseMapper.countCustomerDetail(customer));

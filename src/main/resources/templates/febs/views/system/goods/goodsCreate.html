@@ -1,0 +1,67 @@
+<style>
+    #goods-add {
+        padding: 20px 25px 25px 0;
+    }
+
+    #goods-add .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+
+    #goods-add .layui-treeSelect .ztree li span.button.switch {
+        top: 1px;
+        left: 3px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: visible !important;
+    }
+</style>
+<div class="layui-fluid" id="goods-add" lay-title="新增车辆">
+    <form class="layui-form" action="" lay-filter="goods-add-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">货品名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">价格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="price" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">库存：</label>
+            <div class="layui-input-block">
+                <input type="text" name="inventory" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="goods-add-form-submit" id="submit"></button>
+            <button type="reset" class="layui-btn" id="reset"></button>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['febs', 'form', 'formSelects', 'treeSelect'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form;
+
+        form.render();
+
+        formSelects.render();
+
+        form.on('submit(goods-add-form-submit)', function (data) {
+            febs.post(ctx + 'goods', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增货品成功！');
+                $('#febs-goods').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>
