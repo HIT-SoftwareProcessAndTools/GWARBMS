@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cc.mrbird.febs.system.mapper.GoodsMapper">
+<mapper namespace="cn.edu.hit.spat.system.mapper.GoodsMapper">
     <sql id="countGoodsDetailSql" >
         SELECT
         COUNT(1)
@@ -44,19 +44,19 @@
         </if>
     </sql>
 
-    <select id="countGoodsDetail" parameterType="goods" resultType="long">
+    <select id="countGoodsDetail" parameterType="cn.edu.hit.spat.system.entity.Goods" resultType="long">
         <include refid="countGoodsDetailSql"/>
     </select>
 
-    <select id="findGoodsDetailPage" parameterType="goods" resultType="goods">
+    <select id="findGoodsDetailPage" parameterType="cn.edu.hit.spat.system.entity.Goods" resultType="cn.edu.hit.spat.system.entity.Goods">
         <include refid="findGoodsDetailSql"/>
     </select>
 
-    <select id="findGoodsDetail" parameterType="goods" resultType="goods">
+    <select id="findGoodsDetail" parameterType="cn.edu.hit.spat.system.entity.Goods" resultType="cn.edu.hit.spat.system.entity.Goods">
         <include refid="findGoodsDetailSql"/>
     </select>
 
-    <select id="findByGoodsId" parameterType="long" resultType="goods">
+    <select id="findByGoodsId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.Goods">
         SELECT
         g.goods_id goodsId,
         g.name,

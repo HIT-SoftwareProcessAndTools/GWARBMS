@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cc.mrbird.febs.system.mapper.OrderMapper">
+<mapper namespace="cn.edu.hit.spat.system.mapper.OrderMapper">
     <sql id="countOrderDetailSql" >
         SELECT
         COUNT(1)
@@ -43,19 +43,19 @@
 
     </sql>
 
-    <select id="countOrderDetail" parameterType="order" resultType="long">
+    <select id="countOrderDetail" parameterType="cn.edu.hit.spat.system.entity.Order" resultType="long">
         <include refid="countOrderDetailSql"/>
     </select>
 
-    <select id="findOrderDetailPage" parameterType="order" resultType="order">
+    <select id="findOrderDetailPage" parameterType="cn.edu.hit.spat.system.entity.Order" resultType="cn.edu.hit.spat.system.entity.Order">
         <include refid="findOrderDetailSql"/>
     </select>
 
-    <select id="findOrderDetail" parameterType="order" resultType="order">
+    <select id="findOrderDetail" parameterType="cn.edu.hit.spat.system.entity.Order" resultType="cn.edu.hit.spat.system.entity.Order">
         <include refid="findOrderDetailSql"/>
     </select>
 
-    <select id="findByName" parameterType="string" resultType="order">
+    <select id="findByName" parameterType="string" resultType="cn.edu.hit.spat.system.entity.Order">
         SELECT
         o.order_id orderId,
         o.create_time createTime,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cc.mrbird.febs.system.mapper.CustomerMapper">
+<mapper namespace="cn.edu.hit.spat.system.mapper.CustomerMapper">
     <sql id="countCustomerDetailSql" >
         SELECT
         COUNT(1)
@@ -44,19 +44,19 @@
         </if>
     </sql>
 
-    <select id="countCustomerDetail" parameterType="customer" resultType="long">
+    <select id="countCustomerDetail" parameterType="cn.edu.hit.spat.system.entity.Customer" resultType="long">
         <include refid="countCustomerDetailSql"/>
     </select>
 
-    <select id="findCustomerDetailPage" parameterType="customer" resultType="customer">
+    <select id="findCustomerDetailPage" parameterType="cn.edu.hit.spat.system.entity.Customer" resultType="cn.edu.hit.spat.system.entity.Customer">
         <include refid="findCustomerDetailSql"/>
     </select>
 
-    <select id="findCustomerDetail" parameterType="customer" resultType="customer">
+    <select id="findCustomerDetail" parameterType="cn.edu.hit.spat.system.entity.Customer" resultType="cn.edu.hit.spat.system.entity.Customer">
         <include refid="findCustomerDetailSql"/>
     </select>
 
-    <select id="findByCustomerId" parameterType="long" resultType="customer">
+    <select id="findByCustomerId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.Customer">
         SELECT
         c.customer_id customerId,
         c.name,
