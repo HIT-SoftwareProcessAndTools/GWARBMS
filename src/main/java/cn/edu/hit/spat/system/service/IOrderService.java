@@ -6,55 +6,56 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- * @author MrBird
+ * @author Xuqian
+ * 零售销售单操作
  */
 public interface IOrderService extends IService<Order> {
 
     /**
-     * 通过客户名称查找用户
+     * 通过客户名称查找销售单
      *
      * @param customerName 客户姓名
-     * @return 订单
+     * @return 零售销售单
      */
     Order findByName(String customerName);
 
     /**
-     * 查找订单详细信息
+     * 查找销售单详细信息
      *
      * @param request request
-     * @param order    订单对象，用于传递查询条件
+     * @param order   销售单对象，用于传递查询条件
      * @return IPage
      */
     IPage<Order> findOrderDetailList(Order order, QueryRequest request);
 
     /**
-     * 通过客户名查找订单详细信息
+     * 通过客户名查找销售单详细信息
      *
      * @param customerName 客户名
-     * @return 订单信息
+     * @return 销售单信息
      */
     Order findOrderDetailList(String customerName);
 
 
 
     /**
-     * 新增订单
+     * 新增零售销售单
      *
-     * @param Order order
+     * @param Order order 零售销售单对象
      */
     void createOrder(Order order);
 
     /**
-     * 删除订单
+     * 删除零售销售单
      *
-     * @param orderIds 订单 id数组
+     * @param orderIds 零售销售单id数组
      */
     void deleteOrders(String[] orderIds);
 
     /**
-     * 修改订单
+     * 修改零售销售单
      *
-     * @param Order user
+     * @param Order order 零售销售单对象
      */
     void updateOrder(Order order);
 

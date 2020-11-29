@@ -20,6 +20,7 @@ import java.util.Map;
 
 /**
  * @author Xuqian
+ * 零售订单控制
  */
 @Slf4j
 @Validated
@@ -31,7 +32,7 @@ public class OrderController extends BaseController {
     private final IOrderService orderService;
 
     /**
-     * 根据客户信息选查看订单
+     * 根据客户信息查看零售销售单
      * @param customername
      * @return
      */
@@ -41,6 +42,12 @@ public class OrderController extends BaseController {
     }
 
 
+    /**
+     * 查看零售销售单详细信息，只有销售人员可以查看订单详细信息。需要配置权限user:view"
+     * @param order 订单编号
+     * @param request
+     * @return
+     */
     @GetMapping("list")
     @RequiresPermissions("user:view")
     public GwarbmsResponse orderList(Order order, QueryRequest request) {
@@ -48,6 +55,11 @@ public class OrderController extends BaseController {
         return new GwarbmsResponse().success().data(dataTable);
     }
 
+    /**
+     * 新增零售销售单，零售销售单不用审核。 销售人员拥有权限user:add
+     * @param order 销售单对象
+     * @return
+     */
     @PostMapping
     @RequiresPermissions("user:add")
     @ControllerEndpoint(operation = "新增订单", exceptionMessage = "新增订单失败")
@@ -56,6 +68,11 @@ public class OrderController extends BaseController {
         return new GwarbmsResponse().success();
     }
 
+    /**
+     * 删除零售单 零售销售单只能由销售人员进行删除，销售人员拥有权限user:delete。
+     * @param orderIds 销售单编号
+     * @return
+     */
     @GetMapping("delete/{userIds}")
     @RequiresPermissions("user:delete")
     @ControllerEndpoint(operation = "删除订单", exceptionMessage = "删除订单失败")
@@ -65,6 +82,11 @@ public class OrderController extends BaseController {
         return new GwarbmsResponse().success();
     }
 
+    /**
+     * 修改零售销售单，零售销售单只能由销售人员进行修改。销售人员有user:update 权限
+     * @param order 销售单对象
+     * @return
+     */
     @PostMapping("update")
     @RequiresPermissions("user:update")
     @ControllerEndpoint(operation = "修改订单", exceptionMessage = "修改订单失败")

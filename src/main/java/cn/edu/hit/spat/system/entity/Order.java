@@ -10,8 +10,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author XuJian
- * 订单表
+ * @author XuQian
+ * 零售销售单表
  */
 @Data
 @TableName("t_order")
@@ -21,13 +21,13 @@ public class Order implements Serializable {
 
 
     /**
-     * 订单 ID
+     * 零售销售单 ID
      */
     @TableId(value = "ORDER_ID", type = IdType.AUTO)
     private Long orderId;
 
     /**
-     * 销售人员ID
+     * 销售人员ID。此系统无用
      */
     @TableField("SALES_ID")
     private Long salesId;
@@ -46,14 +46,14 @@ public class Order implements Serializable {
 
 
     /**
-     * 车辆ID
+     * 车辆ID，此系统无用
      */
     @TableField("VIHECLE_ID")
     private Long vihecleId;
 
 
     /**
-     * 价格
+     * 零售销售单价格
      */
     @TableField("PRICE")
     private Long price;

@@ -5,7 +5,7 @@
         SELECT
         COUNT(1)
         FROM
-        m_order o
+        order_single o
         WHERE 1 = 1
         <if test="order.customerName != null and order.customerName != ''">
             AND o.customer_name = #{order.customerName}
@@ -22,13 +22,12 @@
        SELECT
         o.order_id orderId,
         o.create_time createTime,
-        o.sales_id salesId,
         o.customer_name customerName,
         o.customer_phone customerPhone,
-        o.vihecle_id vehecleId,
-        o.price
+        o.order_price orderPrice,
+        o.order_info orderInfo
         FROM
-        m_order o
+        order_single o
         WHERE 1 = 1
         <if test="order.customerName != null and order.customerName != ''">
             AND o.customer_name = #{order.customerName}
@@ -59,13 +58,12 @@
         SELECT
         o.order_id orderId,
         o.create_time createTime,
-        o.sales_id salesId,
         o.customer_name customerName,
         o.customer_phone customerPhone,
-        o.vihecle_id vehecleId,
-        o.price
+        o.order_price orderPrice,
+        o.order_info orderInfo
         FROM
-        m_order o
+        order_single o
         WHERE  o.customer_name = #{customerName}
 
     </select>
