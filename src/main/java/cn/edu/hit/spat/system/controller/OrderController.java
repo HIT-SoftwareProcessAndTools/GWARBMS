@@ -19,7 +19,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 /**
- * @author MrBird
+ * @author Xuqian
  */
 @Slf4j
 @Validated
@@ -30,6 +30,11 @@ public class OrderController extends BaseController {
 
     private final IOrderService orderService;
 
+    /**
+     * 根据客户信息选查看订单
+     * @param customername
+     * @return
+     */
     @GetMapping("{customername}")
     public Order getUser(@NotBlank(message = "{required}") @PathVariable String customername) {
         return this.orderService.findOrderDetailList(customername);

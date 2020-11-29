@@ -25,12 +25,10 @@ DROP TABLE IF EXISTS `order_single`;
 CREATE TABLE `order_single` (
   `order_id` int NOT NULL AUTO_INCREMENT COMMENT '订单编号',
   `customer_name` varchar(100) NOT NULL COMMENT '客户姓名',
-  `good_id` int NOT NULL COMMENT '货品编号',
-  `good_name` varchar(100) NOT NULL COMMENT '货品姓名',
-  `good_number` int NOT NULL COMMENT '货品数量，零售订单默认为1',
   `customer_phobe` varchar(100) NOT NULL COMMENT '客户电话',
-  `price` varchar(100) NOT NULL COMMENT '价格',
+  `order_price` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '价格',
   `create_time` varchar(100) NOT NULL COMMENT '订单建立时间',
+  `order_info` varchar(100) NOT NULL,
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='零售订单表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -41,7 +39,7 @@ CREATE TABLE `order_single` (
 
 LOCK TABLES `order_single` WRITE;
 /*!40000 ALTER TABLE `order_single` DISABLE KEYS */;
-INSERT INTO `order_single` VALUES (1,'ss',2,'脸盆',1,'111111','3','2020/01/02 20:00'),(2,'ss',2,'脸盆',1,'111111','3','2020/01/02 20:01'),(3,'ss',1,'拖鞋',1,'11111','10','2020/01/02 20:03');
+INSERT INTO `order_single` VALUES (1,'ss','1111','12','2020/12/02 21:00','拖鞋*2;脸盆*3;毛巾*4');
 /*!40000 ALTER TABLE `order_single` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-29  9:32:08
+-- Dump completed on 2020-11-29 10:36:57
