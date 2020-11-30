@@ -14,7 +14,7 @@ import java.util.Date;
  * 零售销售单表
  */
 @Data
-@TableName("t_order")
+@TableName("t_order_retail")
 public class Order implements Serializable {
 
     private static final long serialVersionUID = -4352868070794165001L;
@@ -23,46 +23,40 @@ public class Order implements Serializable {
     /**
      * 零售销售单 ID
      */
-    @TableId(value = "ORDER_ID", type = IdType.AUTO)
+    @TableId(value = "order_id", type = IdType.AUTO)
     private Long orderId;
 
-    /**
-     * 销售人员ID。此系统无用
-     */
-    @TableField("SALES_ID")
-    private Long salesId;
 
     /**
      * 客户姓名
      */
-    @TableField("CUSTOMER_NAME")
+    @TableField("customer_name")
     private String customerName;
 
     /**
      * 客户手机号码
      */
-    @TableField("CUSTOMER_PHONE")
+    @TableField("customer_phone")
     private String customerPhone;
-
-
-    /**
-     * 车辆ID，此系统无用
-     */
-    @TableField("VIHECLE_ID")
-    private Long vihecleId;
 
 
     /**
      * 零售销售单价格
      */
-    @TableField("PRICE")
-    private Long price;
+    @TableField("order_price")
+    private Float price;
+
+    /**
+     * 零售销售单详情
+     */
+    @TableField("order_info")
+    private String orderInfo;
 
 
     /**
      * 创建时间
      */
-    @TableField("CREATE_TIME")
+    @TableField("create_time")
     private Date createTime;
 
     @TableField(exist = false)

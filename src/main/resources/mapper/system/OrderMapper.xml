@@ -5,7 +5,7 @@
         SELECT
         COUNT(1)
         FROM
-        order_single o
+        t_order_retail o
         WHERE 1 = 1
         <if test="order.customerName != null and order.customerName != ''">
             AND o.customer_name = #{order.customerName}
