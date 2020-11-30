@@ -44,7 +44,7 @@ public class GoodsController extends BaseController {
 
     @PostMapping
     @RequiresPermissions("goods:create")
-    @ControllerEndpoint(operation = "新增车辆", exceptionMessage = "新增车辆失败")
+    @ControllerEndpoint(operation = "新增货品", exceptionMessage = "新增货品失败")
     public GwarbmsResponse createGoods(@Valid Goods goods) {
         this.goodsService.createGoods(goods);
         return new GwarbmsResponse().success();
@@ -52,10 +52,10 @@ public class GoodsController extends BaseController {
 
     @PostMapping("update")
     @RequiresPermissions("goods:modify")
-    @ControllerEndpoint(operation = "修改车辆", exceptionMessage = "修改车辆失败")
+    @ControllerEndpoint(operation = "修改货品", exceptionMessage = "修改货品失败")
     public GwarbmsResponse updateGoods(@Valid Goods goods) {
         if (goods.getGoodsId() == null) {
-            throw new GwarbmsException("车辆ID为空");
+            throw new GwarbmsException("货品ID为空");
         }
         this.goodsService.updateGoods(goods);
         return new GwarbmsResponse().success();
@@ -63,26 +63,9 @@ public class GoodsController extends BaseController {
 
     @GetMapping("delete/{goodsId}")
     @RequiresPermissions("goods:modify")
-    @ControllerEndpoint(operation = "删除车辆", exceptionMessage = "删除车辆失败")
+    @ControllerEndpoint(operation = "删除货品", exceptionMessage = "删除货品失败")
     public GwarbmsResponse deleteGoodss(@NotBlank(message = "{required}") @PathVariable String goodsId) {
         this.goodsService.deleteGoods(goodsId);
         return new GwarbmsResponse().success();
     }
-
-    @PostMapping("sale/{goodsIds}")
-    @RequiresPermissions("goods:sale")
-    @ControllerEndpoint(operation = "出售车辆", exceptionMessage = "出售车辆失败")
-    public GwarbmsResponse saleGoodss(@NotBlank(message = "{required}") @PathVariable String goodsIds) {
-        String[] idsArray = goodsIds.split(StringPool.COMMA);
-        Long[] ids = new Long[idsArray.length];
-        for (int i = 0; i < idsArray.length; i++) {
-            Long id = Long.valueOf(idsArray[i]);
-//            if (this.goodsService.findByGoodsId(id).getStatus().equals("0"))
-//                ids[i] = id;
-//            else throw new GwarbmsException("选中已出售状态车辆");
-        }
-        this.goodsService.saleGoodss(ids);
-        return new GwarbmsResponse().success();
-    }
-
 }

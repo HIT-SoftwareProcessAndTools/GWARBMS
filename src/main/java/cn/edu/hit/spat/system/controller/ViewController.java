@@ -5,7 +5,11 @@ import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.utils.DateUtil;
 import cn.edu.hit.spat.common.utils.GwarbmsUtil;
+import cn.edu.hit.spat.system.entity.Customer;
+import cn.edu.hit.spat.system.entity.Goods;
 import cn.edu.hit.spat.system.entity.User;
+import cn.edu.hit.spat.system.service.ICustomerService;
+import cn.edu.hit.spat.system.service.IGoodsService;
 import cn.edu.hit.spat.system.service.IUserDataPermissionService;
 import cn.edu.hit.spat.system.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +36,9 @@ public class ViewController extends BaseController {
     private final IUserService userService;
     private final ShiroHelper shiroHelper;
     private final IUserDataPermissionService userDataPermissionService;
+    /* 新增数据 */
+    private final ICustomerService customerService;
+    private final IGoodsService goodsService;
 
     @GetMapping("login")
     @ResponseBody
@@ -197,4 +204,85 @@ public class ViewController extends BaseController {
             model.addAttribute("lastLoginTime", DateUtil.getDateFormat(user.getLastLoginTime(), DateUtil.FULL_TIME_SPLIT_PATTERN));
         }
     }
+
+    /**
+     * customer function======================================================================================
+     * @author XuJian
+     */
+    /* 客户管理 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer")
+    @RequiresPermissions("customer:view")
+    public String systemCustomer() {
+        return GwarbmsUtil.view("system/customer/customer");
+    }
+
+    /* 新增客户 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/create")
+    @RequiresPermissions("customer:create")
+    public String systemCustomerCreate() {
+        return GwarbmsUtil.view("system/customer/customerCreate");
+    }
+
+    /* 客户详情 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/detail/{customerId}")
+    @RequiresPermissions("customer:view")
+    public String systemCustomerDetail(@PathVariable Long customerId, Model model) {
+        resolveCustomerModel(customerId, model);
+        return GwarbmsUtil.view("system/customer/customerDetail");
+    }
+
+    /* 修改客户 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/update/{customerId}")
+    @RequiresPermissions("customer:update")
+    public String systemCustomerUpdate(@PathVariable Long customerId, Model model) {
+        resolveCustomerModel(customerId, model);
+        return GwarbmsUtil.view("system/customer/customerUpdate");
+    }
+
+    private void resolveCustomerModel(Long customerId, Model model) {
+        Customer customer = this.customerService.findByCustomerId(customerId);
+        model.addAttribute("customer", customer);
+    }
+
+    /**
+     * goods function======================================================================================
+     * @author XuJian
+     */
+    /* 货品管理 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/goods")
+    @RequiresPermissions("goods:view")
+    public String systemGoods() {
+        return GwarbmsUtil.view("system/goods/goods");
+    }
+
+    /* 新增货品 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/goods/create")
+    @RequiresPermissions("goods:create")
+    public String systemGoodsCreate() {
+        return GwarbmsUtil.view("system/goods/goodsCreate");
+    }
+
+    /* 货品详情 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/goods/detail/{goodsId}")
+    @RequiresPermissions("goods:view")
+    public String systemGoodsDetail(@PathVariable Long goodsId, Model model) {
+        resolveGoodsModel(goodsId, model);
+        return GwarbmsUtil.view("system/goods/goodsDetail");
+    }
+
+    /* 修改货品 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/goods/update/{goodsId}")
+    @RequiresPermissions("goods:modify")
+    public String systemGoodsUpdate(@PathVariable Long goodsId, Model model) {
+        resolveGoodsModel(goodsId, model);
+        return GwarbmsUtil.view("system/goods/goodsUpdate");
+    }
+
+    private void resolveGoodsModel(Long goodsId, Model model) {
+        Goods goods = this.goodsService.findByGoodsId(goodsId);
+        model.addAttribute("goods", goods);
+    }
+    /**
+     * =============================================================================================
+     */
 }

@@ -28,17 +28,17 @@ import java.util.Map;
 @RequestMapping("customer")
 public class CustomerController extends BaseController {
 
-    private final ICustomerService userService;
+    private final ICustomerService customerService;
 
     @GetMapping("{customerId}")
     public Customer getCustomer(@NotBlank(message = "{required}") @PathVariable Long customerId) {
-        return this.userService.findCustomerDetailList(customerId);
+        return this.customerService.findCustomerDetailList(customerId);
     }
 
     @GetMapping("list")
     @RequiresPermissions("customer:view")
     public GwarbmsResponse customerList(Customer customer, QueryRequest request) {
-        Map<String, Object> dataTable = getDataTable(this.userService.findCustomerDetailList(customer, request));
+        Map<String, Object> dataTable = getDataTable(this.customerService.findCustomerDetailList(customer, request));
         return new GwarbmsResponse().success().data(dataTable);
     }
 
@@ -46,7 +46,7 @@ public class CustomerController extends BaseController {
     @RequiresPermissions("customer:create")
     @ControllerEndpoint(operation = "新增客户", exceptionMessage = "新增客户失败")
     public GwarbmsResponse createCustomer(@Valid Customer customer) {
-        this.userService.createCustomer(customer);
+        this.customerService.createCustomer(customer);
         return new GwarbmsResponse().success();
     }
 
@@ -55,7 +55,7 @@ public class CustomerController extends BaseController {
     @ControllerEndpoint(operation = "删除客户", exceptionMessage = "删除客户失败")
     public GwarbmsResponse deleteCustomers(@NotBlank(message = "{required}") @PathVariable String customerIds) {
         String[] ids = customerIds.split(StringPool.COMMA);
-        this.userService.deleteCustomers(ids);
+        this.customerService.deleteCustomers(ids);
         return new GwarbmsResponse().success();
     }
 
@@ -66,7 +66,7 @@ public class CustomerController extends BaseController {
         if (customer.getCustomerId() == null) {
             throw new GwarbmsException("客户ID为空");
         }
-        this.userService.updateCustomer(customer);
+        this.customerService.updateCustomer(customer);
         return new GwarbmsResponse().success();
     }
 }

@@ -20,15 +20,21 @@
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">货品价格</label>
+                                        <label class="layui-form-label layui-form-label-sm">进货价格</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="price" autocomplete="off" class="layui-input">
+                                            <input type="text" name="purchasePrice" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">货品库存</label>
+                                        <label class="layui-form-label layui-form-label-sm">批发价格</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="inventory" autocomplete="off" class="layui-input">
+                                            <input type="text" name="wholesalePrice" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">零售价格</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="retailPrice" autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                 </div>
@@ -104,32 +110,11 @@
                         }
                     });
                 }
-                if (name === 'sale') {
-                    var checkStatus = table.checkStatus('goodsTable');
-                    if (!checkStatus.data.length) {
-                        febs.alert.warn('请选择需要出售的货品');
-                    } else {
-                        febs.modal.confirm('出售货品', '确定出售选中货品？', function () {
-                            var goodsIds = [];
-                            layui.each(checkStatus.data, function (key, item) {
-                                goodsIds.push(item.goodsId)
-                            });
-                            febs.post(ctx + 'goods/sale/' + goodsIds.join(','), null, function () {
-                                febs.alert.success('货品出售成功');
-                                $query.click();
-                            });
-                        });
-                    }
-                }
             },
             options: [{
                 name: 'create',
                 title: '新增货品',
                 perms: 'goods:create'
-            }, {
-                name: 'sale',
-                title: '出售货品',
-                perms: 'goods:sale'
             }]
         });
 
@@ -198,8 +183,9 @@
                     {type: 'checkbox'},
                     {field: 'goodsId', title: '货品 ID', minWidth: 100},
                     {field: 'name', title: '货品名'},
-                    {field: 'price', title: '价格'},
-                    {field: 'inventory', title: '货品库存'},
+                    {field: 'purchasePrice', title: '进货价格'},
+                    {field: 'wholesalePrice', title: '批发价格'},
+                    {field: 'retailPrice', title: '零售价格'},
                     {title: '操作', toolbar: '#goods-option', minWidth: 140}
                 ]]
             });
@@ -207,14 +193,7 @@
 
         function getQueryParams() {
             var params = $searchForm.serializeJson();
-            var manufactureDate = params.time;
-            if (manufactureDate) {
-                manufactureDateFrom = manufactureDate.split(' - ')[0];
-                manufactureDateTo = manufactureDate.split(' - ')[1];
-            }
             params.invalidate_ie_cache = new Date();
-            params.manufactureDateFrom = manufactureDateFrom;
-            params.manufactureDateTo = manufactureDateTo;
             return params;
         }
     })

@@ -19,6 +19,9 @@
         <if test="customer.phone != null and customer.phone != ''">
             AND c.phone = #{customer.phone}
         </if>
+        <if test="customer.type != null and customer.type != ''">
+            AND c.type = #{customer.type}
+        </if>
     </sql>
 
     <sql id="findCustomerDetailSql">
@@ -26,7 +29,8 @@
         c.customer_id customerId,
         c.name,
         c.gender,
-        c.phone
+        c.phone,
+        c.type
         FROM
         t_customer c
         WHERE 1 = 1
@@ -41,6 +45,9 @@
         </if>
         <if test="customer.phone != null and customer.phone != ''">
             AND c.phone = #{customer.phone}
+        </if>
+        <if test="customer.type != null and customer.type != ''">
+            AND c.type = #{customer.type}
         </if>
     </sql>
 
@@ -61,7 +68,8 @@
         c.customer_id customerId,
         c.name,
         c.gender,
-        c.phone
+        c.phone,
+        c.type
         FROM
         t_customer c
         WHERE  c.customer_id = #{customerId}

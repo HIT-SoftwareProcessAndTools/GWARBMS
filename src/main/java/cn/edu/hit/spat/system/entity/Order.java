@@ -14,7 +14,7 @@ import java.util.Date;
  * 零售销售单表
  */
 @Data
-@TableName("t_order")
+@TableName("t_order_single")
 public class Order implements Serializable {
 
     private static final long serialVersionUID = -4352868070794165001L;

@@ -45,14 +45,15 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">性别：</label>
             <div class="layui-input-block">
-                <input type="radio" name="gender" value="0" title="男性">
-                <input type="radio" name="gender" value="1" title="女性">
+                <input type="radio" name="gender" value="男" title="男性">
+                <input type="radio" name="gender" value="女" title="女性">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">车辆 ID：</label>
+            <label class="layui-form-label febs-form-item-require">客户类型：</label>
             <div class="layui-input-block">
-                <input type="text" name="vehicleId" autocomplete="off" class="layui-input">
+                <input type="radio" name="type" value="零售客户" title="零售客户">
+                <input type="radio" name="type" value="批发客户" title="批发客户">
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -85,7 +86,7 @@
                 "name": customer.name,
                 "phone": customer.phone,
                 "gender": customer.gender,
-                "vehicleId": customer.vehicleId
+                "type": customer.type
             });
         }
 

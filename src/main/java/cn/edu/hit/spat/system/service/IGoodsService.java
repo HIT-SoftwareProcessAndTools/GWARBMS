@@ -45,21 +45,15 @@ public interface IGoodsService extends IService<Goods> {
     /**
      * 删除
      *
-     * @param goodsId 车辆 id数组
+     * @param goodsId 货品 id数组
      */
     void deleteGoods(String goodsId);
 
     /**
-     * 修改车辆
+     * 修改
      *
-     * @param goods 车辆
+     * @param goods 货品
      */
     void updateGoods(Goods goods);
 
-    /**
-     * 出售车辆
-     *
-     * @param goodsIds
-     */
-    void saleGoodss(Long[] goodsIds);
 }

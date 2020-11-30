@@ -27,16 +27,22 @@ public class Goods implements Serializable {
     private String name;
 
     /**
-     * 货品价格
+     * 进货价格
      */
-    @TableField("PRICE")
-    private String price;
+    @TableField("PURCHASE_PRICE")
+    private String purchasePrice;
 
     /**
-     * 库存数量
+     * 批发价格
      */
-    @TableField("INVENTORY")
-    private String inventory;
+    @TableField("WHOLESALE_PRICE")
+    private String wholesalePrice;
+
+    /**
+     * 零售价格
+     */
+    @TableField("RETAIL_PRICE")
+    private String retailPrice;
 
     public Long getId() {
         return goodsId;

@@ -16,7 +16,7 @@
         overflow: visible !important;
     }
 </style>
-<div class="layui-fluid" id="goods-add" lay-title="新增车辆">
+<div class="layui-fluid" id="goods-add" lay-title="新增货品">
     <form class="layui-form" action="" lay-filter="goods-add-form">
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">货品名：</label>
@@ -25,15 +25,21 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">价格：</label>
+            <label class="layui-form-label febs-form-item-require">进货价格：</label>
             <div class="layui-input-block">
-                <input type="text" name="price" autocomplete="off" class="layui-input">
+                <input type="text" name="purchasePrice" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">库存：</label>
+            <label class="layui-form-label febs-form-item-require">批发价格：</label>
             <div class="layui-input-block">
-                <input type="text" name="inventory" autocomplete="off" class="layui-input">
+                <input type="text" name="wholesalePrice" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">零售价格：</label>
+            <div class="layui-input-block">
+                <input type="text" name="retailPrice"  autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item febs-hide">

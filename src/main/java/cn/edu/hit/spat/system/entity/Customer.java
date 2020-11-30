@@ -41,6 +41,12 @@ public class Customer implements Serializable {
     @TableField("PHONE")
     private Long phone;
 
+    /**
+     * 客户类别
+     */
+    @TableField("TYPE")
+    private String type;
+
     public Long getId() {
         return customerId;
     }
