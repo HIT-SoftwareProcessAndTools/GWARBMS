@@ -51,7 +51,7 @@ public class GoodsController extends BaseController {
     }
 
     @PostMapping("update")
-    @RequiresPermissions("goods:modify")
+    @RequiresPermissions("goods:update")
     @ControllerEndpoint(operation = "修改货品", exceptionMessage = "修改货品失败")
     public GwarbmsResponse updateGoods(@Valid Goods goods) {
         if (goods.getGoodsId() == null) {
@@ -62,7 +62,7 @@ public class GoodsController extends BaseController {
     }
 
     @GetMapping("delete/{goodsId}")
-    @RequiresPermissions("goods:modify")
+    @RequiresPermissions("goods:delete")
     @ControllerEndpoint(operation = "删除货品", exceptionMessage = "删除货品失败")
     public GwarbmsResponse deleteGoodss(@NotBlank(message = "{required}") @PathVariable String goodsId) {
         this.goodsService.deleteGoods(goodsId);

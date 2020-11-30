@@ -14,13 +14,13 @@
             AND g.name = #{goods.name}
         </if>
         <if test="goods.purchasePrice != null and goods.purchasePrice != ''">
-            AND g.purchasePrice = #{goods.purchasePrice}
+            AND g.purchase_price = #{goods.purchasePrice}
         </if>
         <if test="goods.wholesalePrice != null and goods.wholesalePrice != ''">
-            AND g.wholesalePrice = #{goods.wholesalePrice}
+            AND g.wholesale_price = #{goods.wholesalePrice}
         </if>
         <if test="goods.retailPrice != null and goods.retailPrice != ''">
-            AND g.retailPrice = #{goods.retailPrice}
+            AND g.retail_price = #{goods.retailPrice}
         </if>
     </sql>
 
@@ -38,7 +38,7 @@
             AND g.goods_id = #{goods.goodsId}
         </if>
         <if test="goods.name != null and goods.name != ''">
-            AND g.type = #{goods.type}
+            AND g.name = #{goods.name}
         </if>
         <if test="goods.purchasePrice != null and goods.purchasePrice != ''">
             AND g.purchase_price = #{goods.purchasePrice}

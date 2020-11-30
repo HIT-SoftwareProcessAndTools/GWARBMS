@@ -272,7 +272,7 @@ public class ViewController extends BaseController {
 
     /* 修改货品 */
     @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/goods/update/{goodsId}")
-    @RequiresPermissions("goods:modify")
+    @RequiresPermissions("goods:update")
     public String systemGoodsUpdate(@PathVariable Long goodsId, Model model) {
         resolveGoodsModel(goodsId, model);
         return GwarbmsUtil.view("system/goods/goodsUpdate");

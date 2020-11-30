@@ -83,7 +83,7 @@
     零售客户: {title: '零售客户', color: 'blue'}
     }[d.type];
     }}
-    <span class="layui-badge febs-bg-{{status.color}}">{{ type.title }}</span>
+    <span class="layui-badge febs-bg-{{type.color}}">{{ type.title }}</span>
 </script>
 <script type="text/html" id="customer-option">
     <span shiro:lacksPermission="customer:view,customer:update,customer:delete">
@@ -99,30 +99,20 @@
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
         var $ = layui.jquery,
-            laydate = layui.laydate,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
-            treeSelect = layui.treeSelect,
             dropdown = layui.dropdown,
             $view = $('#febs-customer'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
-            sortObject = {field: 'purchasingDate', type: null},
-            tableIns,
-            purchasingDateFrom,
-            purchasingDateTo;
+            sortObject = {field: 'customerId', type: null},
+            tableIns;
 
         form.render();
 
         initTable();
-
-        laydate.render({
-            elem: '#purchasingDate',
-            range: true,
-            trigger: 'click'
-        });
 
         dropdown.render({
             elem: $view.find('.action-more'),
@@ -213,10 +203,7 @@
 
         $reset.on('click', function () {
             $searchForm[0].reset();
-            treeSelect.revokeNode('dept');
             sortObject.type = 'null';
-            purchasingDateTo = null;
-            purchasingDateFrom = null;
             tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
         });
 
@@ -239,14 +226,6 @@
 
         function getQueryParams() {
             var params = $searchForm.serializeJson();
-            var purchasingDate = params.time;
-            if (purchasingDate) {
-                purchasingDateFrom = purchasingDate.split(' - ')[0];
-                purchasingDateTo = purchasingDate.split(' - ')[1];
-            }
-            params.invalidate_ie_cache = new Date();
-            params.purchasingDateFrom = purchasingDateFrom;
-            params.purchasingDateTo = purchasingDateTo;
             return params;
         }
 
