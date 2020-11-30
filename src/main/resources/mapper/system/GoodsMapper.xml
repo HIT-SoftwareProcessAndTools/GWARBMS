@@ -13,11 +13,14 @@
         <if test="goods.name != null and goods.name != ''">
             AND g.name = #{goods.name}
         </if>
-        <if test="goods.price != null and goods.price != ''">
-            AND g.price = #{goods.price}
+        <if test="goods.purchasePrice != null and goods.purchasePrice != ''">
+            AND g.purchase_price = #{goods.purchasePrice}
         </if>
-        <if test="goods.inventory != null and goods.inventory != ''">
-            AND g.inventory = #{goods.inventory}
+        <if test="goods.wholesalePrice != null and goods.wholesalePrice != ''">
+            AND g.wholesale_price = #{goods.wholesalePrice}
+        </if>
+        <if test="goods.retailPrice != null and goods.retailPrice != ''">
+            AND g.retail_price = #{goods.retailPrice}
         </if>
     </sql>
 
@@ -25,8 +28,9 @@
         SELECT
         g.goods_id goodsId,
         g.name,
-        g.price,
-        g.inventory
+        g.purchase_price,
+        g.wholesale_price,
+        g.retail_price
         FROM
         t_goods g
         WHERE 1 = 1
@@ -34,13 +38,16 @@
             AND g.goods_id = #{goods.goodsId}
         </if>
         <if test="goods.name != null and goods.name != ''">
-            AND g.type = #{goods.type}
+            AND g.name = #{goods.name}
         </if>
-        <if test="goods.price != null and goods.price != ''">
-            AND g.price = #{goods.price}
+        <if test="goods.purchasePrice != null and goods.purchasePrice != ''">
+            AND g.purchase_price = #{goods.purchasePrice}
         </if>
-        <if test="goods.inventory != null and goods.inventory != ''">
-            AND g.inventory = #{goods.inventory}
+        <if test="goods.wholesalePrice != null and goods.wholesalePrice != ''">
+            AND g.wholesale_price = #{goods.wholesalePrice}
+        </if>
+        <if test="goods.retailPrice != null and goods.retailPrice != ''">
+            AND g.retail_price = #{goods.retailPrice}
         </if>
     </sql>
 
@@ -60,8 +67,9 @@
         SELECT
         g.goods_id goodsId,
         g.name,
-        g.price,
-        g.inventory
+        g.purchase_price,
+        g.wholesale_price,
+        g.retail_price
         FROM
         t_goods g
         WHERE  g.goods_id = #{goodsId}

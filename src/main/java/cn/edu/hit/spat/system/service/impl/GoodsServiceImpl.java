@@ -34,11 +34,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     public IPage<Goods> findGoodsDetailList(Goods goods, QueryRequest request) {
-//        if (StringUtils.isNotBlank(goods.getManufactureDateFrom()) &&
-//                StringUtils.equals(goods.getManufactureDateFrom(), goods.getManufactureDateTo())) {
-//            goods.setManufactureDateFrom((goods.getManufactureDateFrom() + " 00:00:00"));
-//            goods.setManufactureDateTo(goods.getManufactureDateTo() + " 23:59:59");
-//        }
         Page<Goods> page = new Page<>(request.getPageNum(), request.getPageSize());
         page.setSearchCount(false);
         page.setTotal(baseMapper.countGoodsDetail(goods));
@@ -57,7 +52,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createGoods(Goods goods) {
-        //goods.setManufactureDate(new Date());
         save(goods);
     }
 
@@ -73,16 +67,6 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     @Transactional(rollbackFor = Exception.class)
     public void updateGoods(Goods goods) {
         updateById(goods);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void saleGoodss(Long[] goodsIds){
-        Arrays.stream(goodsIds).forEach(goodsId -> {
-//            Goods goods = new Goods();
-//            goods.setStatus("1");
-//            this.baseMapper.update(goods, new LambdaQueryWrapper<Goods>().eq(Goods::getGoodsId, goodsId));
-        });
     }
     
 }

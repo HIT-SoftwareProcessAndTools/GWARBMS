@@ -24,8 +24,8 @@
                                         <div class="layui-input-inline">
                                             <select name="gender">
                                                 <option value=""></option>
-                                                <option value="0">男</option>
-                                                <option value="1">女</option>
+                                                <option value="男">男</option>
+                                                <option value="女">女</option>
                                             </select>
                                         </div>
                                     </div>
@@ -33,6 +33,16 @@
                                         <label class="layui-form-label layui-form-label-sm">联系电话</label>
                                         <div class="layui-input-inline">
                                             <input type="text" name="phone" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">类型</label>
+                                        <div class="layui-input-inline">
+                                            <select name="type">
+                                                <option value=""></option>
+                                                <option value="批发客户">批发客户</option>
+                                                <option value="零售客户">零售客户</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -60,11 +70,20 @@
 <script type="text/html" id="customer-gender">
     {{#
     var gender = {
-    1: {title: '女'},
-    0: {title: '男'}
+    女: {title: '女'},
+    男: {title: '男'}
     }[d.gender];
     }}
     <span>{{ gender.title }}</span>
+</script>
+<script type="text/html" id="customer-type">
+    {{#
+    var type = {
+    批发客户: {title: '批发客户', color: 'green'},
+    零售客户: {title: '零售客户', color: 'blue'}
+    }[d.type];
+    }}
+    <span class="layui-badge febs-bg-{{type.color}}">{{ type.title }}</span>
 </script>
 <script type="text/html" id="customer-option">
     <span shiro:lacksPermission="customer:view,customer:update,customer:delete">
@@ -80,30 +99,20 @@
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
         var $ = layui.jquery,
-            laydate = layui.laydate,
             febs = layui.febs,
             form = layui.form,
             table = layui.table,
-            treeSelect = layui.treeSelect,
             dropdown = layui.dropdown,
             $view = $('#febs-customer'),
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
-            sortObject = {field: 'purchasingDate', type: null},
-            tableIns,
-            purchasingDateFrom,
-            purchasingDateTo;
+            sortObject = {field: 'customerId', type: null},
+            tableIns;
 
         form.render();
 
         initTable();
-
-        laydate.render({
-            elem: '#purchasingDate',
-            range: true,
-            trigger: 'click'
-        });
 
         dropdown.render({
             elem: $view.find('.action-more'),
@@ -194,10 +203,7 @@
 
         $reset.on('click', function () {
             $searchForm[0].reset();
-            treeSelect.revokeNode('dept');
             sortObject.type = 'null';
-            purchasingDateTo = null;
-            purchasingDateFrom = null;
             tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
         });
 
@@ -212,6 +218,7 @@
                     {field: 'name', title: '姓名'},
                     {title: '性别', templet: '#customer-gender'},
                     {field: 'phone', title: '手机', minWidth: 165},
+                    {title: '类型', templet: '#customer-type'},
                     {title: '操作', toolbar: '#customer-option', minWidth: 140}
                 ]]
             });
@@ -219,14 +226,6 @@
 
         function getQueryParams() {
             var params = $searchForm.serializeJson();
-            var purchasingDate = params.time;
-            if (purchasingDate) {
-                purchasingDateFrom = purchasingDate.split(' - ')[0];
-                purchasingDateTo = purchasingDate.split(' - ')[1];
-            }
-            params.invalidate_ie_cache = new Date();
-            params.purchasingDateFrom = purchasingDateFrom;
-            params.purchasingDateTo = purchasingDateTo;
             return params;
         }
 

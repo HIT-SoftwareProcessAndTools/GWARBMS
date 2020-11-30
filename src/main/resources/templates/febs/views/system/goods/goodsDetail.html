@@ -31,17 +31,20 @@
 <div class="layui-fluid" id="febs-goods-detail" lay-title="货品信息">
     <div id="goods-info-wrapper">
         <div class="goods-info">
-            <div><span class="layui-icon layui-icon-car"></span> 货品 ID：
+            <div><span class="layui-icon layui-icon-form"></span> 货品 ID：
                 [[${goods.goodsId}]]
             </div>
-            <div><span class="layui-icon layui-icon-car"></span> 货品名：
+            <div><span class="layui-icon layui-icon-component"></span> 货品名：
                 [[${goods.name}]]
             </div>
-            <div><span class="layui-icon layui-icon-car"></span> 价格：
-                [[${goods.price}]]
+            <div><span class="layui-icon layui-icon-rmb"></span> 进货价格：
+                [[${goods.purchasePrice}]]
             </div>
-            <div><span class="layui-icon layui-icon-car"></span> 库存：
-                [[${goods.inventory}]]
+            <div><span class="layui-icon layui-icon-rmb"></span> 批发价格：
+                [[${goods.wholesalePrice}]]
+            </div>
+            <div><span class="layui-icon layui-icon-rmb"></span> 零售价格：
+                [[${goods.retailPrice}]]
             </div>
         </div>
     </div>
