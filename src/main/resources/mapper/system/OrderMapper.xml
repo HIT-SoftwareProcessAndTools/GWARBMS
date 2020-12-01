@@ -24,10 +24,9 @@
         o.create_time createTime,
         o.customer_name customerName,
         o.customer_phone customerPhone,
-        o.order_price orderPrice,
-        o.order_info orderInfo
+        o.order_price orderPrice
         FROM
-        order_single o
+        t_order_retail o
         WHERE 1 = 1
         <if test="order.customerName != null and order.customerName != ''">
             AND o.customer_name = #{order.customerName}
@@ -60,10 +59,9 @@
         o.create_time createTime,
         o.customer_name customerName,
         o.customer_phone customerPhone,
-        o.order_price orderPrice,
-        o.order_info orderInfo
+        o.order_price orderPrice
         FROM
-        order_single o
+        t_order_retail o
         WHERE  o.customer_name = #{customerName}
 
     </select>

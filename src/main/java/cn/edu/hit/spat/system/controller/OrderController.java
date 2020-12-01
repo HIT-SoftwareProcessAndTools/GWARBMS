@@ -49,32 +49,32 @@ public class OrderController extends BaseController {
      * @return
      */
     @GetMapping("list")
-    @RequiresPermissions("user:view")
+    @RequiresPermissions("order:view")
     public GwarbmsResponse orderList(Order order, QueryRequest request) {
         Map<String, Object> dataTable = getDataTable(this.orderService.findOrderDetailList(order, request));
         return new GwarbmsResponse().success().data(dataTable);
     }
 
     /**
-     * 新增零售销售单，零售销售单不用审核。 销售人员拥有权限user:add
+     * 新增零售销售单，零售销售单不用审核。 销售人员拥有权限order:retail
      * @param order 销售单对象
      * @return
      */
     @PostMapping
-    @RequiresPermissions("user:add")
-    @ControllerEndpoint(operation = "新增订单", exceptionMessage = "新增订单失败")
+    @RequiresPermissions("order:retail")
+    @ControllerEndpoint(operation = "新增零售单", exceptionMessage = "新增零售单失败")
     public GwarbmsResponse addUser(@Valid Order order) {
         this.orderService.createOrder(order);
         return new GwarbmsResponse().success();
     }
 
     /**
-     * 删除零售单 零售销售单只能由销售人员进行删除，销售人员拥有权限user:delete。
+     * 删除零售单 零售销售单只能由销售人员进行删除，销售人员拥有权限order:delete。
      * @param orderIds 销售单编号
      * @return
      */
     @GetMapping("delete/{userIds}")
-    @RequiresPermissions("user:delete")
+    @RequiresPermissions("order:delete")
     @ControllerEndpoint(operation = "删除订单", exceptionMessage = "删除订单失败")
     public GwarbmsResponse deleteOrders(@NotBlank(message = "{required}") @PathVariable String orderIds) {
         String[] ids = orderIds.split(StringPool.COMMA);
@@ -83,12 +83,12 @@ public class OrderController extends BaseController {
     }
 
     /**
-     * 修改零售销售单，零售销售单只能由销售人员进行修改。销售人员有user:update 权限
+     * 修改零售销售单，零售销售单只能由销售人员进行修改。销售人员有order:update 权限
      * @param order 销售单对象
      * @return
      */
     @PostMapping("update")
-    @RequiresPermissions("user:update")
+    @RequiresPermissions("order:update")
     @ControllerEndpoint(operation = "修改订单", exceptionMessage = "修改订单失败")
     public GwarbmsResponse updateOrder(@Valid Order order) {
         if (order.getOrderId() == null) {

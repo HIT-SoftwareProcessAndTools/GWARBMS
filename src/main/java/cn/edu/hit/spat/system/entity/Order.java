@@ -44,13 +44,13 @@ public class Order implements Serializable {
      * 零售销售单价格
      */
     @TableField("order_price")
-    private Float price;
+    private Double orderPrice;
 
     /**
-     * 零售销售单详情
+     * 对应商品IDs
      */
-    @TableField("order_info")
-    private String orderInfo;
+    @TableField(exist = false)
+    private String goodsIds;
 
 
     /**
