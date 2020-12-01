@@ -14,11 +14,7 @@ import java.util.Date;
  * 零售销售单表
  */
 @Data
-<<<<<<< HEAD
 @TableName("t_order_retail")
-=======
-@TableName("t_order_single")
->>>>>>> ab3b20dc4153917df2b7d3b17a10f7206cdfa368
 public class Order implements Serializable {
 
     private static final long serialVersionUID = -4352868070794165001L;
