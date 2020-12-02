@@ -1,0 +1,281 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-orders" lay-title="订单管理">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="orders-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">客户姓名</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="customerName" autocomplete="on"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">货品ID</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="goodsId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain table-action"
+                                     id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain table-action"
+                                     id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="orders:create">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="ordersTable" lay-data="{id: 'ordersTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="orders-status">
+    {{#
+    var status = {
+    2: {title: '已归档', color: 'blue'},
+    1: {title: '已审核', color: 'green'},
+    0: {title: '待审核', color: 'volcano'}
+    }[d.status];
+    }}
+    <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            laydate = layui.laydate,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            $view = $('#febs-orders'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'ordersId', type: null},
+            tableIns;
+
+        form.render();
+
+        initTable();
+
+        laydate.render({
+            elem: '#orders-createTime',
+            range: true,
+            trigger: 'click'
+        });
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('ordersTable');
+                if (name === 'create') {
+                    febs.modal.open('新增订单', 'system/orders/create', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        offset: '30px',
+                        yes: function (index, layero) {
+                            $('#orders_create').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#orders_create').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'audit') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要审核的订单');
+                    } else {
+                        febs.modal.confirm('审核订单', '确定审核该订单？', function () {
+                            var ordersIds = [];
+                            //添加选中的订单的状态数组
+                            var ordersSelectedStatus = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                ordersIds.push(item.ordersId);
+                                ordersSelectedStatus.push(item.status);
+                            });
+                            auditorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                        });
+                    }
+                }
+                if (name === 'archive') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择待归档的订单');
+                    } else {
+                        febs.modal.confirm('归档订单', '确定归档该订单？', function () {
+                            var ordersIds = [];
+                            //添加选中的订单的状态数组
+                            var ordersSelectedStatus = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                ordersIds.push(item.ordersId)
+                                ordersSelectedStatus.push(item.status);
+                            });
+                            archiveorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                        });
+                    }
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择待撤销的订单');
+                    } else {
+                        febs.modal.confirm('撤销订单', '确定撤销该订单？', function () {
+                            var ordersIds = [];
+                            var ordersSelectedStatus = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                ordersIds.push(item.ordersId)
+                                ordersSelectedStatus.push(item.status);
+                            });
+                            deleteorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                        });
+                    }
+                }
+            },
+            options: [{
+                name: 'create',
+                title: '新增订单',
+                perms: 'orders:create'
+            }, {
+                name: 'audit',
+                title: '审核订单',
+                perms: 'orders:audit'
+            }, {
+                name: 'delete',
+                title: '撤销订单',
+                perms: 'orders:delete'
+            }, {
+                name: 'archive',
+                title: '归档订单',
+                perms: 'orders:archive'
+            }]
+        });
+
+        table.on('sort(ordersTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    orders: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, orders: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            treeSelect.revokeNode('dept');
+            sortObject.type = 'null';
+            createTimeTo = null;
+            createTimeFrom = null;
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'ordersTable',
+                url: ctx + 'orders/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'ordersId', title: '销售单号'},
+                    {field: 'customerName', title: '客户姓名'},
+                    {field: 'customerPhone', title: '联系方式', minWidth: 165},
+                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
+                    {field: 'goodsId', title: '货品ID'},
+                    {field: 'goodsNum', title: '货品数量'},
+                    {field: 'ordersprice', title: '订单价格'},
+                    {field: 'pricepaid', title: '已收款'},
+                    {field: 'ordersaddress', title: '收货地址', minWidth: 180},
+                    {field: 'storehouse', title: '发货仓库'},
+                    {field: 'status', title: '状态', templet: '#orders-status'},
+                    {title: '操作', toolbar: '#orders-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+            var params = $searchForm.serializeJson();
+            var createTime = params.time;
+            if (createTime) {
+                createTimeFrom = createTime.split(' - ')[0];
+                createTimeTo = createTime.split(' - ')[1];
+            }
+            params.invalidate_ie_cache = new Date();
+            params.createTimeFrom = createTimeFrom;
+            params.createTimeTo = createTimeTo;
+            return params;
+        }
+
+        function auditorders(ordersIds, ordersSelectedStatus) {
+            var oid = ordersIds.split(",");
+            var oss = ordersSelectedStatus.split(",");
+            // 定义标志位
+            var flag = true;
+            for (i = 0; i < oid.length; i++) {
+                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
+                if (oss[i] !== "0") {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                febs.get(ctx + 'orders/audit/' + ordersIds, null, function () {
+                    febs.alert.success('审核订单成功');
+                    $query.click();
+                });
+            } else {
+                febs.alert.warn('选中订单中包含已审核（或已归档），请重新选择！');
+            }
+        }
+
+        function archiveorders(ordersIds, ordersSelectedStatus) {
+            var oid = ordersIds.split(",");
+            var oss = ordersSelectedStatus.split(",");
+            for (i = 0; i < oid.length; i++) {
+                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
+                if (oss[i] !== "1") {
+                    febs.alert.warn('选中订单中包含未审核（或已归档），请重新选择！');
+                    return;
+                }
+            }
+            febs.get(ctx + 'orders/archive/' + ordersIds, null, function () {
+                febs.alert.success('归档订单成功');
+                $query.click();
+            });
+        }
+
+        function deleteorders(ordersIds, ordersSelectedStatus) {
+            var oid = ordersIds.split(",");
+            var oss = ordersSelectedStatus.split(",");
+            for (i = 0; i < oid.length; i++) {
+                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
+                if (oss[i] !== "0") {
+                    febs.alert.warn('订单已通过审核，不允许撤销！');
+                    return;
+                }
+            }
+            febs.get(ctx + 'orders/delete/' + ordersIds, null, function () {
+                febs.alert.success('撤销订单成功');
+                $query.click();
+            });
+        }
+    })
+</script>

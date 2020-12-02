@@ -122,14 +122,16 @@ public class ViewController extends BaseController {
         return GwarbmsUtil.view("system/order/orderCreate");
     }
 
-    /*
-    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/detail/{customername}")
-    @RequiresPermissions("order:view")
-    public String systemOrderDetail(@PathVariable String customername, Model model) {
-        resolveOrderModel(customername, model, true);
-        return GwarbmsUtil.view("system/order/orderDetail");
+    /**
+     * Modified functions=================================================================================
+     * @return
+     */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders")
+    @RequiresPermissions("orders:view")
+    public String systemOrders() {
+        return GwarbmsUtil.view("system/orders/orders");
     }
-    */
+
     /**
      * =====================================================================================================
      * @return
