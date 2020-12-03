@@ -1,0 +1,440 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-orders" lay-title="订单管理">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="orders-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">客户姓名</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="customerName" autocomplete="on"
+                                                   class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">货品ID</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="goodsId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">收货地址</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="ordersaddress" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">发货仓库</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="storehouse" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">创建时间</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="time" id="orders-createTime" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">状态</label>
+                                        <div class="layui-input-inline">
+                                            <select name="status">
+                                                <option value=""></option>
+                                                <option value="0">保存可修改</option>
+                                                <option value="1">提交待审核</option>
+                                                <option value="2">审核待收款</option>
+                                                <option value="3">收款完成</option>
+                                                <option value="4">退货</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain table-action"
+                                     id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain table-action"
+                                     id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="orders:create,orders:audit,orders:submit,orders:pay,orders:return,orders:delete">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="ordersTable" lay-data="{id: 'ordersTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="orders-status">
+    {{#
+    var status = {
+    4: {title: '退货', color: 'yellow'},
+    3: {title: '收款完成', color: 'blue'},
+    2: {title: '审核待收款', color: 'red'},
+    1: {title: '提交待审核', color: 'green'},
+    0: {title: '保存可修改', color: 'volcano'}
+    }[d.status];
+    }}
+    <span class="layui-badge febs-bg-{{status.color}}">{{ status.title }}</span>
+</script>
+<script type="text/html" id="orders-option">
+    <span shiro:lacksPermission="customer:view,customer:update,customer:delete">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="detail" shiro:hasPermission="orders:view"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="edit" shiro:hasPermission="orders:update"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a7;</i></a>
+    <a lay-event="payone" shiro:hasPermission="orders:payone"><i
+            class="layui-icon febs-edit-area febs-red">&#xe7a9;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            laydate = layui.laydate,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            treeSelect = layui.treeSelect,
+            dropdown = layui.dropdown,
+            $view = $('#febs-orders'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'createTime', type: null},
+            tableIns,
+            createTimeFrom,
+            createTimeTo;
+
+        form.render();
+
+        initTable();
+
+        laydate.render({
+            elem: '#orders-createTime',
+            range: true,
+            trigger: 'click'
+        });
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('ordersTable');
+                if (name === 'create') {
+                    febs.modal.open('新增订单', 'system/orders/create', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        offset: '30px',
+                        yes: function (index, layero) {
+                            $('#orders_create').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#orders_create').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+                if (name === 'audit') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择需要审核的订单');
+                    } else {
+                        febs.modal.confirm('审核订单', '确定审核该订单？', function () {
+                            var ordersIds = [];
+                            //添加选中的订单的状态数组
+                            var ordersSelectedStatus = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                ordersIds.push(item.ordersId);
+                                ordersSelectedStatus.push(item.status);
+                            });
+                            auditorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                        });
+                    }
+                }
+                if (name === 'submit') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择待提交的订单');
+                    } else {
+                        febs.modal.confirm('提交订单', '确定提交该订单？', function () {
+                            var ordersIds = [];
+                            //添加选中的订单的状态数组
+                            var ordersSelectedStatus = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                ordersIds.push(item.ordersId)
+                                ordersSelectedStatus.push(item.status);
+                            });
+                            submitorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                        });
+                    }
+                }
+                if (name === 'pay') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择完成收款的订单');
+                    } else {
+                        febs.modal.confirm('完成收款', '确定该订单已完成收款？', function () {
+                            var ordersIds = [];
+                            //添加选中的订单的状态数组
+                            var ordersSelectedStatus = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                ordersIds.push(item.ordersId);
+                                ordersSelectedStatus.push(item.status);
+                            });
+                            payorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                        });
+                    }
+                }
+                if (name === 'return') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择退货的订单');
+                    } else {
+                        febs.modal.confirm('退货', '确定退货？', function () {
+                            var ordersIds = [];
+                            //添加选中的订单的状态数组
+                            var ordersSelectedStatus = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                ordersIds.push(item.ordersId);
+                                ordersSelectedStatus.push(item.status);
+                            });
+                            returnorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                        });
+                    }
+                }
+                if (name === 'delete') {
+                    if (!checkStatus.data.length) {
+                        febs.alert.warn('请选择待删除的订单');
+                    } else {
+                        febs.modal.confirm('删除订单', '确定删除该订单？', function () {
+                            var ordersIds = [];
+                            var ordersSelectedStatus = [];
+                            layui.each(checkStatus.data, function (key, item) {
+                                ordersIds.push(item.ordersId)
+                                ordersSelectedStatus.push(item.status);
+                            });
+                            deleteorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                        });
+                    }
+                }
+            },
+            options: [{
+                name: 'create',
+                title: '新增订单',
+                perms: 'orders:create'
+            }, {
+                name: 'audit',
+                title: '审核订单',
+                perms: 'orders:audit'
+            }, {
+                name: 'delete',
+                title: '删除订单',
+                perms: 'orders:delete'
+            }, {
+                name: 'submit',
+                title: '提交订单',
+                perms: 'orders:submit'
+            }, {
+                name: 'pay',
+                title: '完成收款',
+                perms: 'orders:pay'
+            }, {
+                name: 'return',
+                title: '订单退货',
+                perms: 'orders:return'
+            }]
+        });
+
+        table.on('tool(ordersTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+                febs.modal.view('订单信息', 'system/orders/detail/' + data.ordersId, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+            if (layEvent === 'payone') {
+                febs.modal.confirm('分期付款', '确定已收取本期款项？', function () {
+                    payoneOrders(data.ordersId);
+                });
+            }
+            if (layEvent === 'edit') {
+                febs.modal.open('修改订单', 'system/orders/update/' + data.ordersId, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    offset: '30px',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#orders-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        treeSelect.render({
+            elem: $view.find('#dept'),
+            type: 'get',
+            data: ctx + 'dept/select/tree',
+            placeholder: '请选择',
+            search: false
+        });
+
+        table.on('sort(ordersTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    orders: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, orders: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            treeSelect.revokeNode('dept');
+            sortObject.type = 'null';
+            createTimeTo = null;
+            createTimeFrom = null;
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'ordersTable',
+                url: ctx + 'orders/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'ordersId', title: '销售单号'},
+                    {field: 'customerName', title: '客户姓名'},
+                    {field: 'goodsId', title: '货品ID'},
+                    {field: 'goodsNum', title: '货品数量'},
+                    {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
+                    {field: 'ordersprice', title: '订单价格', sort: true},
+                    {field: 'ordersaddress', title: '收货地址', minWidth: 100},
+                    {field: 'storehouse', title: '发货仓库'},
+                    {field: 'status', title: '状态', templet: '#orders-status'},
+                    {title: '操作', toolbar: '#orders-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+            var params = $searchForm.serializeJson();
+            var createTime = params.time;
+            if (createTime) {
+                createTimeFrom = createTime.split(' - ')[0];
+                createTimeTo = createTime.split(' - ')[1];
+            }
+            params.invalidate_ie_cache = new Date();
+            params.createTimeFrom = createTimeFrom;
+            params.createTimeTo = createTimeTo;
+            return params;
+        }
+
+        //审核订单：已提交（1）才可以审核
+        function auditorders(ordersIds, ordersSelectedStatus) {
+            var oid = ordersIds.split(",");
+            var oss = ordersSelectedStatus.split(",");
+            for (i = 0; i < oid.length; i++) {
+                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
+                if (oss[i] !== "1") {
+                    febs.alert.warn('只有已提交的订单才可以审核，请重新选择！');
+                    return;
+                }
+            }
+            febs.get(ctx + 'orders/audit/' + ordersIds, null, function () {
+                febs.alert.success('审核订单成功');
+                $query.click();
+            });
+        }
+
+        //提交订单，只有状态为保存待提交（0）时才可以进行提交
+        function submitorders(ordersIds, ordersSelectedStatus) {
+            var oid = ordersIds.split(",");
+            var oss = ordersSelectedStatus.split(",");
+            for (i = 0; i < oid.length; i++) {
+                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
+                if (oss[i] !== "0") {
+                    febs.alert.warn('只有订单状态为保存待提交时才可以进行提交，请重新选择！');
+                    return;
+                }
+            }
+            febs.get(ctx + 'orders/submit/' + ordersIds, null, function () {
+                febs.alert.success('提交订单成功');
+                $query.click();
+            });
+        }
+
+        //完成收款，只有订单在已审核未收款的状态下才能完成收款
+        function payorders(ordersIds, ordersSelectedStatus) {
+            var oid = ordersIds.split(",");
+            var oss = ordersSelectedStatus.split(",");
+            for (i = 0; i < oid.length; i++) {
+                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
+                if (oss[i] !== "2") {
+                    febs.alert.warn('只有订单在审核通过的收款状态下才可以完成收款，请重新选择！');
+                    return;
+                }
+            }
+            febs.get(ctx + 'orders/pay/' + ordersIds, null, function () {
+                febs.alert.success('订单完成收款');
+                $query.click();
+            });
+        }
+
+        //退货，只有商家收回货品（订单审核后的任意状态（2、3）才能完成退货
+        function returnorders(ordersIds, ordersSelectedStatus) {
+            var oid = ordersIds.split(",");
+            var oss = ordersSelectedStatus.split(",");
+            for (i = 0; i < oid.length; i++) {
+                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
+                if (oss[i] !== "2" && oss[i] !== "3") {
+                    febs.alert.warn('选中订单中包含无法退货的订单，请重新选择！');
+                    return;
+                }
+            }
+            febs.get(ctx + 'orders/return/' + ordersIds, null, function () {
+                febs.alert.success('订单完成退货');
+                $query.click();
+            });
+        }
+
+        function deleteorders(ordersIds, ordersSelectedStatus) {
+            var oid = ordersIds.split(",");
+            var oss = ordersSelectedStatus.split(",");
+            for (i = 0; i < oid.length; i++) {
+                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
+                if (oss[i] !== "0") {
+                    febs.alert.warn('订单已提交，不允许删除！');
+                    return;
+                }
+            }
+            febs.get(ctx + 'orders/delete/' + ordersIds, null, function () {
+                febs.alert.success('删除订单成功');
+                $query.click();
+            });
+        }
+
+        function payoneOrders(ordersId) {
+            febs.get(ctx + 'orders/payone/' + ordersId, null, function () {
+                febs.alert.success('本期收款成功');
+                $query.click();
+            });
+        }
+    })
+</script>

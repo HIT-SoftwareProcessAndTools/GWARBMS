@@ -34,6 +34,7 @@ public class ViewController extends BaseController {
     private final IUserDataPermissionService userDataPermissionService;
     /* 新增数据 */
     private final ICustomerService customerService;
+    private final IOrdersService ordersService;
     private final IGoodsService goodsService;
     private final IStorageService storageService;
     private final IRecordService recordService;
@@ -120,14 +121,42 @@ public class ViewController extends BaseController {
         return GwarbmsUtil.view("system/order/orderCreate");
     }
 
-    /*
-    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/detail/{customername}")
-    @RequiresPermissions("order:view")
-    public String systemOrderDetail(@PathVariable String customername, Model model) {
-        resolveOrderModel(customername, model, true);
-        return GwarbmsUtil.view("system/order/orderDetail");
+    /**
+     * orders function
+     * @author Daijiajia
+     */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/wholesale")
+    @RequiresPermissions("orders:view")
+    public String systemOrders() {
+        return GwarbmsUtil.view("system/orders/orders");
     }
-    */
+
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/wholesale/create")
+    @RequiresPermissions("orders:create")
+    public String systemOrdersCreate() {
+        return GwarbmsUtil.view("system/orders/ordersCreate");
+    }
+
+    /* 批发销售单详情 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders/detail/{ordersId}")
+    @RequiresPermissions("orders:view")
+    public String systemOrdersDetail(@PathVariable Long ordersId, Model model) {
+        resolveOrdersModel(ordersId, model);
+        return GwarbmsUtil.view("system/orders/ordersDetail");
+    }
+
+    /* 修改批发销售单 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders/update/{ordersId}")
+    @RequiresPermissions("orders:update")
+    public String systemOrdersUpdate(@PathVariable Long ordersId, Model model) {
+        resolveOrdersModel(ordersId, model);
+        return GwarbmsUtil.view("system/orders/ordersUpdate");
+    }
+
+    private void resolveOrdersModel(Long ordersId, Model model) {
+        Orders orders = this.ordersService.findById(ordersId);
+        model.addAttribute("orders", orders);
+    }
     /**
      * =====================================================================================================
      * @return
