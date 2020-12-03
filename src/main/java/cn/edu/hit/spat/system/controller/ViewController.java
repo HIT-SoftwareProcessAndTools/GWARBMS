@@ -7,11 +7,9 @@ import cn.edu.hit.spat.common.utils.DateUtil;
 import cn.edu.hit.spat.common.utils.GwarbmsUtil;
 import cn.edu.hit.spat.system.entity.Customer;
 import cn.edu.hit.spat.system.entity.Goods;
+import cn.edu.hit.spat.system.entity.Orders;
 import cn.edu.hit.spat.system.entity.User;
-import cn.edu.hit.spat.system.service.ICustomerService;
-import cn.edu.hit.spat.system.service.IGoodsService;
-import cn.edu.hit.spat.system.service.IUserDataPermissionService;
-import cn.edu.hit.spat.system.service.IUserService;
+import cn.edu.hit.spat.system.service.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -38,6 +36,7 @@ public class ViewController extends BaseController {
     private final IUserDataPermissionService userDataPermissionService;
     /* 新增数据 */
     private final ICustomerService customerService;
+    private final IOrdersService ordersService;
     private final IGoodsService goodsService;
 
     @GetMapping("login")
@@ -123,8 +122,8 @@ public class ViewController extends BaseController {
     }
 
     /**
-     * Modified functions=================================================================================
-     * @return
+     * orders function
+     * @author Daijiajia
      */
     @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders")
     @RequiresPermissions("orders:view")
@@ -132,6 +131,32 @@ public class ViewController extends BaseController {
         return GwarbmsUtil.view("system/orders/orders");
     }
 
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders/create")
+    @RequiresPermissions("orders:create")
+    public String systemOrdersCreate() {
+        return GwarbmsUtil.view("system/orders/ordersCreate");
+    }
+
+    /* 批发销售单详情 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders/detail/{ordersId}")
+    @RequiresPermissions("orders:view")
+    public String systemOrdersDetail(@PathVariable Long ordersId, Model model) {
+        resolveOrdersModel(ordersId, model);
+        return GwarbmsUtil.view("system/orders/ordersDetail");
+    }
+
+    /* 修改批发销售单 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders/update/{ordersId}")
+    @RequiresPermissions("orders:update")
+    public String systemOrdersUpdate(@PathVariable Long ordersId, Model model) {
+        resolveOrdersModel(ordersId, model);
+        return GwarbmsUtil.view("system/orders/ordersUpdate");
+    }
+
+    private void resolveOrdersModel(Long ordersId, Model model) {
+        Orders orders = this.ordersService.findById(ordersId);
+        model.addAttribute("orders", orders);
+    }
     /**
      * =====================================================================================================
      * @return

@@ -20,25 +20,25 @@ public class Orders implements Serializable {
     private static final long serialVersionUID = -4352868070794165001L;
 
     /**
-     * 订单状态：待提交
+     * 订单状态：已保存，待提交
      */
     public static final String STATUS_SAVED = "0";
     /**
-     * 订单状态：待审核
+     * 订单状态：已提交，待审核
      */
     public static final String STATUS_AUDITING = "1";
     /**
-     * 订单状态：待收款
+     * 订单状态：已审核，收款中
      */
     public static final String STATUS_PAYING = "2";
     /**
-     * 订单状态：归档
+     * 订单状态：收款完毕，已归档
      */
     public static final String STATUS_VALID = "3";
     /**
-     * 订单状态：归档
+     * 订单状态：退货
      */
-    public static final String STATUS_RETURNED = "3";
+    public static final String STATUS_RETURNED = "4";
 
     /**
      * 批发销售单 ID
@@ -74,18 +74,37 @@ public class Orders implements Serializable {
      * 订单价格
      */
     @TableField("orders_price")
-    private Long ordersprice;
+    private Double ordersprice;
 
     /**
      * 订单已收金额
      */
     @TableField("price_paid")
-    private Long pricepaid;
+    private Double pricepaid;
+
+    /**
+     * 订单分期数
+     */
+    @TableField("orders_period")
+    private Double ordersperiod;
+
     /**
      * 状态 0待审核 1审核中 2归档
      */
     @TableField("status")
     private String status;
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     /**
      * 创建时间
@@ -104,4 +123,10 @@ public class Orders implements Serializable {
      */
     @TableField("storehouse")
     private String storehouse;
+
+    @TableField(exist = false)
+    private String createTimeFrom;
+
+    @TableField(exist = false)
+    private String createTimeTo;
 }

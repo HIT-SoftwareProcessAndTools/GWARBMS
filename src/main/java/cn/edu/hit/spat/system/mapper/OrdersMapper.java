@@ -14,12 +14,12 @@ import java.util.List;
 public interface OrdersMapper extends BaseMapper<Orders> {
 
     /**
-     * 通过客户名称查找批发销售单
+     * 通过销售单ID查找批发销售单
      *
-     * @param customerName 客户姓名
+     * @param ordersId 销售单ID
      * @return 批发销售单
      */
-    Orders findByName(String customerName);
+    Orders findById(Long ordersId);
 
     /**
      * 查找零售销售单详细信息
@@ -47,5 +47,13 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * @param statusAuditing 更新后的订单状态
      *
      */
-    void updateById(String id, String statusAuditing);
+    void updatestateById(String id, String statusAuditing);
+
+    /**
+     * 通过订单ID更新订单已收取款项
+     *
+     * @param id 订单id
+     *
+     */
+    void updatepricepaidById(String id,Double price);
 }

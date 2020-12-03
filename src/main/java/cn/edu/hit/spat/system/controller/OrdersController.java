@@ -4,12 +4,12 @@ import cn.edu.hit.spat.common.annotation.ControllerEndpoint;
 import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
+import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.system.entity.Orders;
 import cn.edu.hit.spat.system.service.IOrdersService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +35,9 @@ public class OrdersController extends BaseController {
         return this.ordersService.findOrdersDetailList(customername);
     }
 
-    @GetMapping("check/{customername}")
-    public boolean checkCustomerName(@NotBlank(message = "{required}") @PathVariable String customername, String ordersId) {
-        return this.ordersService.findByName(customername) == null || StringUtils.isNotBlank(ordersId);
+    @GetMapping("{ordersId}")
+    public Orders getOrders(@NotBlank(message = "{required}") @PathVariable Long ordersId) {
+        return this.ordersService.findOrdersDetailList(ordersId);
     }
 
     @GetMapping("list")
@@ -55,12 +55,31 @@ public class OrdersController extends BaseController {
         return new GwarbmsResponse().success();
     }
 
-    @GetMapping("archive/{ordersIds}")
-    @RequiresPermissions("orders:archive")
+    @PostMapping("update")
+    @RequiresPermissions("orders:update")
+    @ControllerEndpoint(operation = "修改销售单", exceptionMessage = "修改销售单失败")
+    public GwarbmsResponse updateOrders(@Valid Orders orders) {
+        if (orders.getOrdersId() == null) {
+            throw new GwarbmsException("销售单ID为空");
+        }
+        this.ordersService.updateOrders(orders);
+        return new GwarbmsResponse().success();
+    }
+
+    @GetMapping("payone/{ordersId}")
+    @RequiresPermissions("orders:payone")
+    @ControllerEndpoint(operation = "分期付款", exceptionMessage = "本期付款失败")
+    public GwarbmsResponse payoneOrders(@NotBlank(message = "{required}") @PathVariable String ordersId) {
+        this.ordersService.payoneOrders(ordersId);
+        return new GwarbmsResponse().success();
+    }
+
+    @GetMapping("submit/{ordersIds}")
+    @RequiresPermissions("orders:submit")
     @ControllerEndpoint(operation = "提交订单", exceptionMessage = "提交订单失败")
-    public GwarbmsResponse archiveOrders(@NotBlank(message = "{required}") @PathVariable String orderIds) {
-        String[] ids = orderIds.split(StringPool.COMMA);
-        this.ordersService.archiveOrders(ids);
+    public GwarbmsResponse archiveOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
+        String[] ids = ordersIds.split(StringPool.COMMA);
+        this.ordersService.submitOrders(ids);
         return new GwarbmsResponse().success();
     }
 
@@ -73,6 +92,24 @@ public class OrdersController extends BaseController {
         return new GwarbmsResponse().success();
     }
 
+    @GetMapping("pay/{ordersIds}")
+    @RequiresPermissions("orders:pay")
+    @ControllerEndpoint(operation = "收款完毕", exceptionMessage = "订单收款未完成")
+    public GwarbmsResponse payOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
+        String[] ids = ordersIds.split(StringPool.COMMA);
+        this.ordersService.payOrders(ids);
+        return new GwarbmsResponse().success();
+    }
+
+    @GetMapping("return/{ordersIds}")
+    @RequiresPermissions("orders:return")
+    @ControllerEndpoint(operation = "订单退货", exceptionMessage = "订单退货未完成")
+    public GwarbmsResponse returnOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
+        String[] ids = ordersIds.split(StringPool.COMMA);
+        this.ordersService.returnOrders(ids);
+        return new GwarbmsResponse().success();
+    }
+
     @GetMapping("delete/{ordersIds}")
     @RequiresPermissions("orders:delete")
     @ControllerEndpoint(operation = "删除订单", exceptionMessage = "删除订单失败")
@@ -81,13 +118,4 @@ public class OrdersController extends BaseController {
         this.ordersService.deleteOrders(ids);
         return new GwarbmsResponse().success();
     }
-
-//    @GetMapping("archive/{ordersIds}")
-//    @RequiresPermissions("orders:archive")
-//    @ControllerEndpoint(operation = "归档订单", exceptionMessage = "归档订单失败")
-//    public GwarbmsResponse finishOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
-//        String[] ids = ordersIds.split(StringPool.COMMA);
-//        this.ordersService.archiveOrders(ids);
-//        return new GwarbmsResponse().success();
-//    }
 }

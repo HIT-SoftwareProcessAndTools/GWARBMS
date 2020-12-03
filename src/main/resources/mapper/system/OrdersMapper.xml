@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hit.spat.system.mapper.OrdersMapper">
+    <sql id="countOrdersDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        t_order_wholesale u
+        WHERE 1 = 1
+        <if test="orders.customerName != null and orders.customerName != ''">
+            AND u.customer_name = #{orders.customerName}
+        </if>
+        <if test="orders.goodsId != null and orders.goodsId != ''">
+            AND u.goods_id = #{orders.goodsId}
+        </if>
+        <if test="orders.createTimeFrom != null and orders.createTimeFrom !=''">
+            And u.create_time &gt; #{orders.createTimeFrom}
+        </if>
+        <if test="orders.createTimeTo!= null and orders.createTimeTo !=''">
+            And u.create_time &lt; #{orders.createTimeTo}
+        </if>
+        <if test="orders.status != null and orders.status != ''">
+            AND u.status = #{orders.status}
+        </if>
+        <if test="orders.ordersaddress != null and orders.ordersaddress != ''">
+            AND u.orders_address = #{orders.ordersaddress}
+        </if>
+        <if test="orders.storehouse != null and orders.storehouse != ''">
+            AND u.storehouse = #{orders.storehouse}
+        </if>
+    </sql>
+    <sql id="findOrdersDetailSql">
+        SELECT
+        u.orders_id ordersId,
+        u.customer_name customerName,
+        u.customer_phone customerPhone,
+        u.status status,
+        u.create_time createTime,
+        u.goods_id goodsId,
+        u.goods_num goodsNum,
+        u.orders_address ordersaddress,
+        u.price_paid pricepaid,
+        u.orders_price ordersprice,
+        u.storehouse storehouse,
+        u.orders_period ordersperiod
+        FROM
+        t_order_wholesale u
+        WHERE 1 = 1
+        <if test="orders.customerName != null and orders.customerName != ''">
+            AND u.customer_name = #{orders.customerName}
+        </if>
+        <if test="orders.goodsId != null and orders.goodsId != ''">
+            AND u.goods_id = #{orders.goodsId}
+        </if>
+        <if test="orders.createTimeFrom != null and orders.createTimeFrom !=''">
+            And u.create_time &gt; #{orders.createTimeFrom}
+        </if>
+        <if test="orders.createTimeTo!= null and orders.createTimeTo !=''">
+            And u.create_time &lt; #{orders.createTimeTo}
+        </if>
+        <if test="orders.status != null and orders.status != ''">
+            AND u.status = #{orders.status}
+        </if>
+        <if test="orders.ordersaddress != null and orders.ordersaddress != ''">
+            AND u.orders_address = #{orders.ordersaddress}
+        </if>
+        <if test="orders.storehouse != null and orders.storehouse != ''">
+            AND u.storehouse = #{orders.storehouse}
+        </if>
+    </sql>
+    <select id="countOrdersDetail" parameterType="cn.edu.hit.spat.system.entity.Orders" resultType="long">
+        <include refid="countOrdersDetailSql"/>
+    </select>
+
+    <select id="findOrdersDetailPage" parameterType="cn.edu.hit.spat.system.entity.Orders" resultType="cn.edu.hit.spat.system.entity.Orders">
+        <include refid="findOrdersDetailSql"/>
+    </select>
+
+    <select id="findOrdersDetail" parameterType="cn.edu.hit.spat.system.entity.Orders" resultType="cn.edu.hit.spat.system.entity.Orders">
+        <include refid="findOrdersDetailSql"/>
+    </select>
+
+    <select id="findById" parameterType="Long" resultType="cn.edu.hit.spat.system.entity.Orders">
+        SELECT
+        u.orders_id ordersId,
+        u.customer_name customerName,
+        u.customer_phone customerPhone,
+        u.status status,
+        u.create_time createTime,
+        u.goods_id goodsId,
+        u.goods_num goodsNum,
+        u.orders_address ordersaddress,
+        u.price_paid pricepaid,
+        u.orders_price ordersprice,
+        u.storehouse storehouse,
+        u.orders_period ordersperiod
+        FROM
+        t_order_wholesale u
+        WHERE  u.orders_id = #{orders.ordersId}
+    </select>
+
+    <update id="updatestateById" parameterType="map">
+        UPDATE t_order_wholesale SET status=#{param2} WHERE orders_id=#{param1}
+    </update>
+
+    <update id="updatepricepaidById" parameterType="map">
+        UPDATE t_order_wholesale SET price_paid=#{param2} WHERE orders_id=#{param1}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        DELETE FROM t_order_wholesale WHERE orders_id=#{param1}
+    </delete>
+</mapper>
