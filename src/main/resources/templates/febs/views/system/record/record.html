@@ -1,0 +1,203 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-record" lay-title="库存记录">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="record-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">记录 ID</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="recordId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">仓库ID</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="storageId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">仓库名</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="storageName" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">货品ID</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="goodsId" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">货品名</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="goodsName" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">数量</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="number" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-blue-plain table-action" id="query">
+                                    <i class="layui-icon">&#xe848;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary febs-button-green-plain table-action" id="reset">
+                                    <i class="layui-icon">&#xe79b;</i>
+                                </div>
+                                <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
+                                     shiro:hasAnyPermissions="record:view,record:create,record:update,record:out">
+                                    <i class="layui-icon">&#xe875;</i>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="recordTable" lay-data="{id: 'recordTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="record-option">
+    <span shiro:lacksPermission="record:view">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="edit" shiro:hasPermission="record:update"><i
+            class="layui-icon febs-edit-area febs-green">&#xe624;</i></a>
+    <a lay-event="del" shiro:hasPermission="record:out"><i
+            class="layui-icon febs-edit-area febs-red">&#xe67e;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            dropdown = layui.dropdown,
+            $view = $('#febs-record'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'recordId', type: null},
+            tableIns;
+
+        form.render();
+
+        initTable();
+
+        dropdown.render({
+            elem: $view.find('.action-more'),
+            click: function (name, elem, event) {
+                var checkStatus = table.checkStatus('recordTable');
+                if (name === 'create') {
+                    febs.modal.open('新货品入库', 'system/record/create', {
+                        btn: ['提交', '重置'],
+                        area: $(window).width() <= 750 ? '95%' : '50%',
+                        offset: '30px',
+                        yes: function (index, layero) {
+                            $('#record-add').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            $('#record-add').find('#reset').trigger('click');
+                            return false;
+                        }
+                    });
+                }
+            },
+            options: [{
+                name: 'create',
+                title: '新货品入库',
+                perms: 'record:create'
+            }]
+        });
+
+        table.on('tool(recordTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            // if (layEvent === 'detail') {
+            //     febs.modal.view('记录信息', 'system/record/detail/' + data.recordId, {
+            //         area: $(window).width() <= 750 ? '95%' : '660px'
+            //     });
+            // }
+            if (layEvent === 'edit') {
+                febs.modal.open('已有货品入库', 'system/record/update/' + data.recordId, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    offset: '30px',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#record-update').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+            if (layEvent === 'del') {
+                febs.modal.open('货品出库', 'system/record/out/' + data.recordId, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    offset: '30px',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#record-out').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        });
+
+        table.on('sort(recordTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'recordTable',
+                url: ctx + 'record/list',
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'recordId', title: '记录ID', minWidth: 100},
+                    {field: 'storageId', title: '仓库ID'},
+                    {field: 'storageName', title: '仓库名'},
+                    {field: 'goodsId', title: '货品ID'},
+                    {field: 'goodsName', title: '货品名'},
+                    {field: 'number', title: '数量'},
+                    {title: '操作', toolbar: '#record-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+            var params = $searchForm.serializeJson();
+            return params;
+        }
+
+    })
+</script>

@@ -1,0 +1,117 @@
+<style>
+    #record-out {
+        padding: 20px 25px 25px 0;
+    }
+
+    #record-out .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+
+    #record-out #data-permission-tree-block {
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 3px 0;
+    }
+
+    #record-out .layui-treeSelect .ztree li span.button.switch {
+        top: 1px;
+        left: 3px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: visible !important;
+    }
+</style>
+<div class="layui-fluid" id="record-out" lay-title="货品出库">
+    <form class="layui-form" action="" lay-filter="record-out-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">记录ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="recordId" data-th-value="${record.recordId}" class="layui-input"
+                       readOnly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">仓库ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="storageId" data-th-value="${record.storageId}" class="layui-input"
+                       readOnly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">仓库名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="storageName" data-th-value="${record.storageName}" class="layui-input"
+                       readOnly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">货品ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsId" data-th-value="${record.goodsId}" class="layui-input"
+                       readOnly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">货品名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsName" data-th-value="${record.goodsName}" class="layui-input"
+                       readOnly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">出库数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="number" data-th-id="${record.number}" autoComplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="record-out-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            record = [[${record}]],
+            $view = $('#record-out');
+
+        form.render();
+        initVehicleValue();
+
+        function initVehicleValue() {
+            form.val("record-out-form", {
+                "recordId": record.recordId,
+                "storageId": record.storageId,
+                "storageName": record.storageName,
+                "goodsId": record.goodsId,
+                "goodsName": record.goodsName,
+                "number": 0,
+            });
+        }
+
+        form.on('submit(record-out-form-submit)', function (data) {
+            if (data.field.number<=0) {
+                febs.alert.warn('出库数量必须>=0 ！');
+                return false;
+            }
+            if (data.field.number>record.number) {
+                febs.alert.warn('出库数量不能大于库存数量 ！');
+                return false;
+            }
+            data.field.number = parseInt(record.number) - parseInt(data.field.number)
+            febs.post(ctx + 'record/out', data.field, function () {
+                layer.closeAll();
+                // data.field是在页面中输入的数据,record是原来表单中的对象
+                febs.alert.success('仓库 ' + record.recordId + ' 的数据修改成功！');
+                $('#febs-record').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>
