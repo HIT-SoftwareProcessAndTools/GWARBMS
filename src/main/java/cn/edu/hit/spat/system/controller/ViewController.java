@@ -125,13 +125,13 @@ public class ViewController extends BaseController {
      * orders function
      * @author Daijiajia
      */
-    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders")
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/wholesale")
     @RequiresPermissions("orders:view")
     public String systemOrders() {
         return GwarbmsUtil.view("system/orders/orders");
     }
 
-    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders/create")
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/wholesale/create")
     @RequiresPermissions("orders:create")
     public String systemOrdersCreate() {
         return GwarbmsUtil.view("system/orders/ordersCreate");

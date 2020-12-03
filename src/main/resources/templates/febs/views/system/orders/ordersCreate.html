@@ -52,9 +52,9 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">货物总价：</label>
+            <label class="layui-form-label">付款分期：</label>
             <div class="layui-input-block">
-                <input type="text" name="ordersprice" maxlength="50" autocomplete="off"
+                <input type="text" name="ordersperiod" maxlength="50" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
@@ -156,7 +156,7 @@
         form.on('submit(orders-create-form-submit)', function (data) {
             febs.post(ctx + 'orders', data.field, function () {
                 layer.closeAll();
-                febs.alert.success('新增订单成功！');
+                febs.alert.success('新增销售单成功！');
                 $('#febs-orders').find('#query').click();
             });
             return false;

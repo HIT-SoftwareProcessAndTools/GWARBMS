@@ -6,6 +6,7 @@ import cn.edu.hit.spat.common.utils.SortUtil;
 import cn.edu.hit.spat.system.entity.Customer;
 import cn.edu.hit.spat.system.entity.Orders;
 import cn.edu.hit.spat.system.mapper.OrdersMapper;
+import cn.edu.hit.spat.system.service.IGoodsService;
 import cn.edu.hit.spat.system.service.IOrdersService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -28,6 +29,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> implements IOrdersService {
+
+    private final IGoodsService goodsService;
+
     @Override
     public Orders findById(Long ordersId) {
         return this.baseMapper.findById(ordersId);
@@ -68,6 +72,7 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orders.setCreateTime(new Date());
         orders.setPricepaid((double) 0);
         orders.setStatus(Orders.STATUS_SAVED);
+        orders.setOrdersprice(goodsService.findByGoodsId(orders.getGoodsId()).getWholesalePrice()*orders.getGoodsNum());
         save(orders);
     }
 
