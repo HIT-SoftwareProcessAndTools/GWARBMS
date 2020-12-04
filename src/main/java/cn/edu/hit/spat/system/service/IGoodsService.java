@@ -45,9 +45,9 @@ public interface IGoodsService extends IService<Goods> {
     /**
      * 删除
      *
-     * @param goodsId 货品 id数组
+     * @param goodsIds 货品 id数组
      */
-    void deleteGoods(String goodsId);
+    void deleteGoods(String[] goodsIds);
 
     /**
      * 修改

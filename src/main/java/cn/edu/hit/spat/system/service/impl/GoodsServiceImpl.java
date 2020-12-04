@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,8 +44,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public Goods findGoodsDetailList(Long goodsId) {
         Goods param = new Goods();
         param.setGoodsId(goodsId);
-        List<Goods> orders = this.baseMapper.findGoodsDetail(param);
-        return CollectionUtils.isNotEmpty(orders) ? orders.get(0) : null;
+        List<Goods> goods = this.baseMapper.findGoodsDetail(param);
+        return CollectionUtils.isNotEmpty(goods) ? goods.get(0) : null;
     }
 
     @Override
@@ -57,9 +56,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteGoods(String goodsId) {
-        List<String> list = new ArrayList<>();
-        list.add(goodsId);
+    public void deleteGoods(String[] goodsIds) {
+        List<String> list = Arrays.asList(goodsIds);
         this.removeByIds(list);
     }
 

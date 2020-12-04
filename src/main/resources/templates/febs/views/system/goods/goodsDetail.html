@@ -30,7 +30,7 @@
 </style>
 <div class="layui-fluid" id="febs-goods-detail" lay-title="货品信息">
     <div id="goods-info-wrapper">
-        <div class="goods-info">
+        <div class="goods-info" id="goods-info-content">
             <div><span class="layui-icon layui-icon-form"></span> 货品 ID：
                 [[${goods.goodsId}]]
             </div>
@@ -38,14 +38,31 @@
                 [[${goods.name}]]
             </div>
             <div><span class="layui-icon layui-icon-rmb"></span> 进货价格：
-                [[${goods.purchasePrice}]]
+                [[${goods.purchasePrice}]] 元
             </div>
             <div><span class="layui-icon layui-icon-rmb"></span> 批发价格：
-                [[${goods.wholesalePrice}]]
+                [[${goods.wholesalePrice}]] 元
             </div>
             <div><span class="layui-icon layui-icon-rmb"></span> 零售价格：
-                [[${goods.retailPrice}]]
+                [[${goods.retailPrice}]] 元
             </div>
         </div>
     </div>
 </div>
+
+<script data-th-inline="javascript">
+    layui.use([], function () {
+        var $ = layui.$,
+            goods = [[${goods.detailList}]];
+        if (goods === null)
+            return false;
+        for (var i = 0; i < goods.length; i++) {
+            var str = ""; //定义用于拼接的字符串
+            //拼接
+            str = "<div><span class=\"layui-icon layui-icon-note\"></span> "
+                + goods[i].goodsAttribute + ": " + goods[i].goodsAttributeValue + "</div>";
+            //追加到详细信息中
+            $("#goods-info-content").append(str);
+        }
+    });
+</script>
