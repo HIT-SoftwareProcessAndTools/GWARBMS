@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.ExpiredSessionException;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author XuJian
@@ -389,6 +392,21 @@ public class ViewController extends BaseController {
     public String systemRecordOut(@PathVariable Long recordId, Model model) {
         resolveRecordModel(recordId, model);
         return GwarbmsUtil.view("system/record/recordOut");
+    }
+
+    /* 货品转移*/
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/record/trans/{recordId}")
+    @RequiresPermissions("record:trans")
+    public String systemRecordTrans(@PathVariable Long recordId, Model model) {
+        Record record = this.recordService.findByRecordId(recordId);
+        model.addAttribute("record", record);
+        List<Storage> allStorage = this.storageService.findAllStorage();
+        List<String> allStorageName = new ArrayList<String>();
+        for(Storage x : allStorage){
+            allStorageName.add(x.getStorageName());
+        }
+        model.addAttribute("allStorage", allStorageName);
+        return GwarbmsUtil.view("system/record/recordTrans");
     }
 
     private void resolveRecordModel(Long recordId, Model model) {

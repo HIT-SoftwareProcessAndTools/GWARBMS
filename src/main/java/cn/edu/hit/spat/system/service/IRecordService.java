@@ -2,8 +2,11 @@ package cn.edu.hit.spat.system.service;
 
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.system.entity.Record;
+import cn.edu.hit.spat.system.entity.StorageTrans;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * created by meizhimin on 2020/12/3
@@ -30,10 +33,11 @@ public interface IRecordService extends IService<Record> {
     /**
      * 通过 ID查找详细信息
      *
-     * @param recordId 记录 ID
+     * @param record 记录 ID
      * @return 信息
      */
-    Record findRecordDetailList(Long recordId);
+    List<Record> findRecordList(Record record);
+
 
     /**
      * 新货品入库
@@ -55,4 +59,11 @@ public interface IRecordService extends IService<Record> {
      * @param record 记录
      */
     void outRecord(Record record);
+
+    /**
+     * 货品转移
+     *
+     * @param storageTrans 转移记录
+     */
+    void transRecord(StorageTrans storageTrans, Long desStorageId);
 }

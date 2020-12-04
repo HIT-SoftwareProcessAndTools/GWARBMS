@@ -5,6 +5,8 @@ import cn.edu.hit.spat.system.entity.Storage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * created by meizhimin on 2020/12/2
  */
@@ -27,14 +29,19 @@ public interface IStorageService extends IService<Storage> {
      * @return IPage
      */
     IPage<Storage> findStorageDetailList(Storage storage, QueryRequest request);
+    /**
+     * 查找货品详细信息
+     *
+     */
+    List<Storage> findAllStorage();
     // TODO
     /**
      * 通过 ID查找详细信息
      *
-     * @param storageId 仓库 ID
+     * @param storage 仓库 ID
      * @return 信息
      */
-    Storage findStorageDetailList(Long storageId);
+    List<Storage> findStorageList(Storage storage);
 
     /**
      * 新增

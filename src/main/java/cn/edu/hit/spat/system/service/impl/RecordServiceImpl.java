@@ -2,8 +2,11 @@ package cn.edu.hit.spat.system.service.impl;
 
 import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.entity.QueryRequest;
+import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.common.utils.SortUtil;
 import cn.edu.hit.spat.system.entity.Record;
+import cn.edu.hit.spat.system.entity.Storage;
+import cn.edu.hit.spat.system.entity.StorageTrans;
 import cn.edu.hit.spat.system.mapper.RecordMapper;
 import cn.edu.hit.spat.system.service.IRecordService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -40,13 +43,9 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     }
 
     @Override
-    public Record findRecordDetailList(Long recordId) {
-        Record param = new Record();
-        param.setRecordId(recordId);
-        List<Record> orders = this.baseMapper.findRecordDetail(param);
-        return CollectionUtils.isNotEmpty(orders) ? orders.get(0) : null;
+    public List<Record> findRecordList(Record record) {
+        return this.baseMapper.findRecordDetail(record);
     }
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createRecord(Record record) {
@@ -65,4 +64,38 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         updateById(record);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void transRecord(StorageTrans storageTrans, Long desStorageId) {
+        Long number  = storageTrans.getNumber();
+        Record sourceRecord = new Record();
+        Record desRecord = new Record();
+        sourceRecord.setGoodsId(storageTrans.getGoodsId());
+        sourceRecord.setStorageName(storageTrans.getSourceStorageName());
+        sourceRecord.setGoodsName(storageTrans.getGoodsName());
+        desRecord.setGoodsName(storageTrans.getGoodsName());
+        desRecord.setGoodsId(storageTrans.getGoodsId());
+        desRecord.setStorageName(storageTrans.getDesStorageName());
+
+        List<Record> sourceList = this.baseMapper.findRecordDetail(sourceRecord);
+        if (CollectionUtils.isNotEmpty(sourceList) ){
+            sourceRecord = sourceList.get(0);
+            sourceRecord.setNumber(sourceRecord.getNumber()- number);
+        }else{
+            throw new GwarbmsException("源记录不存在！");
+        }
+
+        List<Record> desList = this.baseMapper.findRecordDetail(desRecord);
+        if (CollectionUtils.isNotEmpty(desList) ){
+            desRecord = desList.get(0);
+            desRecord.setNumber(desRecord.getNumber() + number);
+            updateById(desRecord);
+            updateById(sourceRecord);
+        }else{
+            desRecord.setNumber(number);
+            desRecord.setStorageId(desStorageId);
+            createRecord(desRecord);
+            updateById(sourceRecord);
+        }
+    }
 }

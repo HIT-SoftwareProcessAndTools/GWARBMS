@@ -7,7 +7,6 @@ import cn.edu.hit.spat.system.entity.Storage;
 import cn.edu.hit.spat.system.mapper.StorageMapper;
 import cn.edu.hit.spat.system.service.IStorageService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -39,13 +38,13 @@ public class StorageServiceImpl extends ServiceImpl<StorageMapper, Storage> impl
         SortUtil.handlePageSort(request, page, "storageId", GwarbmsConstant.ORDER_ASC, false);
         return this.baseMapper.findStorageDetailPage(page, storage);
     }
-    
     @Override
-    public Storage findStorageDetailList(Long storageId) {
-        Storage param = new Storage();
-        param.setStorageId(storageId);
-        List<Storage> orders = this.baseMapper.findStorageDetail(param);
-        return CollectionUtils.isNotEmpty(orders) ? orders.get(0) : null;
+    public List<Storage> findAllStorage() {
+        return this.baseMapper.findStorageDetail(new Storage());
+    }
+    @Override
+    public List<Storage> findStorageList(Storage storage) {
+        return this.baseMapper.findStorageDetail(storage);
     }
     
     @Override
@@ -54,7 +53,7 @@ public class StorageServiceImpl extends ServiceImpl<StorageMapper, Storage> impl
         save(storage);
     }
 
-    // TODO 只能删除空仓库
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteStorage(String storageId) {

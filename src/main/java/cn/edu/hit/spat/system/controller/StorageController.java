@@ -5,8 +5,11 @@ import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.exception.GwarbmsException;
+import cn.edu.hit.spat.system.entity.Record;
 import cn.edu.hit.spat.system.entity.Storage;
+import cn.edu.hit.spat.system.service.IRecordService;
 import cn.edu.hit.spat.system.service.IStorageService;
+import com.baomidou.mybatisplus.extension.service.IService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,10 +32,11 @@ import java.util.Map;
 public class StorageController extends BaseController {
 
     private final IStorageService storageService;
+    private final IRecordService recordService;
 
     @GetMapping("{storageId}")
     public Storage getStorage(@NotBlank(message = "{required}") @PathVariable Long storageId) {
-        return this.storageService.findStorageDetailList(storageId);
+        return this.storageService.findByStorageId(storageId);
     }
 
     @GetMapping("list")
@@ -57,6 +62,13 @@ public class StorageController extends BaseController {
             throw new GwarbmsException("仓库ID为空");
         }
         this.storageService.updateStorage(storage);
+        Record record = new Record();
+        record.setStorageId(storage.getStorageId());
+        List<Record> recordList = this.recordService.findRecordList(record);
+        for(Record x : recordList){
+            x.setStorageName(storage.getStorageName());
+            this.recordService.updateRecord(x);
+        }
         return new GwarbmsResponse().success();
     }
 

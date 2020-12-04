@@ -1,0 +1,112 @@
+<style>
+    #record-trans {
+        padding: 20px 25px 25px 0;
+    }
+
+    #record-trans .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+
+    #record-trans #data-permission-tree-block {
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 3px 0;
+    }
+
+    #record-trans .layui-treeSelect .ztree li span.button.switch {
+        top: 1px;
+        left: 3px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: visible !important;
+    }
+</style>
+<div class="layui-fluid" id="record-trans" lay-title="货品转移">
+    <form class="layui-form" action="" lay-filter="record-trans-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">货品ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsId" data-th-value="${record.goodsId}" class="layui-input"
+                       readOnly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">货品名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsName" data-th-value="${record.goodsName}" class="layui-input"
+                       readOnly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">源仓库名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="sourceStorageName" data-th-value="${record.storageName}" class="layui-input"
+                       readOnly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">目的仓库名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="desStorageName"  autoComplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">转移数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="number"  autoComplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="record-trans-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            form = layui.form,
+            record = [[${record}]],
+            allStorage = [[${allStorage}]],
+            $view = $('#record-trans');
+
+        form.render();
+        initVehicleValue();
+
+        function initVehicleValue() {
+            form.val("record-trans-form", {
+                "goodsId": record.goodsId,
+                "goodsName": record.goodsName,
+                "sourceStorageName": record.storageName,
+                "desStorageName":'',
+                "number": 0,
+            });
+        }
+
+        form.on('submit(record-trans-form-submit)', function (data) {
+            if (data.field.number<=0) {
+                febs.alert.warn('转移数量必须>=0 ！');
+                return false;
+            }
+            if (data.field.number>record.number) {
+                febs.alert.warn('转移数量不能大于库存数量 ！');
+                return false;
+            }
+            if(allStorage.indexOf(data.field.desStorageName)<0){
+                febs.alert.warn('目的仓库不存在 ！');
+                return false;
+            }
+            febs.post(ctx + 'record/trans', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('货品成功转移');
+                $('#febs-record').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

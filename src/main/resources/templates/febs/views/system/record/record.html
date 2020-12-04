@@ -53,7 +53,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="record:view,record:create,record:update,record:out">
+                                     shiro:hasAnyPermissions="record:view,record:create,record:update,record:out,record:trans">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
@@ -73,6 +73,8 @@
             class="layui-icon febs-edit-area febs-green">&#xe624;</i></a>
     <a lay-event="del" shiro:hasPermission="record:out"><i
             class="layui-icon febs-edit-area febs-red">&#xe67e;</i></a>
+    <a lay-event="trans" shiro:hasPermission="record:trans"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe609;</i></a>
 </script>
 <script data-th-inline="none" type="text/javascript">
     layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
@@ -87,7 +89,6 @@
             $searchForm = $view.find('form'),
             sortObject = {field: 'recordId', type: null},
             tableIns;
-
         form.render();
 
         initTable();
@@ -95,7 +96,6 @@
         dropdown.render({
             elem: $view.find('.action-more'),
             click: function (name, elem, event) {
-                var checkStatus = table.checkStatus('recordTable');
                 if (name === 'create') {
                     febs.modal.open('新货品入库', 'system/record/create', {
                         btn: ['提交', '重置'],
@@ -119,13 +119,22 @@
         });
 
         table.on('tool(recordTable)', function (obj) {
+            datas = table.cache['recordTable'];
             var data = obj.data,
                 layEvent = obj.event;
-            // if (layEvent === 'detail') {
-            //     febs.modal.view('记录信息', 'system/record/detail/' + data.recordId, {
-            //         area: $(window).width() <= 750 ? '95%' : '660px'
-            //     });
-            // }
+            if (layEvent === 'trans') {
+                febs.modal.open('货品转移', 'system/record/trans/' + data.recordId, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    offset: '30px',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#record-trans').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
             if (layEvent === 'edit') {
                 febs.modal.open('已有货品入库', 'system/record/update/' + data.recordId, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
@@ -198,6 +207,5 @@
             var params = $searchForm.serializeJson();
             return params;
         }
-
     })
 </script>
