@@ -21,13 +21,17 @@
     .layui-layer-page .layui-layer-content {
         overflow: visible !important;
     }
+
+    #goods-detail-table {
+        margin-left: 20px;
+    }
 </style>
 <div class="layui-fluid" id="goods-update" lay-title="修改货品">
-    <form class="layui-form" action="" lay-filter="goods-update-form">
+    <form class="layui-form" action="" lay-filter="goods-update-form" id="goods-update-info">
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">货品ID：</label>
             <div class="layui-input-block">
-                <input type="text" name="goodsId" data-th-value="${goods.goodsId}" class="layui-input" readonly>
+                <input type="text" id="goodsId" name="goodsId" value="${goods.goodsId}" class="layui-input" readonly>
             </div>
         </div>
         <div class="layui-form-item">
@@ -61,21 +65,32 @@
             <button class="layui-btn" lay-submit="" lay-filter="goods-update-form-submit" id="submit"></button>
         </div>
     </form>
+    <div id="goods-detail-table">
+        <table lay-filter="goodsDetailTable" lay-data="{id: 'goodsDetailTable'}"></table>
+    </div>
 </div>
 
+<script type="text/html" id="goods-detail-option">
+    <span shiro:lacksPermission="goods:view">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="edit" shiro:hasPermission="goods:update"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="del" shiro:hasPermission="goods:delete"><i
+            class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
+</script>
 <script data-th-inline="javascript">
-    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
-        var $ = layui.$,
+    layui.use(['febs', 'form', 'formSelects', 'treeSelect', 'eleTree', 'jquery', 'table'], function () {
+        var $ = layui.jquery,
             febs = layui.febs,
-            layer = layui.layer,
-            form = layui.form,
             goods = [[${goods}]],
-            $view = $('#goods-update');
+            form = layui.form;
 
         form.render();
-        initVehicleValue();
 
-        function initVehicleValue() {
+        initGoodsValue();
+
+        function initGoodsValue() {
             form.val("goods-update-form", {
                 "goodsId": goods.goodsId,
                 "name": goods.name,
@@ -92,10 +107,72 @@
             }
             febs.post(ctx + 'goods/update', data.field, function () {
                 layer.closeAll();
-                febs.alert.success('货品' + goods.goodsId +' 的数据修改成功！');
+                febs.alert.success('货品 ' + goods.goodsId +' 的数据修改成功！');
                 $('#febs-goods').find('#query').click();
             });
             return false;
         });
-    });
+
+    })
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            table = layui.table,
+            $view = $('#goods-update'),
+            sortObject = {field: 'goodsDetailId', type: null},
+            tableIns,
+            goodsId = document.getElementById("goodsId").value;
+
+        initTable();
+
+        table.on('tool(goodsDetailTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'edit') {
+                febs.modal.open('修改货品属性', 'system/goods/detailUpdate/' + data.goodsDetailId, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    offset: '30px',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layero) {
+                        $('#goods-detail-update').find('#submit').trigger('click');
+                        tableIns.reload({initSort: obj});
+                    },
+                    btn2: function () {
+                        layer.close(layer.index);
+                    }
+                });
+            }
+            if (layEvent === 'del') {
+                febs.modal.confirm('删除货品属性', '确定删除选中货品属性？', function () {
+                    febs.get(ctx + 'goods/detailDelete/' + data.goodsDetailId, null, function () {
+                        febs.alert.success('删除货品成功');
+                        tableIns.reload({initSort: obj});
+                    });
+                });
+            }
+        });
+        table.on('sort(goodsTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({initSort: obj});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'goodsDetailTable',
+                page: false,
+                url: ctx + 'goods/detailList/' + goodsId,
+                cols: [[
+                    {field: 'goodsDetailId', title: '货品详情项 ID'},
+                    {field: 'goodsId', title: '货品 ID'},
+                    {field: 'goodsAttribute', title: '属性'},
+                    {field: 'goodsAttributeValue', title: '属性值'},
+                    {title: '操作', toolbar: '#goods-detail-option'}
+                ]]
+            });
+        }
+
+    })
 </script>

@@ -27,7 +27,7 @@
     <sql id="findGoodsDetailSql">
         SELECT
         g.goods_id goodsId,
-        g.name,
+        g.name name,
         g.purchase_price,
         g.wholesale_price,
         g.retail_price
@@ -66,7 +66,7 @@
     <select id="findByGoodsId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.Goods">
         SELECT
         g.goods_id goodsId,
-        g.name,
+        g.name name,
         g.purchase_price,
         g.wholesale_price,
         g.retail_price

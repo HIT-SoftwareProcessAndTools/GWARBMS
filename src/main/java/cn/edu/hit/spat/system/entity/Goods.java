@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author XuJian
@@ -43,6 +44,12 @@ public class Goods implements Serializable {
      */
     @TableField("RETAIL_PRICE")
     private Double retailPrice;
+
+    /**
+     * 货品细则
+     */
+    @TableField(exist = false)
+    private List<GoodsDetail> detailList;
 
     public Long getId() {
         return goodsId;

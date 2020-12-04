@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hit.spat.system.mapper.GoodsDetailMapper">
+    <sql id="countGoodsDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        t_goods_detail g
+        WHERE 1 = 1
+        <if test="goodsDetail.goodsDetailId != null and goodsDetail.goodsDetailId != ''">
+            AND g.goods_detail_id = #{goodsDetail.goodsDetailId}
+        </if>
+        <if test="goodsDetail.goodsId != null and goodsDetail.goodsId != ''">
+            AND g.goods_id = #{goodsDetail.goodsId}
+        </if>
+        <if test="goodsDetail.goodsAttribute != null and goodsDetail.goodsAttribute != ''">
+            AND g.goods_attribute = #{goodsDetail.goodsAttribute}
+        </if>
+        <if test="goodsDetail.goodsAttributeValue != null and goodsDetail.goodsAttributeValue != ''">
+            AND g.goods_attribute_value = #{goodsDetail.goodsAttributeValue}
+        </if>
+    </sql>
+
+    <sql id="findGoodsDetailSql">
+        SELECT
+        g.goods_detail_id goodsDetailId,
+        g.goods_id,
+        g.goods_attribute,
+        g.goods_attribute_value
+        FROM
+        t_goods_detail g
+        WHERE 1 = 1
+        <if test="goodsDetail.goodsDetailId != null and goodsDetail.goodsDetailId != ''">
+            AND g.goods_detail_id = #{goodsDetail.goodsDetailId}
+        </if>
+        <if test="goodsDetail.goodsId != null and goodsDetail.goodsId != ''">
+            AND g.goods_id = #{goodsDetail.goodsId}
+        </if>
+        <if test="goodsDetail.goodsAttribute != null and goodsDetail.goodsAttribute != ''">
+            AND g.goods_attribute = #{goodsDetail.goodsAttribute}
+        </if>
+        <if test="goodsDetail.goodsAttributeValue != null and goodsDetail.goodsAttributeValue != ''">
+            AND g.goods_attribute_value = #{goodsDetail.goodsAttributeValue}
+        </if>
+    </sql>
+
+    <select id="findGoodsDetail" parameterType="cn.edu.hit.spat.system.entity.GoodsDetail" resultType="cn.edu.hit.spat.system.entity.GoodsDetail">
+        <include refid="findGoodsDetailSql"/>
+    </select>
+
+    <select id="countGoodsDetail" parameterType="cn.edu.hit.spat.system.entity.GoodsDetail" resultType="long">
+        <include refid="countGoodsDetailSql"/>
+    </select>
+
+    <select id="findGoodsDetailPage" parameterType="cn.edu.hit.spat.system.entity.GoodsDetail" resultType="cn.edu.hit.spat.system.entity.GoodsDetail">
+        <include refid="findGoodsDetailSql"/>
+    </select>
+
+    <select id="findByGoodId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.GoodsDetail">
+        SELECT
+        g.goods_detail_id,
+        g.goods_id,
+        g.goods_attribute,
+        g.goods_attribute_value
+        FROM
+        t_goods_detail g
+        WHERE  g.goods_id = #{goodsId}
+    </select>
+
+    <select id="findByGoodsDetailId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.GoodsDetail">
+        SELECT
+        g.goods_detail_id,
+        g.goods_id,
+        g.goods_attribute,
+        g.goods_attribute_value
+        FROM
+        t_goods_detail g
+        WHERE  g.goods_detail_id = #{goodsDetailId}
+    </select>
+</mapper>

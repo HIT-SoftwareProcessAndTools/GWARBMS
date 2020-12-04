@@ -1,0 +1,98 @@
+
+<style>
+    #goods-detail-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #goods-detail-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+
+    #goods-detail-update #data-permission-tree-block {
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 3px 0;
+    }
+
+    #goods-detail-update  .layui-treeSelect .ztree li span.button.switch {
+        top: 1px;
+        left: 3px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: visible !important;
+    }
+</style>
+<div class="layui-fluid" id="goods-detail-update">
+    <form class="layui-form" action="" lay-filter="goods-detail-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">货品属性ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsDetailId" data-th-value="${goodsDetail.goodsDetailId}" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">货品ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsId" data-th-id="${goodsDetail.goodsId}" autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">属性：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsAttribute" data-th-id="${goodsDetail.goodsAttribute}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">属性值：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsAttributeValue" data-th-id="${goodsDetail.goodsAttributeValue}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="goods-detail-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            goodsDetail = [[${goodsDetail}]],
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initGoodsDetailValue();
+
+        formSelects.render();
+
+        function initGoodsDetailValue() {
+            form.val("goods-detail-update-form", {
+                "goodsDetailId": goodsDetail.goodsDetailId,
+                "goodsId": goodsDetail.goodsId,
+                "goodsAttribute": goodsDetail.goodsAttribute,
+                "goodsAttributeValue": goodsDetail.goodsAttributeValue
+            });
+        }
+
+        form.on('submit(goods-detail-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, goodsDetail)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'goods/detailUpdate', data.field, function () {
+                layer.close(layer.index);
+                febs.alert.success(goodsDetail.goodsAttribute + ' 属性数据修改成功');
+            });
+            return false;
+        });
+    });
+</script>

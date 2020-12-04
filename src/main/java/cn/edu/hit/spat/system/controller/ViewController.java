@@ -5,9 +5,15 @@ import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.utils.DateUtil;
 import cn.edu.hit.spat.common.utils.GwarbmsUtil;
-import cn.edu.hit.spat.system.entity.*;
+
+import cn.edu.hit.spat.system.entity.Customer;
+import cn.edu.hit.spat.system.entity.Goods;
+import cn.edu.hit.spat.system.entity.GoodsDetail;
+import cn.edu.hit.spat.system.entity.User;
 import cn.edu.hit.spat.system.service.*;
-import com.baomidou.mybatisplus.extension.service.IService;
+
+import cn.edu.hit.spat.system.entity.*;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -38,7 +44,10 @@ public class ViewController extends BaseController {
     /* 新增数据 */
     private final ICustomerService customerService;
     private final IOrdersService ordersService;
+
     private final IGoodsService goodsService;
+    private final IGoodsDetailService goodsDetailService;
+
     private final IStorageService storageService;
     private final IRecordService recordService;
 
@@ -304,7 +313,7 @@ public class ViewController extends BaseController {
     @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/goods/detail/{goodsId}")
     @RequiresPermissions("goods:view")
     public String systemGoodsDetail(@PathVariable Long goodsId, Model model) {
-        resolveGoodsModel(goodsId, model);
+        resolveGoodsWithDetailModel(goodsId, model);
         return GwarbmsUtil.view("system/goods/goodsDetail");
     }
 
@@ -316,8 +325,35 @@ public class ViewController extends BaseController {
         return GwarbmsUtil.view("system/goods/goodsUpdate");
     }
 
+    /* 新增货品属性 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/goods/detailCreate/{goodsId}")
+    @RequiresPermissions("goods:create")
+    public String systemGoodsAddAttribute(@PathVariable Long goodsId, Model model) {
+        resolveGoodsModel(goodsId, model);
+        return GwarbmsUtil.view("system/goods/goodsDetailCreate");
+    }
+
+    /* 修改货品属性 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/goods/detailUpdate/{goodsDetailId}")
+    @RequiresPermissions("goods:update")
+    public String systemGoodsDetailUpdate(@PathVariable Long goodsDetailId, Model model) {
+        resolveGoodsDetailModel(goodsDetailId, model);
+        return GwarbmsUtil.view("system/goods/goodsDetailUpdate");
+    }
+
+    private void resolveGoodsDetailModel(Long goodsDetailId, Model model) {
+        GoodsDetail goodsDetail = this.goodsDetailService.findByDetailId(goodsDetailId);
+        model.addAttribute("goodsDetail", goodsDetail);
+    }
+
     private void resolveGoodsModel(Long goodsId, Model model) {
         Goods goods = this.goodsService.findByGoodsId(goodsId);
+        model.addAttribute("goods", goods);
+    }
+
+    private void resolveGoodsWithDetailModel(Long goodsId, Model model) {
+        Goods goods = this.goodsService.findByGoodsId(goodsId);
+        goods.setDetailList(this.goodsDetailService.findByGoodsId(goodsId));
         model.addAttribute("goods", goods);
     }
 

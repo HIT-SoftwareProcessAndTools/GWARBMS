@@ -2,8 +2,11 @@ package cn.edu.hit.spat.system.service;
 
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.system.entity.Goods;
+import cn.edu.hit.spat.system.entity.Role;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @author XuJian
@@ -45,9 +48,9 @@ public interface IGoodsService extends IService<Goods> {
     /**
      * 删除
      *
-     * @param goodsId 货品 id数组
+     * @param goodsIds 货品 id数组
      */
-    void deleteGoods(String goodsId);
+    void deleteGoods(String[] goodsIds);
 
     /**
      * 修改
@@ -56,4 +59,11 @@ public interface IGoodsService extends IService<Goods> {
      */
     void updateGoods(Goods goods);
 
+    /**
+     * 寻找商品所有信息
+     * @authoer xuqian
+     * @param goods
+     * @return
+     */
+    List<Goods> findGoods(Goods goods);
 }

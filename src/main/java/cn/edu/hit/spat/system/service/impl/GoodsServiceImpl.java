@@ -4,18 +4,20 @@ import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.utils.SortUtil;
 import cn.edu.hit.spat.system.entity.Goods;
+import cn.edu.hit.spat.system.entity.Role;
 import cn.edu.hit.spat.system.mapper.GoodsMapper;
 import cn.edu.hit.spat.system.service.IGoodsService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,6 +35,16 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     }
 
     @Override
+    public List<Goods> findGoods(Goods goods) {
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(goods.getName())) {
+            queryWrapper.lambda().like(Goods::getName, goods.getName());
+        }
+        return this.baseMapper.selectList(queryWrapper);
+    }
+
+
+    @Override
     public IPage<Goods> findGoodsDetailList(Goods goods, QueryRequest request) {
         Page<Goods> page = new Page<>(request.getPageNum(), request.getPageSize());
         page.setSearchCount(false);
@@ -45,8 +57,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
     public Goods findGoodsDetailList(Long goodsId) {
         Goods param = new Goods();
         param.setGoodsId(goodsId);
-        List<Goods> orders = this.baseMapper.findGoodsDetail(param);
-        return CollectionUtils.isNotEmpty(orders) ? orders.get(0) : null;
+        List<Goods> goods = this.baseMapper.findGoodsDetail(param);
+        return CollectionUtils.isNotEmpty(goods) ? goods.get(0) : null;
     }
 
     @Override
@@ -57,9 +69,8 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteGoods(String goodsId) {
-        List<String> list = new ArrayList<>();
-        list.add(goodsId);
+    public void deleteGoods(String[] goodsIds) {
+        List<String> list = Arrays.asList(goodsIds);
         this.removeByIds(list);
     }
 

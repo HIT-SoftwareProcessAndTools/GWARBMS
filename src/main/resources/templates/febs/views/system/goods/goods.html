@@ -65,6 +65,8 @@
     </span>
     <a lay-event="detail" shiro:hasPermission="goods:view"><i
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+    <a lay-event="detailCreate" shiro:hasPermission="goods:create"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe66e;</i></a>
     <a lay-event="edit" shiro:hasPermission="goods:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
     <a lay-event="del" shiro:hasPermission="goods:delete"><i
@@ -137,6 +139,19 @@
             if (layEvent === 'detail') {
                 febs.modal.view('货品信息', 'system/goods/detail/' + data.goodsId, {
                     area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+            if (layEvent === 'detailCreate'){
+                febs.modal.open('添加货品属性', 'system/goods/detailCreate/' + data.goodsId, {
+                    area: $(window).width() <= 750 ? '90%' : '50%',
+                    offset: '30px',
+                    btn: ['提交', '取消'],
+                    yes: function (index, layer) {
+                        $('#goods-detail-create').find('#submit').trigger('click');
+                    },
+                    btn2: function () {
+                        layer.closeAll();
+                    }
                 });
             }
             if (layEvent === 'edit') {
