@@ -24,7 +24,9 @@
         o.create_time createTime,
         o.customer_name customerName,
         o.customer_phone customerPhone,
-        o.order_price orderPrice
+        o.order_price orderPrice,
+        GROUP_CONCAT(g.goods_id) goodsId,
+        GROUP_CONCAT(g.name) name
         FROM
         t_order_retail o
         WHERE 1 = 1

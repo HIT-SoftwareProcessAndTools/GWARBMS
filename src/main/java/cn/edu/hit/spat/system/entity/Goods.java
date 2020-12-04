@@ -31,19 +31,19 @@ public class Goods implements Serializable {
      * 进货价格
      */
     @TableField("PURCHASE_PRICE")
-    private String purchasePrice;
+    private Double purchasePrice;
 
     /**
      * 批发价格
      */
     @TableField("WHOLESALE_PRICE")
-    private String wholesalePrice;
+    private Double wholesalePrice;
 
     /**
      * 零售价格
      */
     @TableField("RETAIL_PRICE")
-    private String retailPrice;
+    private Double retailPrice;
 
     /**
      * 货品细则

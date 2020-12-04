@@ -5,11 +5,15 @@ import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.utils.DateUtil;
 import cn.edu.hit.spat.common.utils.GwarbmsUtil;
+
 import cn.edu.hit.spat.system.entity.Customer;
 import cn.edu.hit.spat.system.entity.Goods;
 import cn.edu.hit.spat.system.entity.GoodsDetail;
 import cn.edu.hit.spat.system.entity.User;
 import cn.edu.hit.spat.system.service.*;
+
+import cn.edu.hit.spat.system.entity.*;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -36,8 +40,13 @@ public class ViewController extends BaseController {
     private final IUserDataPermissionService userDataPermissionService;
     /* 新增数据 */
     private final ICustomerService customerService;
+    private final IOrdersService ordersService;
+
     private final IGoodsService goodsService;
     private final IGoodsDetailService goodsDetailService;
+
+    private final IStorageService storageService;
+    private final IRecordService recordService;
 
     @GetMapping("login")
     @ResponseBody
@@ -121,14 +130,42 @@ public class ViewController extends BaseController {
         return GwarbmsUtil.view("system/order/orderCreate");
     }
 
-    /*
-    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/detail/{customername}")
-    @RequiresPermissions("order:view")
-    public String systemOrderDetail(@PathVariable String customername, Model model) {
-        resolveOrderModel(customername, model, true);
-        return GwarbmsUtil.view("system/order/orderDetail");
+    /**
+     * orders function
+     * @author Daijiajia
+     */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/wholesale")
+    @RequiresPermissions("orders:view")
+    public String systemOrders() {
+        return GwarbmsUtil.view("system/orders/orders");
     }
-    */
+
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/wholesale/create")
+    @RequiresPermissions("orders:create")
+    public String systemOrdersCreate() {
+        return GwarbmsUtil.view("system/orders/ordersCreate");
+    }
+
+    /* 批发销售单详情 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders/detail/{ordersId}")
+    @RequiresPermissions("orders:view")
+    public String systemOrdersDetail(@PathVariable Long ordersId, Model model) {
+        resolveOrdersModel(ordersId, model);
+        return GwarbmsUtil.view("system/orders/ordersDetail");
+    }
+
+    /* 修改批发销售单 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/orders/update/{ordersId}")
+    @RequiresPermissions("orders:update")
+    public String systemOrdersUpdate(@PathVariable Long ordersId, Model model) {
+        resolveOrdersModel(ordersId, model);
+        return GwarbmsUtil.view("system/orders/ordersUpdate");
+    }
+
+    private void resolveOrdersModel(Long ordersId, Model model) {
+        Orders orders = this.ordersService.findById(ordersId);
+        model.addAttribute("orders", orders);
+    }
     /**
      * =====================================================================================================
      * @return
@@ -316,9 +353,82 @@ public class ViewController extends BaseController {
         goods.setDetailList(this.goodsDetailService.findByGoodsId(goodsId));
         model.addAttribute("goods", goods);
     }
+
     /**
-     * =============================================================================================
+     * storage function=============================================================================================
+     * @author meizhimin
      */
+    /* 仓库总览 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/storage")
+    @RequiresPermissions("storage:view")
+    public String systemStorage() {
+        return GwarbmsUtil.view("system/storage/storage");
+    }
 
+    /* 新增仓库 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/storage/create")
+    @RequiresPermissions("storage:create")
+    public String systemStorageCreate() {
+        return GwarbmsUtil.view("system/storage/storageCreate");
+    }
 
+    /* 仓库详情 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/storage/detail/{storageId}")
+    @RequiresPermissions("storage:view")
+    public String systemStorageDetail(@PathVariable Long storageId, Model model) {
+        resolveStorageModel(storageId, model);
+        return GwarbmsUtil.view("system/storage/storageDetail");
+    }
+
+    /* 修改仓库*/
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/storage/update/{storageId}")
+    @RequiresPermissions("storage:update")
+    public String systemStorageUpdate(@PathVariable Long storageId, Model model) {
+        resolveStorageModel(storageId, model);
+        return GwarbmsUtil.view("system/storage/storageUpdate");
+    }
+
+    private void resolveStorageModel(Long storageId, Model model) {
+        Storage storage = this.storageService.findByStorageId(storageId);
+        model.addAttribute("storage", storage);
+    }
+
+    /**
+     * record function=============================================================================================
+     * @author meizhimin
+     */
+    /* 库存记录 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/record")
+    @RequiresPermissions("record:view")
+    public String systemRecord() {
+        return GwarbmsUtil.view("system/record/record");
+    }
+
+    /* 新货品入库 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/record/create")
+    @RequiresPermissions("record:create")
+    public String systemRecordCreate() {
+        return GwarbmsUtil.view("system/record/recordCreate");
+    }
+
+    /* 已有货品入库*/
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/record/update/{recordId}")
+    @RequiresPermissions("record:update")
+    public String systemRecordUpdate(@PathVariable Long recordId, Model model) {
+        resolveRecordModel(recordId, model);
+        return GwarbmsUtil.view("system/record/recordUpdate");
+    }
+
+    /* 货品出库*/
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/record/out/{recordId}")
+    @RequiresPermissions("record:out")
+    public String systemRecordOut(@PathVariable Long recordId, Model model) {
+        resolveRecordModel(recordId, model);
+        return GwarbmsUtil.view("system/record/recordOut");
+    }
+
+    private void resolveRecordModel(Long recordId, Model model) {
+        Record record = this.recordService.findByRecordId(recordId);
+        model.addAttribute("record", record);
+    }
 }

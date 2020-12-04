@@ -1,0 +1,146 @@
+<style>
+    #orders-update {
+        padding: 20px 25px 25px 0;
+    }
+
+    #orders-update .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+
+    #orders-update #data-permission-tree-block {
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 3px 0;
+    }
+
+    #orders-update  .layui-treeSelect .ztree li span.button.switch {
+        top: 1px;
+        left: 3px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: visible !important;
+    }
+</style>
+<div class="layui-fluid" id="orders-update">
+    <form class="layui-form" action="" lay-filter="orders-update-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">订单id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="ordersId" data-th-value="${orders.ordersId}" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">客户姓名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="customerName" data-th-id="${orders.customerName}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">联系电话：</label>
+            <div class="layui-input-block">
+                <input type="tel" name="customerPhone" lay-verify="customerPhone" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">货物ID：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsId" data-th-id="${orders.goodsId}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">货物数量：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsNum" data-th-id="${orders.goodsNum}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">订单总额：</label>
+            <div class="layui-input-block">
+                <input type="text" name="ordersprice" data-th-id="${orders.ordersprice}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">收货地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="ordersaddress" data-th-id="${orders.ordersaddress}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">发货仓库：</label>
+            <div class="layui-input-block">
+                <input type="text" name="storehouse" data-th-id="${orders.storehouse}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">订单状态：</label>
+            <div class="layui-input-block">
+                <input type="text" name="status" data-th-value="${orders.status}" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">已收款：</label>
+            <div class="layui-input-block">
+                <input type="text" name="pricepaid" data-th-value="${orders.pricepaid}" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">订单期数：</label>
+            <div class="layui-input-block">
+                <input type="text" name="ordersperiod" data-th-value="${orders.ordersperiod}" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="orders-update-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            orders = [[${orders}]],
+            $view = $('#orders-update'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initordersValue();
+
+        formSelects.render();
+
+        function initordersValue() {
+            form.val("orders-update-form", {
+                "ordersId": orders.ordersId,
+                "customerName": orders.customerName,
+                "customerPhone": orders.customerPhone,
+                "goodsId": orders.goodsId,
+                "goodsNum": orders.goodsNum,
+                "ordersprice": orders.ordersprice,
+                "ordersaddress": orders.ordersaddress,
+                "storehouse": orders.storehouse,
+                "status": orders.status,
+                "pricepaid": orders.pricepaid,
+                "ordersperiod": orders.ordersperiod
+            });
+        }
+
+        form.on('submit(orders-update-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, orders)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'orders/update', data.field, function () {
+                layer.closeAll();
+                febs.alert.success(orders.ordersId + ' 号销售单修改成功');
+                $('#febs-orders').find('#query').click();
+            });
+            return false;
+        });
+    });
+</script>

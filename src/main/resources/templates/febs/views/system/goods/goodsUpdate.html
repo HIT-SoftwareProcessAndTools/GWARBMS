@@ -107,7 +107,7 @@
             }
             febs.post(ctx + 'goods/update', data.field, function () {
                 layer.closeAll();
-                febs.alert.success(+ '货品 ' + goods.goodsId +' 的数据修改成功！');
+                febs.alert.success('货品 ' + goods.goodsId +' 的数据修改成功！');
                 $('#febs-goods').find('#query').click();
             });
             return false;
