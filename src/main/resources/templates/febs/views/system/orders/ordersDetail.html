@@ -1,0 +1,73 @@
+<style>
+    #febs-orders-detail #orders-img, #febs-orders-detail .orders-info {
+        display: inline-block;
+        float: left;
+        margin-left: 15px;
+    }
+
+    #febs-orders-detail #orders-img img {
+        width: 7rem;
+        margin: 10px 10px 0 20px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #febs-orders-detail #orders-info-wrapper {
+        margin: 0 0 1rem 0;
+        display: inline-block;
+    }
+
+    #febs-orders-detail .orders-info div {
+        margin: 10px 15px;
+        max-width: 23rem;
+    }
+
+    #febs-orders-detail #options-wrapper a {
+        padding: 4px 6px;
+        color: rgba(0, 0, 0, 0.65);
+        border: 1px solid #d9d9d9;
+        border-radius: 2px;
+    }
+
+    #febs-orders-detail #options-wrapper a:hover {
+        color: #40a9ff;
+        border-color: #40a9ff;
+    }
+
+</style>
+<div class="layui-fluid" id="febs-orders-detail" lay-title="销售单信息">
+    <div id="orders-info-wrapper">
+        <div class="orders-info">
+            <div><span class="layui-icon layui-icon-user"></span> 客户姓名：
+                [[${orders.customerName}]]
+            </div>
+            <div><span class="layui-icon layui-icon-phone"></span> 客户联系方式：
+                [[${orders.customerPhone}]]
+            </div>
+            <div><span class="layui-icon layui-icon-number"></span> 货物ID：
+                [[${orders.goodsId}]]
+            </div>
+            <div><span class="layui-icon layui-icon-number"></span> 货物数量：
+                [[${orders.goodsNum}]]
+            </div>
+            <div><span class="layui-icon layui-icon-moneycollect-fill"></span> 订单总价：
+                [[${orders.ordersprice}]]
+            </div>
+            <div><span class="layui-icon layui-icon-date"></span> 订单分期数：
+                [[${orders.ordersperiod}]]
+            </div>
+            <div><span class="layui-icon layui-icon-moneycollect"></span> 订单已收取金额：
+                [[${orders.pricepaid}]]
+            </div>
+            <div><span class="layui-icon layui-icon-home-fill"></span> 收货地址：
+                [[${orders.ordersaddress}]]
+            </div>
+            <div><span class="layui-icon layui-icon-home"></span> 发货仓库：
+                [[${orders.storehouse}]]
+            </div>
+            <div><span class="layui-icon layui-icon-time-circle"></span> 订单创建时间：
+                [[${orders.createTime}]]
+            </div>
+        </div>
+    </div>
+</div>

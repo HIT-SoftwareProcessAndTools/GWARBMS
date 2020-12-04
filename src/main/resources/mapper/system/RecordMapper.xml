@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hit.spat.system.mapper.RecordMapper">
+    <sql id="countRecordDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        t_storage_goods r
+        WHERE 1 = 1
+        <if test="record.recordId != null and record.recordId != ''">
+            AND r.record_id = #{record.recordId}
+        </if>
+        <if test="record.storageId != null and record.storageId != ''">
+            AND r.storage_id = #{record.storageId}
+        </if>
+        <if test="record.storageName != null and record.storageName != ''">
+            AND r.storage_name = #{record.storageName}
+        </if>
+        <if test="record.goodsId != null and record.goodsId != ''">
+            AND r.goods_id = #{record.goodsId}
+        </if>
+        <if test="record.goodsName != null and record.goodsName != ''">
+            AND r.goods_name = #{record.goodsName}
+        </if>
+        <if test="record.number != null and record.number != ''">
+            AND r.number = #{record.number}
+        </if>
+    </sql>
+
+    <sql id="findRecordDetailSql">
+        SELECT
+        r.record_id recordId,
+        r.storage_id,
+        r.storage_name,
+        r.goods_id,
+        r.goods_name,
+        r.number
+        FROM
+        t_storage_goods r
+        WHERE 1 = 1
+        <if test="record.recordId != null and record.recordId != ''">
+            AND r.record_id = #{record.recordId}
+        </if>
+        <if test="record.storageId != null and record.storageId != ''">
+            AND r.storage_id = #{record.storageId}
+        </if>
+        <if test="record.storageName != null and record.storageName != ''">
+            AND r.storage_name = #{record.storageName}
+        </if>
+        <if test="record.goodsId != null and record.goodsId != ''">
+            AND r.goods_id = #{record.goodsId}
+        </if>
+        <if test="record.goodsName != null and record.goodsName != ''">
+            AND r.goods_name = #{record.goodsName}
+        </if>
+        <if test="record.number != null and record.number != ''">
+            AND r.number = #{record.number}
+        </if>
+    </sql>
+
+    <select id="countRecordDetail" parameterType="cn.edu.hit.spat.system.entity.Record" resultType="long">
+        <include refid="countRecordDetailSql"/>
+    </select>
+
+    <select id="findRecordDetailPage" parameterType="cn.edu.hit.spat.system.entity.Record" resultType="cn.edu.hit.spat.system.entity.Record">
+        <include refid="findRecordDetailSql"/>
+    </select>
+
+    <select id="findRecordDetail" parameterType="cn.edu.hit.spat.system.entity.Record" resultType="cn.edu.hit.spat.system.entity.Record">
+        <include refid="findRecordDetailSql"/>
+    </select>
+
+    <select id="findByRecordId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.Record">
+        SELECT
+        r.record_id recordId,
+        r.storage_id,
+        r.storage_name,
+        r.goods_id,
+        r.goods_name,
+        r.number
+        FROM
+        t_storage_goods r
+        WHERE  r.record_id = #{recordId}
+    </select>
+</mapper>
