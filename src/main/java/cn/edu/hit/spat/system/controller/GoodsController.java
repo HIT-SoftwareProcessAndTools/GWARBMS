@@ -6,6 +6,7 @@ import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.system.entity.Goods;
+import cn.edu.hit.spat.system.entity.Role;
 import cn.edu.hit.spat.system.service.IGoodsService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,12 @@ import java.util.Map;
 public class GoodsController extends BaseController {
 
     private final IGoodsService goodsService;
+
+    @GetMapping
+    public GwarbmsResponse getAllGoods(Goods goods) {
+        return new GwarbmsResponse().success().data(goodsService.findGoods(goods));
+    }
+
 
     @GetMapping("{goodsId}")
     public Goods getGoods(@NotBlank(message = "{required}") @PathVariable Long goodsId) {

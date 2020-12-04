@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.wuwenze.poi.annotation.ExcelField;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -46,8 +48,20 @@ public class Order implements Serializable {
     @TableField("order_price")
     private Double orderPrice;
 
+
     /**
-     * 对应商品IDs
+     * 订单商品ID
+     */
+    @NotBlank(message = "{required}")
+    @TableField(exist = false)
+    private String goodsId;
+
+    @ExcelField(value = "商品")
+    @TableField(exist = false)
+    private String goodsName;
+
+    /**
+     * 订单商品IDs
      */
     @TableField(exist = false)
     private String goodsIds;
@@ -66,7 +80,9 @@ public class Order implements Serializable {
     private String createTimeTo;
 
 
+
     public Long getId() {
         return orderId;
     }
+
 }
