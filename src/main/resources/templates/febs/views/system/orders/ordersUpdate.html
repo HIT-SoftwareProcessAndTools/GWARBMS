@@ -54,7 +54,7 @@
                 <input type="text" name="goodsNum" data-th-id="${orders.goodsNum}" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">订单总额：</label>
             <div class="layui-input-block">
                 <input type="text" name="ordersprice" data-th-id="${orders.ordersprice}" autocomplete="off" class="layui-input">
@@ -82,6 +82,18 @@
             <label class="layui-form-label febs-form-item-require">已收款：</label>
             <div class="layui-input-block">
                 <input type="text" name="pricepaid" data-th-value="${orders.pricepaid}" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">订单利润：</label>
+            <div class="layui-input-block">
+                <input type="text" name="ordersprofile" data-th-value="${orders.ordersprofile}" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">货品名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsName" data-th-value="${orders.goodsName}" readonly>
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -126,6 +138,8 @@
                 "storehouse": orders.storehouse,
                 "status": orders.status,
                 "pricepaid": orders.pricepaid,
+                "ordersprofile":orders.ordersprofile,
+                "goodsName":orders.goodsName,
                 "ordersperiod": orders.ordersperiod
             });
         }

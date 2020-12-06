@@ -71,10 +71,22 @@ public class Orders implements Serializable {
     private Long goodsNum;
 
     /**
-     * 订单价格
+     * 货品名称
+     */
+    @TableField("goods_name")
+    private String goodsName;
+
+    /**
+     * 订单总价
      */
     @TableField("orders_price")
     private Double ordersprice;
+
+    /**
+     * 订单利润
+     */
+    @TableField("orders_profile")
+    private Double ordersprofile;
 
     /**
      * 订单已收金额
@@ -89,7 +101,7 @@ public class Orders implements Serializable {
     private Double ordersperiod;
 
     /**
-     * 状态 0待审核 1审核中 2归档
+     * 状态 0已保存待提交，1已提交待审核，2已审核收款中，3已收款，4退货
      */
     @TableField("status")
     private String status;

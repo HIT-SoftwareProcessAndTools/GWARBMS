@@ -70,7 +70,7 @@ public interface IOrdersService extends IService<Orders> {
      *
      * @param ordersIds
      */
-    void payOrders(String[] ordersIds);
+    int payOrders(String[] ordersIds);
 
     /**
      * 退货
@@ -91,12 +91,12 @@ public interface IOrdersService extends IService<Orders> {
      *
      * @param orders orders
      */
-    void updateOrders(Orders orders);
+    int updateOrders(Orders orders);
 
     /**
      * 销售单分期收款
      *
      * @param id ordersID
      */
-    void payoneOrders(String id);
+    int payoneOrders(String id);
 }

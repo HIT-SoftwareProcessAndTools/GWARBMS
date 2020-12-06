@@ -37,10 +37,12 @@
         u.status status,
         u.create_time createTime,
         u.goods_id goodsId,
+        u.goods_name goodsName,
         u.goods_num goodsNum,
         u.orders_address ordersaddress,
         u.price_paid pricepaid,
         u.orders_price ordersprice,
+        u.orders_profile ordersprofile,
         u.storehouse storehouse,
         u.orders_period ordersperiod
         FROM
@@ -88,10 +90,12 @@
         u.status status,
         u.create_time createTime,
         u.goods_id goodsId,
+        u.goods_name goodsName,
         u.goods_num goodsNum,
         u.orders_address ordersaddress,
         u.price_paid pricepaid,
         u.orders_price ordersprice,
+        u.orders_profile ordersprofile,
         u.storehouse storehouse,
         u.orders_period ordersperiod
         FROM

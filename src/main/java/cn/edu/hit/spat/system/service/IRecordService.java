@@ -75,4 +75,6 @@ public interface IRecordService extends IService<Record> {
     void transRecord(StorageTrans storageTrans, Long desStorageId);
 
     void resetbyGoodsId(String[] goodsIds);
+
+    void resetbyGoodsId(Long goodsId,Long num);
 }

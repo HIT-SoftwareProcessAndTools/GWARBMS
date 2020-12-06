@@ -3,11 +3,12 @@ package cn.edu.hit.spat.system.service.impl;
 import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.utils.SortUtil;
-import cn.edu.hit.spat.system.entity.Customer;
-import cn.edu.hit.spat.system.entity.Orders;
+import cn.edu.hit.spat.system.entity.*;
 import cn.edu.hit.spat.system.mapper.OrdersMapper;
 import cn.edu.hit.spat.system.service.IGoodsService;
 import cn.edu.hit.spat.system.service.IOrdersService;
+import cn.edu.hit.spat.system.service.IRecordService;
+import cn.edu.hit.spat.system.service.IStorageService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -31,6 +32,8 @@ import java.util.List;
 public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> implements IOrdersService {
 
     private final IGoodsService goodsService;
+    private final IRecordService recordService;
+    private final IStorageService storageService;
 
     @Override
     public Orders findById(Long ordersId) {
@@ -66,13 +69,17 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
         return CollectionUtils.isNotEmpty(orders) ? orders.get(0) : null;
     }
 
+    //新增
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createOrders(Orders orders) {
         orders.setCreateTime(new Date());
         orders.setPricepaid((double) 0);
         orders.setStatus(Orders.STATUS_SAVED);
-        orders.setOrdersprice(goodsService.findByGoodsId(orders.getGoodsId()).getWholesalePrice()*orders.getGoodsNum());
+        Goods goods=goodsService.findByGoodsId(orders.getGoodsId());
+        orders.setOrdersprice(goods.getWholesalePrice()*orders.getGoodsNum());
+        orders.setOrdersprofile((goods.getWholesalePrice()-goods.getPurchasePrice())*orders.getGoodsNum());
+        orders.setGoodsName(goods.getName());
         save(orders);
     }
 
@@ -93,17 +100,23 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
         List<String> list = Arrays.asList(ordersIds);
         for(String id:list){
             this.baseMapper.updatestateById(id,Orders.STATUS_PAYING);
+            Orders o = this.baseMapper.findById(Long.valueOf(id));
+            recordService.resetbyGoodsId(o.getGoodsId(),o.getGoodsNum());
         }
     }
 
     //收款
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void payOrders(String[] ordersIds){
+    public int payOrders(String[] ordersIds){
         List<String> list = Arrays.asList(ordersIds);
         for(String id:list){
+            Orders o = this.baseMapper.findById(Long.valueOf(id));
+            if(!o.getOrdersprice().equals(o.getPricepaid()))
+                return 0;
             this.baseMapper.updatestateById(id,Orders.STATUS_VALID);
         }
+        return 1;
     }
 
     //退货
@@ -113,6 +126,10 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
         List<String> list = Arrays.asList(ordersIds);
         for(String id:list){
             this.baseMapper.updatestateById(id,Orders.STATUS_RETURNED);
+            Orders o = this.baseMapper.findById(Long.valueOf(id));
+            Record rec=recordService.findByGoods(o.getGoodsId());
+            rec.setNumber(rec.getNumber()+o.getGoodsNum());
+            recordService.updateRecord(rec);
         }
     }
 
@@ -128,19 +145,31 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateOrders(Orders orders) {
+    public int updateOrders(Orders orders) {
         // 更新销售单
+        if(!orders.getStatus().equals("0"))
+            return 0;
+        Goods goods=goodsService.findByGoodsId(orders.getGoodsId());
+        orders.setOrdersprice(goods.getWholesalePrice()*orders.getGoodsNum());
         orders.setCreateTime(orders.getCreateTime());
+        orders.setOrdersprofile((goods.getWholesalePrice()-goods.getPurchasePrice())*orders.getGoodsNum());
+        orders.setGoodsName(goods.getName());
         updateById(orders);
+        return 1;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void payoneOrders(String id) {
+    public int payoneOrders(String id) {
         // 销售单分期收款
         Long ordersId=Long.valueOf(id);
         Orders orders=findById(ordersId);
+        if(!orders.getStatus().equals("2"))
+            return 0;
+        if(orders.getPricepaid().equals(orders.getOrdersprice()))
+            return 0;
         Double price=orders.getPricepaid()+orders.getOrdersprice()/orders.getOrdersperiod();
-        this.baseMapper.updatepricepaidById(String.valueOf(id),price);
+        this.baseMapper.updatepricepaidById(id,price);
+        return 1;
     }
 }

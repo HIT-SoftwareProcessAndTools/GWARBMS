@@ -87,6 +87,15 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void resetbyGoodsId(Long goodsId,Long num){
+        Record rec = findByGoods(goodsId);
+        Long i=rec.getNumber()-num;
+        rec.setNumber(i);
+        updateRecord(rec);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void transRecord(StorageTrans storageTrans, Long desStorageId) {
         Long number  = storageTrans.getNumber();
         Record sourceRecord = new Record();

@@ -62,7 +62,9 @@ public class OrdersController extends BaseController {
         if (orders.getOrdersId() == null) {
             throw new GwarbmsException("销售单ID为空");
         }
-        this.ordersService.updateOrders(orders);
+        int msg=this.ordersService.updateOrders(orders);
+        if(msg==0)
+            return new GwarbmsResponse().fail();
         return new GwarbmsResponse().success();
     }
 
@@ -70,7 +72,9 @@ public class OrdersController extends BaseController {
     @RequiresPermissions("orders:payone")
     @ControllerEndpoint(operation = "分期付款", exceptionMessage = "本期付款失败")
     public GwarbmsResponse payoneOrders(@NotBlank(message = "{required}") @PathVariable String ordersId) {
-        this.ordersService.payoneOrders(ordersId);
+        int msg=this.ordersService.payoneOrders(ordersId);
+        if(msg==0)
+            return new GwarbmsResponse().fail();
         return new GwarbmsResponse().success();
     }
 
@@ -97,7 +101,9 @@ public class OrdersController extends BaseController {
     @ControllerEndpoint(operation = "收款完毕", exceptionMessage = "订单收款未完成")
     public GwarbmsResponse payOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
         String[] ids = ordersIds.split(StringPool.COMMA);
-        this.ordersService.payOrders(ids);
+        int msg = this.ordersService.payOrders(ids);
+        if(msg==0)
+            return new GwarbmsResponse().fail();
         return new GwarbmsResponse().success();
     }
 

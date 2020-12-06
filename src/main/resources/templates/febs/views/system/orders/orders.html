@@ -131,7 +131,7 @@
             click: function (name, elem, event) {
                 var checkStatus = table.checkStatus('ordersTable');
                 if (name === 'create') {
-                    febs.modal.open('新增订单', 'system/orders/create', {
+                    febs.modal.open('新增订单', 'system/order/wholesale/create', {
                         btn: ['提交', '重置'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         offset: '30px',

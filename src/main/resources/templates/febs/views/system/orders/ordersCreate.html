@@ -130,29 +130,6 @@
             return _deptTree;
         }
 
-        formSelects.config('orders-create-role', {
-            searchUrl: ctx + 'role',
-            response: {
-                statusCode: 200
-            },
-            beforeSuccess: function (id, url, searchVal, result) {
-                var data = result.data;
-                var tranData = [];
-                for (var i = 0; i < data.length; i++) {
-                    tranData.push({
-                        name: data[i].roleName,
-                        value: data[i].roleId
-                    })
-                }
-                result.data = tranData;
-                return result;
-            },
-            error: function (id, url, searchVal, err) {
-                console.error(err);
-                febs.alert.error('获取角色列表失败');
-            }
-        });
-
         form.on('submit(orders-create-form-submit)', function (data) {
             febs.post(ctx + 'orders', data.field, function () {
                 layer.closeAll();
