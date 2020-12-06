@@ -22,6 +22,13 @@ public interface IRecordService extends IService<Record> {
     Record findByRecordId(Long recordId);
 
     /**
+     * 通过商品ID查找记录
+     * @param goodsId
+     * @return
+     */
+    Record findByGoods(Long goodsId);
+
+    /**
      * 查找记录详细信息
      *
      * @param request request
@@ -66,4 +73,6 @@ public interface IRecordService extends IService<Record> {
      * @param storageTrans 转移记录
      */
     void transRecord(StorageTrans storageTrans, Long desStorageId);
+
+    void resetbyGoodsId(String[] goodsIds);
 }

@@ -20,6 +20,12 @@ public interface IOrderService extends IService<Order> {
     Order findByName(String customerName);
 
     /**
+     * 通过订单编号查找零售单
+     * @param orderId
+     * @return
+     */
+    Order findByOrderId(Long orderId);
+    /**
      * 查找销售单详细信息
      *
      * @param request request

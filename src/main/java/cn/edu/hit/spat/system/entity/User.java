@@ -195,7 +195,7 @@ public class User implements Serializable {
     @TableField(exist = false)
     private String createTimeTo;
     /**
-     * 角色 ID
+     * 角色 ID，String
      */
     @NotBlank(message = "{required}")
     @TableField(exist = false)

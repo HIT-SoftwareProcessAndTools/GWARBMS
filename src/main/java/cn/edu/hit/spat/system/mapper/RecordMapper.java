@@ -38,4 +38,11 @@ public interface RecordMapper extends BaseMapper<Record> {
      * @return List<Record>
      */
     List<Record> findRecordDetail(@Param("record") Record record);
+
+    /**
+     * 根据商品ID查找记录
+     * @param goodsId
+     * @return
+     */
+    Record findByGoods(Long goodsId);
 }

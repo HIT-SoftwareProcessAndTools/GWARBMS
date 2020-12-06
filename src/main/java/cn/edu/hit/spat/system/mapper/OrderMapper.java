@@ -40,4 +40,10 @@ public interface OrderMapper extends BaseMapper<Order> {
      */
     List<Order> findOrderDetail(@Param("order") Order order);
 
+    /**
+     * 根据订单Id查找信息
+     * @param orderId
+     * @return
+     */
+    Order findByOrderId(Long orderId);
 }

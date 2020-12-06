@@ -3,13 +3,16 @@ package cn.edu.hit.spat.system.service.impl;
 import cn.edu.hit.spat.common.authentication.ShiroRealm;
 import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.entity.QueryRequest;
+import cn.edu.hit.spat.common.utils.Md5Util;
 import cn.edu.hit.spat.common.utils.SortUtil;
-import cn.edu.hit.spat.system.entity.Order;
-import cn.edu.hit.spat.system.entity.RetailGoods;
-import cn.edu.hit.spat.system.entity.UserDataPermission;
+import cn.edu.hit.spat.system.entity.*;
+import cn.edu.hit.spat.system.entity.Record;
 import cn.edu.hit.spat.system.mapper.OrderMapper;
+import cn.edu.hit.spat.system.service.IGoodsService;
 import cn.edu.hit.spat.system.service.IOrderService;
+import cn.edu.hit.spat.system.service.IRecordService;
 import cn.edu.hit.spat.system.service.IRetailGoodsService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -38,10 +42,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     private final ShiroRealm shiroRealm;
     private final IRetailGoodsService retailGoodsService;
+    private  final IGoodsService goodsService;
+    private final IRecordService recordService;
 
     @Override
     public Order findByName(String customername) {
         return this.baseMapper.findByName(customername);
+    }
+    @Override
+    public Order findByOrderId(Long orderId) {
+        return this.baseMapper.findByOrderId(orderId);
     }
 
     @Override
@@ -70,13 +80,42 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createOrder(Order order) {
+        // 保存零售单和商品关联关系
+        String[] goodsIds = order.getGoodsId().split(StringPool.COMMA);
+        List<String> goodsname = findgoodsName(goodsIds);
+        Double price = getprice(goodsIds);
+        order.setName(goodsname);
+        order.setOrderPrice(price);
         order.setCreateTime(new Date());
         save(order);
-        // 保存零售单和商品关联关系
-        String[] goodsIds = StringUtils.splitByWholeSeparatorPreserveAllTokens(order.getGoodsIds(), StringPool.COMMA);
-        if (ArrayUtils.isNotEmpty(goodsIds)) {
-            setRetailandGoods(order, goodsIds);
+        setRetailandGoods(order, goodsIds);
+        recordService.resetbyGoodsId(goodsIds);
+
+    }
+
+    private Double getprice(String[] goodsIds) {
+        List<Double> p = new ArrayList<>();
+        Arrays.stream(goodsIds).forEach(goodsId -> {
+            Goods newgood = goodsService.findByGoodsId(Long.valueOf(goodsId));
+            p.add(newgood.getRetailPrice());
+        });
+        System.out.println(p);
+        int i=0;
+        Double sum = 0.0;
+        for(i=0;i< p.size();i++){
+            sum = sum +p.get(i);
         }
+        System.out.println(sum);
+        return sum;
+    }
+
+    private List<String> findgoodsName(String[] goodsIds) {
+        List<String> goodsNames = new ArrayList<>();
+        Arrays.stream(goodsIds).forEach(goodsId -> {
+            Goods newgood = goodsService.findByGoodsId(Long.valueOf(goodsId));
+            goodsNames.add(newgood.getName());
+        });
+        return goodsNames;
     }
 
     private void setRetailandGoods(Order order, String[] goodsIds) {

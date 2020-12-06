@@ -1,6 +1,7 @@
 package cn.edu.hit.spat.system.mapper;
 
 import cn.edu.hit.spat.system.entity.Goods;
+import cn.edu.hit.spat.system.entity.Role;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,6 +13,17 @@ import java.util.List;
  * @author XuJian
  */
 public interface GoodsMapper extends BaseMapper<Goods> {
+
+
+    /**
+     * 通过订单号ID查找商品集合
+     *
+     * @param orderId 订单编号
+     * @return 订单货品集合
+     */
+    List<Goods> findRetailGoods(Long orderId);
+
+
 
     /**
      * 通过货品ID查找货品

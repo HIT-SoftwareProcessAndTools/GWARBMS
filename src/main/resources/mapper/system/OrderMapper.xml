@@ -24,23 +24,25 @@
         o.create_time createTime,
         o.customer_name customerName,
         o.customer_phone customerPhone,
-        o.order_price orderPrice,
-        GROUP_CONCAT(g.goods_id) goodsId,
-        GROUP_CONCAT(g.name) name
+        o.order_price orderPrice
         FROM
         t_order_retail o
         WHERE 1 = 1
         <if test="order.customerName != null and order.customerName != ''">
             AND o.customer_name = #{order.customerName}
         </if>
-
+        <if test="order.orderPrice != null and order.orderPrice != ''">
+            AND o.order_price = #{order.orderPrice}
+        </if>
+        <if test="order.customerPhone!= null and order.customerPhone !=''">
+            And o.customer_phone &lt; #{order.customerPhone}
+        </if>
         <if test="order.createTimeFrom != null and order.createTimeFrom !=''">
             And o.create_time &gt; #{order.createTimeFrom}
         </if>
         <if test="order.createTimeTo!= null and order.createTimeTo !=''">
             And o.create_time &lt; #{order.createTimeTo}
         </if>
-
     </sql>
 
     <select id="countOrderDetail" parameterType="cn.edu.hit.spat.system.entity.Order" resultType="long">
@@ -68,5 +70,17 @@
 
     </select>
 
+    <select id="findByOrderId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.Order">
+        SELECT
+            o.order_id orderId,
+            o.create_time createTime,
+            o.customer_name customerName,
+            o.customer_phone customerPhone,
+            o.order_price orderPrice
+        FROM
+            t_order_retail o
+        WHERE  o.order_id = #{orderId}
+
+    </select>
 
 </mapper>

@@ -30,15 +30,12 @@
 </style>
 <div class="layui-fluid" id="febs-order-detail" lay-title="订单信息">
     <div id="order-info-wrapper">
-        <div class="order-info">
+        <div class="order-info" id="order-info-content">
             <div><span class="layui-icon layui-icon-read"></span> 订单号：
                 [[${order.orderId}]]
             </div>
             <div><span class="layui-icon layui-icon-time-circle"></span> 创建时间：
                 [[${order.createTime}]]
-            </div>
-            <div><span class="layui-icon layui-icon-user"></span> 销售人员ID：
-                [[${order.salesId}]]
             </div>
             <div><span class="layui-icon layui-icon-user"></span> 客户姓名：
                 [[${order.customerName}]]
@@ -46,15 +43,28 @@
             <div><span class="layui-icon layui-icon-phone"></span> 客户电话：
                 [[${order.customerPhone}]]
             </div>
-            <div><span class="layui-icon layui-icon-car"></span> 车辆ID：
-                [[${order.vehicleId}]]
-            </div>
-            <div><span class="layui-icon layui-icon-read"></span> 价格：
-                [[${order.price}]]
-            </div>
-            <div><span class="layui-icon layui-icon-star"></span> 订单状态：
-                [[${order.status}]]
+            <div><span class="layui-icon layui-icon-rmb"></span> 价格(元)：
+                [[${order.orderPrice}]]
             </div>
         </div>
     </div>
 </div>
+
+<script data-th-inline="javascript">
+    layui.use([], function () {
+        var $ = layui.$,
+            names = [[${order.name}]];
+        console.log(names);
+        if (names === null)
+            return false;
+        var str = "商品：";
+        for (var i = 0; i < names.length; i++) {
+
+            str = str + names[i]+"; ";
+
+        }
+        str = "<div><span class=\"layui-icon layui-icon-component\"></span> "
+            + str + "</div>"
+        $("#order-info-content").append(str);
+    });
+</script>

@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.hit.spat.system.mapper.GoodsMapper">
+    <resultMap id="goodsMap" type="cn.edu.hit.spat.system.entity.Goods">
+        <result column="GOODS_ID" jdbcType="DECIMAL" property="goodsId;" />
+        <result column="NAME" jdbcType="VARCHAR" property="name" />
+        <result column="PURCHASE_PRICE" jdbcType="DECIMAL" property="purchasePrice;" />
+        <result column="WHOLESALE_PRICE" jdbcType="DECIMAL" property="wholesalePrice;" />
+        <result column="RETAIL_PRICE" jdbcType="DECIMAL" property="retailPrice;" />
+    </resultMap>
+
+    <select id="findRetailGoods" resultMap="goodsMap">
+        SELECT
+            g.*
+        FROM
+            t_goods g
+                LEFT JOIN t_retail_goods rg ON (g.goods_id = rg.goods_Id)
+                LEFT JOIN t_order_retail o ON (o.order_id = rg.order_Id)
+        WHERE
+            o.order_Id = #{orderId}
+    </select>
+
+
     <sql id="countGoodsDetailSql" >
         SELECT
         COUNT(1)
@@ -74,4 +94,5 @@
         t_goods g
         WHERE  g.goods_id = #{goodsId}
     </select>
+
 </mapper>

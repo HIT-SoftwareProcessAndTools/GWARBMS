@@ -14,6 +14,7 @@ import cn.edu.hit.spat.system.service.*;
 
 import cn.edu.hit.spat.system.entity.*;
 
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,7 +46,8 @@ public class ViewController extends BaseController {
     /* 新增数据 */
     private final ICustomerService customerService;
     private final IOrdersService ordersService;
-
+    private final IOrderService orderService;
+    private  final IRetailGoodsService retailGoodsService;
     private final IGoodsService goodsService;
     private final IGoodsDetailService goodsDetailService;
 
@@ -118,8 +121,9 @@ public class ViewController extends BaseController {
     }
 
     /**
+     * 零售单
      * Modified functions=================================================================================
-     * @return
+     * @author xuqian
      */
     @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order")
     @RequiresPermissions("order:view")
@@ -131,6 +135,26 @@ public class ViewController extends BaseController {
     @RequiresPermissions("order:retail")
     public String systemOrderCreate() {
         return GwarbmsUtil.view("system/order/orderCreate");
+    }
+
+    /* 零售销售单详情 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/detail/{orderId}")
+    @RequiresPermissions("order:view")
+    public String systemOrderDetail(@PathVariable Long orderId, Model model) {
+        resolveOrderModel(orderId, model);
+        return GwarbmsUtil.view("system/order/orderDetail");
+    }
+    private void resolveOrderModel(Long orderId, Model model) {
+        Order order = this.orderService.findByOrderId(orderId);
+        String[] goodsIdbyretail = this.retailGoodsService.findByOrderId(orderId.toString()).split(StringPool.COMMA);
+        List<String> goodsname = new ArrayList<>();
+
+        Arrays.stream(goodsIdbyretail).forEach(gId -> {
+            Goods newgood = goodsService.findByGoodsId(Long.valueOf(gId));
+            goodsname.add(newgood.getName());
+        });
+        order.setName(goodsname);
+        model.addAttribute("order", order);
     }
 
     /**
@@ -449,4 +473,7 @@ public class ViewController extends BaseController {
         Record record = this.recordService.findByRecordId(recordId);
         model.addAttribute("record", record);
     }
+
+
+
 }

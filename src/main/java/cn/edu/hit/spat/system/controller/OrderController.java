@@ -37,7 +37,7 @@ public class OrderController extends BaseController {
      * @return
      */
     @GetMapping("{customername}")
-    public Order getUser(@NotBlank(message = "{required}") @PathVariable String customername) {
+    public Order getOrder(@NotBlank(message = "{required}") @PathVariable String customername) {
         return this.orderService.findOrderDetailList(customername);
     }
 
@@ -63,7 +63,7 @@ public class OrderController extends BaseController {
     @PostMapping
     @RequiresPermissions("order:retail")
     @ControllerEndpoint(operation = "新增零售单", exceptionMessage = "新增零售单失败")
-    public GwarbmsResponse addUser(@Valid Order order) {
+    public GwarbmsResponse addOrder(@Valid Order order) {
         this.orderService.createOrder(order);
         return new GwarbmsResponse().success();
     }

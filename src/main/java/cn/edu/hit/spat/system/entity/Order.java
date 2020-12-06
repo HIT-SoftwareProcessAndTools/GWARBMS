@@ -10,6 +10,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author XuQian
@@ -52,19 +53,13 @@ public class Order implements Serializable {
     /**
      * 订单商品ID
      */
-    @NotBlank(message = "{required}")
+    @ExcelField(value = "商品ID")
     @TableField(exist = false)
     private String goodsId;
 
-    @ExcelField(value = "商品")
-    @TableField(exist = false)
-    private String goodsName;
 
-    /**
-     * 订单商品IDs
-     */
     @TableField(exist = false)
-    private String goodsIds;
+    private List<String> name;
 
 
     /**

@@ -32,22 +32,9 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">商品：</label>
+            <label class="layui-form-label febs-form-item-require">商品编号(eg:1,1,2,2)：</label>
             <div class="layui-input-block">
-                <select name="goodsId"
-                        lay-verify="required"
-                        xm-select-direction="down"
-                        xm-select="retail-add-goods"
-                        xm-select-skin="default">
-                </select>
-            </div>
-        </div>
-
-
-        <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">本单价格：</label>
-            <div class="layui-input-block">
-                <input type="text" name="orderPrice" autocomplete="off" class="layui-input">
+                <input type="text" name="goodsId" autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -59,40 +46,17 @@
 </div>
 
 <script>
-    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
+    layui.use(['febs', 'form', 'formSelects', 'treeSelect'], function () {
         var $ = layui.$,
             febs = layui.febs,
             layer = layui.layer,
             formSelects = layui.formSelects,
-            form = layui.form,
-            validate = layui.validate;
+            form = layui.form;
 
-        form.verify(validate);
         form.render();
 
         formSelects.render();
 
-        formSelects.config('retail-add-goods', {
-            searchUrl: ctx + 'goods',
-            response: {
-                statusCode: 200
-            },
-            beforeSuccess: function (id, url, searchVal, result) {
-                var data = result.data;
-                var tranData = [];
-                for (var i = 0; i < data.length; i++) {
-                    tranData.push({
-                        value: data[i].goodsId
-                    })
-                }
-                result.data = tranData;
-                return result;
-            },
-            error: function (id, url, searchVal, err) {
-                console.error(err);
-                febs.alert.error('获取商品列表失败');
-            }
-        });
 
         form.on('submit(order-add-form-submit)', function (data) {
             febs.post(ctx + 'order', data.field, function () {
@@ -103,4 +67,4 @@
             return false;
         });
     });
-</script
+</script>
