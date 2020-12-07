@@ -101,7 +101,7 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
         for(String id:list){
             this.baseMapper.updatestateById(id,Orders.STATUS_PAYING);
             Orders o = this.baseMapper.findById(Long.valueOf(id));
-            recordService.resetbyGoodsId(o.getGoodsId(),o.getGoodsNum());
+            recordService.resetbyGoodsIdandStorage(o.getGoodsId(),o.getStorehouse(),o.getGoodsNum());
         }
     }
 

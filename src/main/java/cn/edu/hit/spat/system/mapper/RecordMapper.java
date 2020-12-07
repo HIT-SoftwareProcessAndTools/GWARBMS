@@ -45,4 +45,11 @@ public interface RecordMapper extends BaseMapper<Record> {
      * @return
      */
     Record findByGoods(Long goodsId);
+
+    /**
+     * 根据商品和仓库查找记录
+     * @param goodsId
+     * @return
+     */
+    Record findByGoodsandStorage(Long goodsId,String storage);
 }
