@@ -63,6 +63,14 @@ public class RecordController extends BaseController {
         if(goods == null){
             throw new GwarbmsException("该货品ID不存在！");
         }
+        // 判断此货品是否为新货品
+        Record tar = new Record();
+        tar.setStorageId(record.getStorageId());
+        tar.setGoodsId(record.getGoodsId());
+        List<Record> records = this.recordService.findRecordList(tar);
+        if(CollectionUtils.isNotEmpty(records)){
+            throw new GwarbmsException("该仓库已有该货品的库存！");
+        }
         record.setStorageName(tarStorage.getStorageName());
         record.setGoodsName(goods.getName());
         this.recordService.createRecord(record);
@@ -107,6 +115,10 @@ public class RecordController extends BaseController {
         // 库存数量减去出库数量
         record.setNumber(records.get(0).getNumber()-record.getNumber());
         this.recordService.outRecord(record);
+        // 若完全出库，则删除此条记录
+        if(record.getNumber() == 0){
+            this.recordService.deleteRecord(record);
+        }
         return new GwarbmsResponse().success();
     }
 

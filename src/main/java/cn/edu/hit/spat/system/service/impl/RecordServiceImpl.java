@@ -137,6 +137,11 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     }
 
     @Override
+    public void deleteRecord(Record record) {
+        this.removeById(record.getId());
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteRecordByStorageIds(String[] storageIds) {
         List<String> list = new ArrayList<>();

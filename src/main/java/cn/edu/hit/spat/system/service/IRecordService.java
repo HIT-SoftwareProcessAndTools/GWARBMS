@@ -81,6 +81,12 @@ public interface IRecordService extends IService<Record> {
     void transRecord(StorageTrans storageTrans, Long desStorageId);
 
     /**
+     * 删除记录
+     * @param record 记录
+     */
+    void deleteRecord(Record record);
+
+    /**
      * 依据仓库Id删除相关记录
      *
      * @param storageIds 仓库id数组
