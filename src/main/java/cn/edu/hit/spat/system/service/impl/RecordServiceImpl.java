@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,12 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     @Override
     public Record findByGoods(Long goodsId) {
         return this.baseMapper.findByGoods(goodsId);
+    }
+
+    @Override
+    public List<Record> findByStorageId(Long storageId) {
+        List<Record> records = this.baseMapper.findByStorageId(storageId);
+        return CollectionUtils.isNotEmpty(records) ? records : null;
     }
 
     @Override
@@ -127,5 +134,18 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
             createRecord(desRecord);
             updateById(sourceRecord);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteRecordByStorageIds(String[] storageIds) {
+        List<String> list = new ArrayList<>();
+        for (String storageId: storageIds){
+            List<Record> records = this.findByStorageId(Long.parseLong(storageId));
+            for (Record record: records){
+                list.add(record.getRecordId().toString());
+            }
+        }
+        this.removeByIds(list);
     }
 }

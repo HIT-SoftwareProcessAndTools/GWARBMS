@@ -3,6 +3,7 @@ package cn.edu.hit.spat.system.service;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.system.entity.Goods;
 import cn.edu.hit.spat.system.entity.Role;
+import cn.edu.hit.spat.system.entity.Storage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -21,6 +22,7 @@ public interface IGoodsService extends IService<Goods> {
      */
     Goods findByGoodsId(Long goodsId);
 
+
     /**
      * 查找货品详细信息
      *
@@ -37,6 +39,14 @@ public interface IGoodsService extends IService<Goods> {
      * @return 信息
      */
     Goods findGoodsDetailList(Long goodsId);
+
+    /**
+     * 通过name查找
+     *
+     * @param name 货品名字
+     * @return 符合条件的所有货品
+     */
+    List<Goods> findByName(String name);
 
     /**
      * 新增

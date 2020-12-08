@@ -96,19 +96,10 @@
         }
 
         form.on('submit(record-out-form-submit)', function (data) {
-            if (data.field.number<=0) {
-                febs.alert.warn('出库数量必须>=0 ！');
-                return false;
-            }
-            if (data.field.number>record.number) {
-                febs.alert.warn('出库数量不能大于库存数量 ！');
-                return false;
-            }
-            data.field.number = parseInt(record.number) - parseInt(data.field.number)
             febs.post(ctx + 'record/out', data.field, function () {
                 layer.closeAll();
                 // data.field是在页面中输入的数据,record是原来表单中的对象
-                febs.alert.success('仓库 ' + record.recordId + ' 的数据修改成功！');
+                febs.alert.success('记录 ' + record.recordId + ' 的数据修改成功！');
                 $('#febs-record').find('#query').click();
             });
             return false;

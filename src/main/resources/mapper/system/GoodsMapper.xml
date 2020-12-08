@@ -95,4 +95,16 @@
         WHERE  g.goods_id = #{goodsId}
     </select>
 
+    <select id="findByName" parameterType="String" resultType="cn.edu.hit.spat.system.entity.Goods">
+        SELECT
+            g.goods_id goodsId,
+            g.name name,
+            g.purchase_price,
+            g.wholesale_price,
+            g.retail_price
+        FROM
+            t_goods g
+        WHERE  g.name = #{name}
+    </select>
+
 </mapper>

@@ -8,9 +8,12 @@ import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.system.entity.Goods;
 
 import cn.edu.hit.spat.system.entity.GoodsDetail;
+import cn.edu.hit.spat.system.entity.Record;
 import cn.edu.hit.spat.system.service.IGoodsDetailService;
 
 import cn.edu.hit.spat.system.service.IGoodsService;
+import cn.edu.hit.spat.system.service.IRecordService;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,6 +38,7 @@ public class GoodsController extends BaseController {
 
     private final IGoodsService goodsService;
     private final IGoodsDetailService goodsDetailService;
+    private final IRecordService recordService;
 
     @GetMapping
     public GwarbmsResponse getAllGoods(Goods goods) {
@@ -57,6 +62,13 @@ public class GoodsController extends BaseController {
     @RequiresPermissions("goods:create")
     @ControllerEndpoint(operation = "新增货品", exceptionMessage = "新增货品失败")
     public GwarbmsResponse createGoods(@Valid Goods goods) {
+        Goods tar = new Goods();
+        tar.setName(goods.getName());
+        // 查询货品名是否已经存在
+        List<Goods> goodsList = this.goodsService.findGoods(tar);
+        if(CollectionUtils.isNotEmpty(goodsList)){
+            throw new GwarbmsException("该货品名已经存在，请重新输入！");
+        }
         this.goodsService.createGoods(goods);
         return new GwarbmsResponse().success();
     }
@@ -67,6 +79,21 @@ public class GoodsController extends BaseController {
     public GwarbmsResponse updateGoods(@Valid Goods goods) {
         if (goods.getGoodsId() == null) {
             throw new GwarbmsException("货品ID为空");
+        }
+        // 查询货品名是否已经存在
+        List<Goods> goodsList = this.goodsService.findByName(goods.getName());
+        if(CollectionUtils.isNotEmpty(goodsList)){
+            throw new GwarbmsException("该货品名已经存在，请重新输入！");
+        }
+        // 更新货品信息
+        this.goodsService.updateGoods(goods);
+        // 更新对应的record信息
+        Record record = new Record();
+        record.setGoodsId(goods.getId());
+        List<Record> recordList = this.recordService.findRecordList(record);
+        for(Record x : recordList){
+            x.setGoodsName(goods.getName());
+            this.recordService.updateRecord(x);
         }
         return new GwarbmsResponse().success();
     }

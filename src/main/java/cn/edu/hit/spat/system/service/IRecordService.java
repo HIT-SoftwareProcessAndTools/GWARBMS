@@ -29,6 +29,12 @@ public interface IRecordService extends IService<Record> {
     Record findByGoods(Long goodsId);
 
     /**
+     * 通过仓库Id查找记录
+     * @param storageId
+     * @return
+     */
+    List<Record> findByStorageId(Long storageId);
+    /**
      * 查找记录详细信息
      *
      * @param request request
@@ -38,10 +44,10 @@ public interface IRecordService extends IService<Record> {
     IPage<Record> findRecordDetailList(Record record, QueryRequest request);
 
     /**
-     * 通过 ID查找详细信息
+     * 通过传递查询条件查找详细信息
      *
-     * @param record 记录 ID
-     * @return 信息
+     * @param record 记录———用于传递查询条件
+     * @return 符合查询条件的所有记录
      */
     List<Record> findRecordList(Record record);
 
@@ -49,7 +55,7 @@ public interface IRecordService extends IService<Record> {
     /**
      * 新货品入库
      *
-     * @param record
+     * @param record 记录
      */
     void createRecord(Record record);
 
@@ -73,6 +79,13 @@ public interface IRecordService extends IService<Record> {
      * @param storageTrans 转移记录
      */
     void transRecord(StorageTrans storageTrans, Long desStorageId);
+
+    /**
+     * 依据仓库Id删除相关记录
+     *
+     * @param storageIds 仓库id数组
+     */
+    void deleteRecordByStorageIds(String[] storageIds);
 
     void resetbyGoodsId(String[] goodsIds);
 

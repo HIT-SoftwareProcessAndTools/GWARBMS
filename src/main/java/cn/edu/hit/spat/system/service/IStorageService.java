@@ -20,23 +20,22 @@ public interface IStorageService extends IService<Storage> {
      */
     Storage findByStorageId(Long storageId);
 
-    // TODO 返回新html，以展示各个仓库包含的内容
     /**
-     * 查找货品详细信息
+     * 查找仓库详细信息
      *
      * @param request request
-     * @param storage 货品对象，用于传递查询条件
+     * @param storage 仓库对象，用于传递查询条件
      * @return IPage
      */
     IPage<Storage> findStorageDetailList(Storage storage, QueryRequest request);
     /**
-     * 查找货品详细信息
+     * 查找仓库详细信息
      *
      */
     List<Storage> findAllStorage();
-    // TODO
+
     /**
-     * 通过 ID查找详细信息
+     * 通过传递查询条件查找详细信息
      *
      * @param storage 仓库 ID
      * @return 信息
@@ -53,9 +52,9 @@ public interface IStorageService extends IService<Storage> {
     /**
      * 删除
      * 只允许删除空仓库
-     * @param storageId 仓库 id数组
+     * @param storageIds 仓库 id数组
      */
-    void deleteStorage(String storageId);
+    void deleteStorage(String[] storageIds);
 
     /**
      * 修改

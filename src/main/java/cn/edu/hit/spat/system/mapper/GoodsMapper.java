@@ -34,6 +34,13 @@ public interface GoodsMapper extends BaseMapper<Goods> {
     Goods findByGoodsId(Long goodsId);
 
     /**
+     * 通过货品名查找货品
+     * @param name 货品名
+     * @return 符合条件的所有Goods
+     */
+    List<Goods> findByName(String name);
+
+    /**
      * 查找货品详细信息
      *
      * @param page 分页对象

@@ -20,8 +20,7 @@ public interface StorageMapper extends BaseMapper<Storage> {
      * @return
      */
     Storage findByStorageId(Long storageId);
-
-    // TODO
+    
     /**
      * 查找仓库详细信息
      *

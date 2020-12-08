@@ -4,6 +4,7 @@ import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.utils.SortUtil;
 import cn.edu.hit.spat.system.entity.Goods;
+import cn.edu.hit.spat.system.entity.Record;
 import cn.edu.hit.spat.system.entity.Role;
 import cn.edu.hit.spat.system.mapper.GoodsMapper;
 import cn.edu.hit.spat.system.service.IGoodsService;
@@ -59,6 +60,12 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
         param.setGoodsId(goodsId);
         List<Goods> goods = this.baseMapper.findGoodsDetail(param);
         return CollectionUtils.isNotEmpty(goods) ? goods.get(0) : null;
+    }
+
+    @Override
+    public List<Goods> findByName(String name) {
+        List<Goods> goodsList = this.baseMapper.findByName(name);
+        return CollectionUtils.isNotEmpty(goodsList) ? goodsList : null;
     }
 
     @Override

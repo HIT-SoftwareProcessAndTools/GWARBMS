@@ -89,18 +89,6 @@
         }
 
         form.on('submit(record-trans-form-submit)', function (data) {
-            if (data.field.number<=0) {
-                febs.alert.warn('转移数量必须>=0 ！');
-                return false;
-            }
-            if (data.field.number>record.number) {
-                febs.alert.warn('转移数量不能大于库存数量 ！');
-                return false;
-            }
-            if(allStorage.indexOf(data.field.desStorageName)<0){
-                febs.alert.warn('目的仓库不存在 ！');
-                return false;
-            }
             febs.post(ctx + 'record/trans', data.field, function () {
                 layer.closeAll();
                 febs.alert.success('货品成功转移');

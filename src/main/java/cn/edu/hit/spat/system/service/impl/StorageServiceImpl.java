@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,9 +57,8 @@ public class StorageServiceImpl extends ServiceImpl<StorageMapper, Storage> impl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteStorage(String storageId) {
-        List<String> list = new ArrayList<>();
-        list.add(storageId);
+    public void deleteStorage(String[] storageIds) {
+        List<String> list = Arrays.asList(storageIds);
         this.removeByIds(list);
     }
 

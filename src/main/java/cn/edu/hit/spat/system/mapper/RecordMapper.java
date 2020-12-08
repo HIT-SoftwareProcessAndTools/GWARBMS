@@ -1,5 +1,6 @@
 package cn.edu.hit.spat.system.mapper;
 
+import cn.edu.hit.spat.system.entity.GoodsDetail;
 import cn.edu.hit.spat.system.entity.Record;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -52,4 +53,12 @@ public interface RecordMapper extends BaseMapper<Record> {
      * @return
      */
     Record findByGoodsandStorage(Long goodsId,String storage);
+
+    /**
+     * 查找仓库详细信息
+     *
+     * @param storageId  仓库ID，用于传递查询条件
+     * @return List<Record>
+     */
+    List<Record> findByStorageId(Long storageId);
 }
