@@ -18,7 +18,7 @@ spring:
     proxy-target-class: true
 
 mybatis-plus:
-  type-aliases-package: cn.edu.cn.spat.*.entity
+  type-aliases-package: cn.edu.hit.spat.*.entity
   mapper-locations: classpath:mapper/*/*.xml
   configuration:
     jdbc-type-for-null: null

@@ -30,19 +30,19 @@
         </if>
     </sql>
 
-    <select id="countStorageDetail" parameterType="cn.edu.hit.spat.system.entity.Storage" resultType="long">
+    <select id="countStorageDetail" parameterType="Storage" resultType="long">
         <include refid="countStorageDetailSql"/>
     </select>
 
-    <select id="findStorageDetailPage" parameterType="cn.edu.hit.spat.system.entity.Storage" resultType="cn.edu.hit.spat.system.entity.Storage">
+    <select id="findStorageDetailPage" parameterType="Storage" resultType="Storage">
         <include refid="findStorageDetailSql"/>
     </select>
 
-    <select id="findStorageDetail" parameterType="cn.edu.hit.spat.system.entity.Storage" resultType="cn.edu.hit.spat.system.entity.Storage">
+    <select id="findStorageDetail" parameterType="Storage" resultType="Storage">
         <include refid="findStorageDetailSql"/>
     </select>
 
-    <select id="findByStorageId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.Storage">
+    <select id="findByStorageId" parameterType="long" resultType="Storage">
         SELECT
         s.storage_id storageId,
         s.storage_name
