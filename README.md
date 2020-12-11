@@ -9,5 +9,5 @@ General wholesale and retail business management system
 
 ## Authors
 
-[Jian Xu](https://github.com/BeiyanLuansheng), [Zhimin Mei](https://github.com/mzm1183710118), [Qian Xu](https://github.com/xuqianxuqian), [Jiajia Dai](https://github.com/1183710121djj), [Peixen Li](https://github.com/1183710108), [Zhuoning Guo](https://github.com/gzn00417)
+[Jian Xu](https://github.com/BeiyanLuansheng), [Zhimin Mei](https://github.com/mzm1183710118), [Qian Xu](https://github.com/xuqianxuqian), [Jiajia Dai](https://github.com/1183710121djj), [Peisen Li](https://github.com/1183710108), [Zhuoning Guo](https://github.com/gzn00417)
 
