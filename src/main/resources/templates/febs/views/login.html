@@ -21,6 +21,13 @@
                 <div class="layui-col-xs12 layui-col-lg4 layui-col-lg-offset4 febs-tc">
                     <div class="layui-logo"><span>通用批发零售业务管理系统</span></div>
                 </div>
+                <div id="time1" style="top:70px;">
+                    日期
+                </div>
+                <script>
+                    setInterval("document.getElementById('time1').innerHTML = new Date().toLocaleString();", 1000);
+                </script>
+
                 <div class="layui-col-xs12 layui-col-lg4 layui-col-lg-offset4" id="login-div">
                     <div class="layui-form" lay-filter="login-form">
                         <div class="layui-anim layui-anim-upbit">
@@ -211,5 +218,6 @@
         });
     });
 </script>
+<div style="position:fixed; bottom:50px; width:100%; text-align:center; color: #90a4ae">制作方：六人帮</div>
 </body>
 </html>
