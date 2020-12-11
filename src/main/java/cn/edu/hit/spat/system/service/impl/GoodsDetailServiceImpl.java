@@ -76,6 +76,9 @@ public class GoodsDetailServiceImpl extends ServiceImpl<GoodsDetailMapper, Goods
         List<String> list = new ArrayList<>();
         for (String goodsId: goodsIds){
             List<GoodsDetail> goodsDetails = this.findByGoodsId(Long.parseLong(goodsId));
+            if (goodsDetails == null){
+                continue;
+            }
             for (GoodsDetail goodsDetail: goodsDetails){
                 list.add(goodsDetail.getGoodsDetailId().toString());
             }

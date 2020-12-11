@@ -147,6 +147,9 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         List<String> list = new ArrayList<>();
         for (String storageId: storageIds){
             List<Record> records = this.findByStorageId(Long.parseLong(storageId));
+            if (records == null){
+                continue;
+            }
             for (Record record: records){
                 list.add(record.getRecordId().toString());
             }
