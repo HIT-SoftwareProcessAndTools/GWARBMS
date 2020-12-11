@@ -3,3 +3,7 @@ log
 out
 .idea/*
 src/main/resources/application-dev.yml
+.settings
+.project
+debug.log
+
