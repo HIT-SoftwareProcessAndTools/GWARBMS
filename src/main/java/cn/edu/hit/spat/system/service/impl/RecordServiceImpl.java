@@ -82,13 +82,18 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
     @Transactional(rollbackFor = Exception.class)
     public void resetbyGoodsId(String[] goodsIds){
         Arrays.stream(goodsIds).forEach(goodsId -> {
-            Record rec = this.baseMapper.findByGoods(Long.valueOf(goodsId));
-            if(rec.getStorageId() == 1){
-                Long i = rec.getNumber()-1;
-                rec.setNumber(i);
-                this.baseMapper.update(rec,new LambdaQueryWrapper<Record>().eq(Record::getGoodsId,Long.valueOf(goodsId)));
+            Record record = new Record();
+            record.setGoodsId(Long.valueOf(goodsId));
+            List<Record> records = this.baseMapper.findRecordDetail(record);
+//            Record rec = this.baseMapper.findByGoods(Long.valueOf(goodsId));
+            for (Record rec: records) {
+                if (rec.getStorageId() == 1) {
+                    Long i = rec.getNumber() - 1;
+                    rec.setNumber(i);
+//                    this.baseMapper.update(rec, new LambdaQueryWrapper<Record>().eq(Record::getGoodsId, Long.valueOf(goodsId)));
+                    updateById(rec);
+                }
             }
-
         });
     }
 
