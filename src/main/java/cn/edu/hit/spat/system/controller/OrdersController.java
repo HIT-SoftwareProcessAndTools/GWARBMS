@@ -5,7 +5,9 @@ import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.exception.GwarbmsException;
+import cn.edu.hit.spat.system.entity.Customer;
 import cn.edu.hit.spat.system.entity.Orders;
+import cn.edu.hit.spat.system.service.ICustomerService;
 import cn.edu.hit.spat.system.service.IOrdersService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ import java.util.Map;
 public class OrdersController extends BaseController {
 
     private final IOrdersService ordersService;
+    private final ICustomerService customerService;
 
     @GetMapping("{customername}")
     public Orders getOrders(@NotBlank(message = "{required}") @PathVariable String customername) {
@@ -47,13 +50,13 @@ public class OrdersController extends BaseController {
         return new GwarbmsResponse().success().data(dataTable);
     }
 
-    @PostMapping
-    @RequiresPermissions("orders:create")
-    @ControllerEndpoint(operation = "新增订单", exceptionMessage = "新增订单失败")
-    public GwarbmsResponse createOrders(@Valid Orders orders) {
-        this.ordersService.createOrders(orders);
-        return new GwarbmsResponse().success();
-    }
+//    @PostMapping
+//    @RequiresPermissions("customer:create")
+//    @ControllerEndpoint(operation = "新增订单", exceptionMessage = "新增订单失败")
+//    public GwarbmsResponse createOrders(@Valid Orders orders) {
+//        this.ordersService.createOrders(orders);
+//        return new GwarbmsResponse().success();
+//    }
 
     @PostMapping("update")
     @RequiresPermissions("orders:update")
@@ -65,6 +68,19 @@ public class OrdersController extends BaseController {
         int msg=this.ordersService.updateOrders(orders);
         if(msg==0)
             return new GwarbmsResponse().fail();
+        return new GwarbmsResponse().success();
+    }
+
+    @GetMapping("create/{customerId}")
+    @RequiresPermissions("customer:create")
+    @ControllerEndpoint(operation = "新增订单", exceptionMessage = "新增订单失败")
+    public GwarbmsResponse createOrders(@NotBlank(message = "{required}") @PathVariable String customerId) {
+        System.out.println(customerId);
+        Orders orders=new Orders();
+        Customer customer=customerService.findByCustomerId(Long.valueOf(customerId));
+        orders.setCustomerName(customer.getName());
+        orders.setCustomerPhone(customer.getPhone().toString());
+        this.ordersService.createOrders(orders);
         return new GwarbmsResponse().success();
     }
 

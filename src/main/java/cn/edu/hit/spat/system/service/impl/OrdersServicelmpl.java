@@ -69,17 +69,24 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
         return CollectionUtils.isNotEmpty(orders) ? orders.get(0) : null;
     }
 
+//    //新增
+//    @Override
+//    @Transactional(rollbackFor = Exception.class)
+//    public void createOrders(Orders orders) {
+//        orders.setCreateTime(new Date());
+//        orders.setPricepaid((double) 0);
+//        orders.setStatus(Orders.STATUS_SAVED);
+//        Goods goods=goodsService.findByGoodsId(orders.getGoodsId());
+//        orders.setOrdersprice(goods.getWholesalePrice()*orders.getGoodsNum());
+//        orders.setOrdersprofile((goods.getWholesalePrice()-goods.getPurchasePrice())*orders.getGoodsNum());
+//        orders.setGoodsName(goods.getName());
+//        save(orders);
+//    }
+
     //新增
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createOrders(Orders orders) {
-        orders.setCreateTime(new Date());
-        orders.setPricepaid((double) 0);
-        orders.setStatus(Orders.STATUS_SAVED);
-        Goods goods=goodsService.findByGoodsId(orders.getGoodsId());
-        orders.setOrdersprice(goods.getWholesalePrice()*orders.getGoodsNum());
-        orders.setOrdersprofile((goods.getWholesalePrice()-goods.getPurchasePrice())*orders.getGoodsNum());
-        orders.setGoodsName(goods.getName());
         save(orders);
     }
 

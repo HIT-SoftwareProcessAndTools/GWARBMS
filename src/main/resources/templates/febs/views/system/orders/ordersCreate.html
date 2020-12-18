@@ -23,63 +23,57 @@
     }
 </style>
 <div class="layui-fluid" id="orders_create">
+    <div class="layui-button">
+        <button class="layui-btn layui-btn-xs" onclick="createcustomer()">+客户未记录,点此新增客户</button>
+    </div>
+    <br>
     <form class="layui-form" action="" lay-filter="orders-create-form">
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">客户姓名：</label>
             <div class="layui-input-block">
                 <input type="text" name="customerName" minlength="2" maxlength="10" lay-verify="range|customername"
-                       autocomplete="off" class="layui-input">
+                       autocomplete="off" class="layui-input" id="orders-customername">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">联系方式：</label>
-            <div class="layui-input-block">
-                <input type="tel" name="customerPhone" lay-verify="phone" autocomplete="off" class="layui-input">
+            <div class="layui-button">
+                <button type="button" class="layui-btn layui-btn-primary" onclick="choosecustomer()">点击选择联系方式</button>
             </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">货物ID：</label>
-            <div class="layui-input-block">
-                <input type="text" name="goodsId" maxlength="50" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">货物数量：</label>
-            <div class="layui-input-block">
-                <input type="text" name="goodsNum" maxlength="50" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">付款分期：</label>
-            <div class="layui-input-block">
-                <input type="text" name="ordersperiod" maxlength="50" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">收货地址：</label>
-            <div class="layui-input-block">
-                <input type="text" name="ordersaddress" maxlength="50" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">发货仓库：</label>
-            <div class="layui-input-block">
-                <input type="text" name="storehouse" maxlength="50" autocomplete="off"
-                       class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="orders-create-form-submit" id="submit"></button>
-            <button type="reset" class="layui-btn" id="reset"></button>
         </div>
     </form>
 </div>
 
 <script>
+    function createcustomer() {
+        layui.febs.modal.open('新增客户', 'system/customer/create', {
+            btn: ['提交', '重置'],
+            area: layui.$(window).width() <= 750 ? '95%' : '50%',
+            offset: '30px',
+            yes: function (index, layero) {
+                layui.$('#customer-create').find('#submit').trigger('click');
+            },
+            btn2: function () {
+                layui.$('#customer-create').find('#reset').trigger('click');
+                return false;
+            }
+        });
+    }
+
+    function choosecustomer() {
+        if(document.getElementById("orders-customername").value === '') {
+            layui.febs.alert.warn('请输入客户姓名！');
+        }
+        else{
+        layui.febs.modal.view('选择客户信息', 'system/customer/choose/'+document.getElementById("orders-customername").value, {
+            //btn: ['确定'],
+            area: layui.$(window).width() <= 750 ? '95%' : '660px',
+            // yes: function (index, layero) {
+            //     layui.$('#febs-customername').find('#submit').trigger('click');
+            // }
+        });}
+    }
+
     layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
         var $ = layui.$,
             febs = layui.febs,
@@ -99,9 +93,9 @@
         renderDeptTree();
 
         treeSelect.render({
-            elem: $view.find('#orders-create-dept'),
+            elem: $view.find('#orders-add-phone'),
             type: 'get',
-            data: ctx + 'dept/select/tree',
+            data: ctx + 'customer/select/tree'+document.getElementById("orders-customername").value,
             placeholder: '请选择',
             search: false
         });
@@ -138,5 +132,7 @@
             });
             return false;
         });
+
     });
+
 </script>

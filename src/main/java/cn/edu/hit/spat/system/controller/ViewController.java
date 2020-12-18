@@ -168,7 +168,7 @@ public class ViewController extends BaseController {
     }
 
     @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/wholesale/create")
-    @RequiresPermissions("orders:create")
+    @RequiresPermissions("customer:create")
     public String systemOrdersCreate() {
         return GwarbmsUtil.view("system/orders/ordersCreate");
     }
@@ -292,6 +292,19 @@ public class ViewController extends BaseController {
     @RequiresPermissions("customer:create")
     public String systemCustomerCreate() {
         return GwarbmsUtil.view("system/customer/customerCreate");
+    }
+
+//    /* 选择客户联系方式 */
+//    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/choose")
+//    public String systemCustomerChoose() {
+//        return GwarbmsUtil.view("system/customer/customername");
+//    }
+
+    /* 选择客户联系方式 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/choose/{customerName}")
+    public String systemCustomerChoose(@PathVariable String customerName, Model model) {
+        model.addAttribute("customerName", customerName);
+        return GwarbmsUtil.view("system/customer/customername");
     }
 
     /* 客户详情 */

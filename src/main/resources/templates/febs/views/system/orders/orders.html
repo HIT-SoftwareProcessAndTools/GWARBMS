@@ -63,7 +63,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="orders:create,orders:audit,orders:submit,orders:pay,orders:return,orders:delete">
+                                     shiro:hasAnyPermissions="customer:create,orders:audit,orders:submit,orders:pay,orders:return,orders:delete">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
@@ -227,7 +227,7 @@
             options: [{
                 name: 'create',
                 title: '新增订单',
-                perms: 'orders:create'
+                perms: 'customer:create'
             }, {
                 name: 'audit',
                 title: '审核订单',

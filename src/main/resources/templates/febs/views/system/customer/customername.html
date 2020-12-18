@@ -1,0 +1,99 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-customername" lay-title="客户信息">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-input-block febs-hide">
+                    <input type="text" name="customerName" data-th-value="${customerName}" id="cus">
+                </div>
+                <div class="layui-card-body febs-table-full">
+                    <table lay-filter="customerTable" lay-data="{id: 'customerTable'}"></table>
+                </div>
+                <div class="layui-form-item febs-hide">
+                    <button class="layui-btn" lay-submit="" lay-filter="customer-choose-form-submit" lay-event="" id="submit">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="customer-gender">
+    {{#
+    var gender = {
+    女: {title: '女'},
+    男: {title: '男'}
+    }[d.gender];
+    }}
+    <span>{{ gender.title }}</span>
+</script>
+<script type="text/html" id="customer-type">
+    {{#
+    var type = {
+    批发客户: {title: '批发客户', color: 'green'},
+    零售客户: {title: '零售客户', color: 'blue'}
+    }[d.type];
+    }}
+    <span class="layui-badge febs-bg-{{type.color}}">{{ type.title }}</span>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            $view = $('#febs-customername'),
+            $query = $view.find('#query'),
+            $reset = $view.find('#reset'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'customerId', type: null},
+            tableIns;
+
+        form.render();
+
+        initTable();
+
+        table.on('sort(customerTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        $query.on('click', function () {
+            var params = $.extend(getQueryParams(), {field: sortObject.field, order: sortObject.type});
+            tableIns.reload({where: params, page: {curr: 1}});
+        });
+
+        $reset.on('click', function () {
+            $searchForm[0].reset();
+            sortObject.type = 'null';
+            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'customerTable',
+                url: ctx + 'customer/list/'+document.getElementById("cus").value,
+                cols: [[
+                    {type: 'checkbox',field: 'customerId'},
+                    {field: 'customerId', title: '客户ID', maxWidth: 60},
+                    {field: 'name', title: '姓名'},
+                    {title: '性别', templet: '#customer-gender'},
+                    {field: 'phone', title: '手机', minWidth: 135},
+                    {title: '类型', templet: '#customer-type'}
+                ]]
+            });
+
+            table.on('checkbox(customerTable)', function (obj) {
+                febs.get(ctx + 'orders/create/' + obj.data.customerId, null, function () {
+                    febs.modal.info('选择成功','客户联系方式：'+obj.data.phone);
+                });
+                layer.closeAll();
+                return false;
+            });
+        }
+    })
+</script>
