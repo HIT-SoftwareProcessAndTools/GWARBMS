@@ -294,12 +294,6 @@ public class ViewController extends BaseController {
         return GwarbmsUtil.view("system/customer/customerCreate");
     }
 
-//    /* 选择客户联系方式 */
-//    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/choose")
-//    public String systemCustomerChoose() {
-//        return GwarbmsUtil.view("system/customer/customername");
-//    }
-
     /* 选择客户联系方式 */
     @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/choose/{customerName}")
     public String systemCustomerChoose(@PathVariable String customerName, Model model) {
@@ -376,6 +370,13 @@ public class ViewController extends BaseController {
     public String systemGoodsDetailUpdate(@PathVariable Long goodsDetailId, Model model) {
         resolveGoodsDetailModel(goodsDetailId, model);
         return GwarbmsUtil.view("system/goods/goodsDetailUpdate");
+    }
+
+    /* 查找货品ID */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/goods/choose/{goodsName}")
+    public String systemGoodsChoose(@PathVariable String goodsName, Model model) {
+        model.addAttribute("goodsName", goodsName);
+        return GwarbmsUtil.view("system/goods/goodsname");
     }
 
     private void resolveGoodsDetailModel(Long goodsDetailId, Model model) {

@@ -49,14 +49,14 @@ public interface IOrdersService extends IService<Orders> {
      *
      * @param orders
      */
-    void createOrders(Orders orders);
+    Long createOrders(Orders orders);
 
     /**
      * 提交订单
      *
      * @param ordersIds
      */
-    void submitOrders(String[] ordersIds);
+    int submitOrders(String[] ordersIds);
 
     /**
      * 审核订单

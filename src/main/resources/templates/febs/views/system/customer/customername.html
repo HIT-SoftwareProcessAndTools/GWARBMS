@@ -8,9 +8,6 @@
                 <div class="layui-card-body febs-table-full">
                     <table lay-filter="customerTable" lay-data="{id: 'customerTable'}"></table>
                 </div>
-                <div class="layui-form-item febs-hide">
-                    <button class="layui-btn" lay-submit="" lay-filter="customer-choose-form-submit" lay-event="" id="submit">确定</button>
-                </div>
             </div>
         </div>
     </div>
@@ -66,12 +63,6 @@
             tableIns.reload({where: params, page: {curr: 1}});
         });
 
-        $reset.on('click', function () {
-            $searchForm[0].reset();
-            sortObject.type = 'null';
-            tableIns.reload({where: getQueryParams(), page: {curr: 1}, initSort: sortObject});
-        });
-
         function initTable() {
             tableIns = febs.table.init({
                 elem: $view.find('table'),
@@ -89,6 +80,7 @@
 
             table.on('checkbox(customerTable)', function (obj) {
                 febs.get(ctx + 'orders/create/' + obj.data.customerId, null, function () {
+                    $('#febs-orders').find('#query').click();
                     febs.modal.info('选择成功','客户联系方式：'+obj.data.phone);
                 });
                 layer.closeAll();

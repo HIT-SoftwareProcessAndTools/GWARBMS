@@ -132,15 +132,11 @@
                 var checkStatus = table.checkStatus('ordersTable');
                 if (name === 'create') {
                     febs.modal.open('新增订单', 'system/order/wholesale/create', {
-                        btn: ['提交', '重置'],
+                        btn: ['提交'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         offset: '30px',
                         yes: function (index, layero) {
-                            $('#orders_create').find('#submit').trigger('click');
-                        },
-                        btn2: function () {
-                            $('#orders_create').find('#reset').trigger('click');
-                            return false;
+                            $('#customer-create').find('#submit').trigger('click');
                         }
                     });
                 }

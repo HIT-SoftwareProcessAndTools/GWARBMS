@@ -5,6 +5,7 @@ import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.exception.GwarbmsException;
+import cn.edu.hit.spat.system.entity.Customer;
 import cn.edu.hit.spat.system.entity.Goods;
 
 import cn.edu.hit.spat.system.entity.GoodsDetail;
@@ -54,6 +55,15 @@ public class GoodsController extends BaseController {
     @GetMapping("list")
     @RequiresPermissions("goods:view")
     public GwarbmsResponse goodsList(Goods goods, QueryRequest request) {
+        Map<String, Object> dataTable = getDataTable(this.goodsService.findGoodsDetailList(goods, request));
+        return new GwarbmsResponse().success().data(dataTable);
+    }
+
+    @GetMapping("list/{goodsName}")
+    @RequiresPermissions("goods:view")
+    public GwarbmsResponse customerList(@PathVariable String goodsName, QueryRequest request) {
+        Goods goods = new Goods();
+        goods.setName(goodsName);
         Map<String, Object> dataTable = getDataTable(this.goodsService.findGoodsDetailList(goods, request));
         return new GwarbmsResponse().success().data(dataTable);
     }

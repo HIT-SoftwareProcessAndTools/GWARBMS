@@ -1,0 +1,87 @@
+<div class="layui-fluid layui-anim febs-anim" id="febs-goods" lay-title="货品管理">
+    <div class="layui-row febs-container">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body febs-table-full">
+                    <form class="layui-form layui-table-form" lay-filter="goods-table-form">
+                        <div class="layui-row">
+                            <div class="layui-col-md10">
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block febs-hide">
+                                        <input type="text" name="goodsName" data-th-value="${goodsName}" id="goods">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <table lay-filter="goodsTable" lay-data="{id: 'goodsTable'}"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="goods-option">
+    <span shiro:lacksPermission="goods:view">
+        <span class="layui-badge-dot febs-bg-orange"></span> 无权限
+    </span>
+    <a lay-event="detail" shiro:hasPermission="goods:view"><i
+            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
+</script>
+<script data-th-inline="none" type="text/javascript">
+    layui.use(['dropdown', 'jquery', 'laydate', 'form', 'table', 'febs', 'treeSelect'], function () {
+        var $ = layui.jquery,
+            febs = layui.febs,
+            form = layui.form,
+            table = layui.table,
+            $view = $('#febs-goods'),
+            $searchForm = $view.find('form'),
+            sortObject = {field: 'goodsId', type: null},
+            tableIns;
+
+        form.render();
+
+        initTable();
+
+        table.on('tool(goodsTable)', function (obj) {
+            var data = obj.data,
+                layEvent = obj.event;
+            if (layEvent === 'detail') {
+                febs.modal.view('货品信息', 'system/goods/detail/' + data.goodsId, {
+                    area: $(window).width() <= 750 ? '95%' : '660px'
+                });
+            }
+        });
+
+        table.on('sort(goodsTable)', function (obj) {
+            sortObject = obj;
+            tableIns.reload({
+                initSort: obj,
+                where: $.extend(getQueryParams(), {
+                    field: obj.field,
+                    order: obj.type
+                })
+            });
+        });
+
+        function initTable() {
+            tableIns = febs.table.init({
+                elem: $view.find('table'),
+                id: 'goodsTable',
+                url: ctx + 'goods/list/'+document.getElementById("goods").value,
+                cols: [[
+                    {type: 'checkbox'},
+                    {field: 'goodsId', title: '货品 ID', minWidth: 100},
+                    {field: 'name', title: '货品名'},
+                    {field: 'purchasePrice', title: '进货价格'},
+                    {field: 'wholesalePrice', title: '批发价格'},
+                    {title: '操作', toolbar: '#goods-option', minWidth: 140}
+                ]]
+            });
+        }
+
+        function getQueryParams() {
+            var params = $searchForm.serializeJson();
+            return params;
+        }
+    })
+</script>

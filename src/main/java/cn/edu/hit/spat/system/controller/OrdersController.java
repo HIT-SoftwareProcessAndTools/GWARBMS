@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,7 +75,7 @@ public class OrdersController extends BaseController {
     @GetMapping("create/{customerId}")
     @RequiresPermissions("customer:create")
     @ControllerEndpoint(operation = "新增订单", exceptionMessage = "新增订单失败")
-    public GwarbmsResponse createOrders(@NotBlank(message = "{required}") @PathVariable String customerId) {
+    public GwarbmsResponse createOrders(@NotBlank(message = "{required}") @PathVariable String customerId , Model model) {
         System.out.println(customerId);
         Orders orders=new Orders();
         Customer customer=customerService.findByCustomerId(Long.valueOf(customerId));
@@ -99,7 +100,9 @@ public class OrdersController extends BaseController {
     @ControllerEndpoint(operation = "提交订单", exceptionMessage = "提交订单失败")
     public GwarbmsResponse archiveOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
         String[] ids = ordersIds.split(StringPool.COMMA);
-        this.ordersService.submitOrders(ids);
+        int msg=this.ordersService.submitOrders(ids);
+        if(msg==0)
+            return new GwarbmsResponse().fail();
         return new GwarbmsResponse().success();
     }
 

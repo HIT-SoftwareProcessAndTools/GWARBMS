@@ -33,7 +33,6 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     private final IGoodsService goodsService;
     private final IRecordService recordService;
-    private final IStorageService storageService;
 
     @Override
     public Orders findById(Long ordersId) {
@@ -86,18 +85,26 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
     //新增
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void createOrders(Orders orders) {
+    public Long createOrders(Orders orders) {
+        orders.setCreateTime(new Date());
+        orders.setPricepaid((double) 0);
+        orders.setStatus(Orders.STATUS_SAVED);
         save(orders);
+        return orders.getOrdersId();
     }
 
     //提交
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void submitOrders(String[] ordersIds){
+    public int submitOrders(String[] ordersIds){
         List<String> list = Arrays.asList(ordersIds);
         for(String id:list){
+            Orders o = this.baseMapper.findById(Long.valueOf(id));
+            if(o.getStorehouse()==null || o.getOrdersaddress()==null || o.getOrdersperiod()==null)
+                return 0;
             this.baseMapper.updatestateById(id,Orders.STATUS_AUDITING);
         }
+        return 1;
     }
 
     //审核

@@ -24,27 +24,34 @@
 </style>
 <div class="layui-fluid" id="orders-update">
     <form class="layui-form" action="" lay-filter="orders-update-form">
-        <div class="layui-form-item febs-hide">
+        <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">订单id：</label>
             <div class="layui-input-block">
-                <input type="text" name="ordersId" data-th-value="${orders.ordersId}" readonly>
+                <input type="number" name="ordersId" data-th-value="${orders.ordersId}" class="layui-input" readonly>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">客户姓名：</label>
             <div class="layui-input-block">
-                <input type="text" name="customerName" data-th-id="${orders.customerName}" autocomplete="off" class="layui-input">
+                <input type="text" name="customerName" data-th-id="${orders.customerName}" autocomplete="off" class="layui-input"  readonly>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">联系电话：</label>
             <div class="layui-input-block">
-                <input type="tel" name="customerPhone" lay-verify="customerPhone" autocomplete="off" class="layui-input">
+                <input type="tel" name="customerPhone" lay-verify="customerPhone" autocomplete="off" class="layui-input"  readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">货品名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="goodsName" data-th-value="${orders.goodsName}" id="goods" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">货物ID：</label>
             <div class="layui-input-block">
+                <button type="button" class="layui-btn layui-btn-primary" onclick="choosegoods()">点击查看货物ID</button>
                 <input type="text" name="goodsId" data-th-id="${orders.goodsId}" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -66,10 +73,13 @@
                 <input type="text" name="ordersaddress" data-th-id="${orders.ordersaddress}" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item">
+        <div class="layui-inline">
             <label class="layui-form-label febs-form-item-require">发货仓库：</label>
-            <div class="layui-input-block">
-                <input type="text" name="storehouse" data-th-id="${orders.storehouse}" autocomplete="off" class="layui-input">
+            <div class="layui-input-inline">
+                <select name="storehouse">
+                    <option value="门店库房">门店库房</option>
+                    <option value="大库">大库</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -90,16 +100,10 @@
                 <input type="text" name="ordersprofile" data-th-value="${orders.ordersprofile}" readonly>
             </div>
         </div>
-        <div class="layui-form-item febs-hide">
-            <label class="layui-form-label febs-form-item-require">货品名称：</label>
-            <div class="layui-input-block">
-                <input type="text" name="goodsName" data-th-value="${orders.goodsName}" readonly>
-            </div>
-        </div>
-        <div class="layui-form-item febs-hide">
+        <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">订单期数：</label>
             <div class="layui-input-block">
-                <input type="text" name="ordersperiod" data-th-value="${orders.ordersperiod}" readonly>
+                <input type="text" name="ordersperiod" data-th-value="${orders.ordersperiod}" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -109,6 +113,17 @@
 </div>
 
 <script data-th-inline="javascript">
+
+    function choosegoods() {
+        if(document.getElementById("goods").value === '') {
+            layui.febs.alert.warn('请输入货品名称！');
+        }
+        else{
+            layui.febs.modal.view('查看货品ID', 'system/goods/choose/'+document.getElementById("goods").value, {
+                area: layui.$(window).width() <= 750 ? '95%' : '660px',
+            });}
+    }
+
     layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
         var $ = layui.$,
             febs = layui.febs,
