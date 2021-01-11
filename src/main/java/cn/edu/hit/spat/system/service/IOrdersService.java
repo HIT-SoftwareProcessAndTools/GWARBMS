@@ -56,7 +56,7 @@ public interface IOrdersService extends IService<Orders> {
      *
      * @param ordersIds
      */
-    int submitOrders(String[] ordersIds);
+    void submitOrders(String[] ordersIds);
 
     /**
      * 审核订单
@@ -70,7 +70,7 @@ public interface IOrdersService extends IService<Orders> {
      *
      * @param ordersIds
      */
-    int payOrders(String[] ordersIds);
+    void payOrders(String[] ordersIds);
 
     /**
      * 退货
@@ -80,7 +80,7 @@ public interface IOrdersService extends IService<Orders> {
     void returnOrders(String[] ordersIds);
 
     /**
-     * 撤销订单
+     * 删除订单
      *
      * @param ordersIds
      */
@@ -91,12 +91,12 @@ public interface IOrdersService extends IService<Orders> {
      *
      * @param orders orders
      */
-    int updateOrders(Orders orders);
+    void updateOrders(Orders orders);
 
     /**
      * 销售单分期收款
      *
      * @param id ordersID
      */
-    int payoneOrders(String id);
+    void payoneOrders(String id);
 }

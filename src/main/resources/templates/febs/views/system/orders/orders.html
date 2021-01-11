@@ -146,13 +146,10 @@
                     } else {
                         febs.modal.confirm('审核订单', '确定审核该订单？', function () {
                             var ordersIds = [];
-                            //添加选中的订单的状态数组
-                            var ordersSelectedStatus = [];
                             layui.each(checkStatus.data, function (key, item) {
                                 ordersIds.push(item.ordersId);
-                                ordersSelectedStatus.push(item.status);
                             });
-                            auditorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                            auditorders(ordersIds.join(','));
                         });
                     }
                 }
@@ -162,13 +159,10 @@
                     } else {
                         febs.modal.confirm('提交订单', '确定提交该订单？', function () {
                             var ordersIds = [];
-                            //添加选中的订单的状态数组
-                            var ordersSelectedStatus = [];
                             layui.each(checkStatus.data, function (key, item) {
                                 ordersIds.push(item.ordersId)
-                                ordersSelectedStatus.push(item.status);
                             });
-                            submitorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                            submitorders(ordersIds.join(','));
                         });
                     }
                 }
@@ -178,13 +172,10 @@
                     } else {
                         febs.modal.confirm('完成收款', '确定该订单已完成收款？', function () {
                             var ordersIds = [];
-                            //添加选中的订单的状态数组
-                            var ordersSelectedStatus = [];
                             layui.each(checkStatus.data, function (key, item) {
                                 ordersIds.push(item.ordersId);
-                                ordersSelectedStatus.push(item.status);
                             });
-                            payorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                            payorders(ordersIds.join(','));
                         });
                     }
                 }
@@ -194,13 +185,10 @@
                     } else {
                         febs.modal.confirm('退货', '确定退货？', function () {
                             var ordersIds = [];
-                            //添加选中的订单的状态数组
-                            var ordersSelectedStatus = [];
                             layui.each(checkStatus.data, function (key, item) {
                                 ordersIds.push(item.ordersId);
-                                ordersSelectedStatus.push(item.status);
                             });
-                            returnorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                            returnorders(ordersIds.join(','));
                         });
                     }
                 }
@@ -210,12 +198,10 @@
                     } else {
                         febs.modal.confirm('删除订单', '确定删除该订单？', function () {
                             var ordersIds = [];
-                            var ordersSelectedStatus = [];
                             layui.each(checkStatus.data, function (key, item) {
                                 ordersIds.push(item.ordersId)
-                                ordersSelectedStatus.push(item.status);
                             });
-                            deleteorders(ordersIds.join(','), ordersSelectedStatus.join(','));
+                            deleteorders(ordersIds.join(','));
                         });
                     }
                 }
@@ -261,6 +247,9 @@
                 });
             }
             if (layEvent === 'edit') {
+                if(data.status!=="0")
+                    febs.alert.warn('该订单已提交，不能进行修改！');
+                else
                 febs.modal.open('修改订单', 'system/orders/update/' + data.ordersId, {
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     offset: '30px',
@@ -343,16 +332,7 @@
         }
 
         //审核订单：已提交（1）才可以审核
-        function auditorders(ordersIds, ordersSelectedStatus) {
-            var oid = ordersIds.split(",");
-            var oss = ordersSelectedStatus.split(",");
-            for (i = 0; i < oid.length; i++) {
-                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
-                if (oss[i] !== "1") {
-                    febs.alert.warn('只有已提交的订单才可以审核，请重新选择！');
-                    return;
-                }
-            }
+        function auditorders(ordersIds) {
             febs.get(ctx + 'orders/audit/' + ordersIds, null, function () {
                 febs.alert.success('审核订单成功');
                 $query.click();
@@ -360,16 +340,7 @@
         }
 
         //提交订单，只有状态为保存待提交（0）时才可以进行提交
-        function submitorders(ordersIds, ordersSelectedStatus) {
-            var oid = ordersIds.split(",");
-            var oss = ordersSelectedStatus.split(",");
-            for (i = 0; i < oid.length; i++) {
-                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
-                if (oss[i] !== "0") {
-                    febs.alert.warn('只有订单状态为保存待提交时才可以进行提交，请重新选择！');
-                    return;
-                }
-            }
+        function submitorders(ordersIds) {
             febs.get(ctx + 'orders/submit/' + ordersIds, null, function () {
                 febs.alert.success('提交订单成功');
                 $query.click();
@@ -377,16 +348,7 @@
         }
 
         //完成收款，只有订单在已审核未收款的状态下才能完成收款
-        function payorders(ordersIds, ordersSelectedStatus) {
-            var oid = ordersIds.split(",");
-            var oss = ordersSelectedStatus.split(",");
-            for (i = 0; i < oid.length; i++) {
-                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
-                if (oss[i] !== "2") {
-                    febs.alert.warn('只有订单在审核通过的收款状态下才可以完成收款，请重新选择！');
-                    return;
-                }
-            }
+        function payorders(ordersIds) {
             febs.get(ctx + 'orders/pay/' + ordersIds, null, function () {
                 febs.alert.success('订单完成收款');
                 $query.click();
@@ -394,32 +356,14 @@
         }
 
         //退货，只有商家收回货品（订单审核后的任意状态（2、3）才能完成退货
-        function returnorders(ordersIds, ordersSelectedStatus) {
-            var oid = ordersIds.split(",");
-            var oss = ordersSelectedStatus.split(",");
-            for (i = 0; i < oid.length; i++) {
-                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
-                if (oss[i] !== "2" && oss[i] !== "3") {
-                    febs.alert.warn('选中订单中包含无法退货的订单，请重新选择！');
-                    return;
-                }
-            }
+        function returnorders(ordersIds) {
             febs.get(ctx + 'orders/return/' + ordersIds, null, function () {
                 febs.alert.success('订单完成退货');
                 $query.click();
             });
         }
 
-        function deleteorders(ordersIds, ordersSelectedStatus) {
-            var oid = ordersIds.split(",");
-            var oss = ordersSelectedStatus.split(",");
-            for (i = 0; i < oid.length; i++) {
-                console.log("selected id:" + oid[i] + ";status:" + oss[i]);
-                if (oss[i] !== "0") {
-                    febs.alert.warn('订单已提交，不允许删除！');
-                    return;
-                }
-            }
+        function deleteorders(ordersIds) {
             febs.get(ctx + 'orders/delete/' + ordersIds, null, function () {
                 febs.alert.success('删除订单成功');
                 $query.click();

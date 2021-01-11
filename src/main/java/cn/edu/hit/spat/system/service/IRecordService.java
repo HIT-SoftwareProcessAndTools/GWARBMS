@@ -95,5 +95,5 @@ public interface IRecordService extends IService<Record> {
 
     void resetbyGoodsId(String[] goodsIds);
 
-    void resetbyGoodsIdandStorage(Long goodsId,String storage,Long num);
+    int resetbyGoodsIdandStorage(Long goodsId,String storage,Long num);
 }

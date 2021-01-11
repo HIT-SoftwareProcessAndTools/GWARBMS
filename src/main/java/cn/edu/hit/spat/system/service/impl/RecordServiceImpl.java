@@ -99,11 +99,14 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void resetbyGoodsIdandStorage(Long goodsId,String storage,Long num){
+    public int resetbyGoodsIdandStorage(Long goodsId,String storage,Long num){
         Record rec = this.baseMapper.findByGoodsandStorage(goodsId,storage);
+        if(rec.getNumber()<num)
+            return 0;
         Long i=rec.getNumber()-num;
         rec.setNumber(i);
         updateRecord(rec);
+        return 1;
     }
 
     @Override
