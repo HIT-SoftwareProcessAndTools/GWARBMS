@@ -23,15 +23,15 @@ public interface IRecordService extends IService<Record> {
 
     /**
      * 通过商品ID查找记录
-     * @param goodsId
-     * @return
+     * @param goodsId 待查找的商品ID
+     * @return 商品ID对应的库存记录
      */
     Record findByGoods(Long goodsId);
 
     /**
      * 通过仓库Id查找记录
-     * @param storageId
-     * @return
+     * @param storageId 待查找的仓库ID
+     * @return 仓库IDID对应的库存记录
      */
     List<Record> findByStorageId(Long storageId);
     /**
@@ -95,5 +95,5 @@ public interface IRecordService extends IService<Record> {
 
     void resetbyGoodsId(String[] goodsIds);
 
-    void resetbyGoodsIdandStorage(Long goodsId,String storage,Long num);
+    int resetbyGoodsIdandStorage(Long goodsId,String storage,Long num);
 }

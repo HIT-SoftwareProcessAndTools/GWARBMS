@@ -4,7 +4,6 @@ import cn.edu.hit.spat.common.annotation.ControllerEndpoint;
 import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
-import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.system.entity.Customer;
 import cn.edu.hit.spat.system.entity.Orders;
 import cn.edu.hit.spat.system.service.ICustomerService;
@@ -51,24 +50,11 @@ public class OrdersController extends BaseController {
         return new GwarbmsResponse().success().data(dataTable);
     }
 
-//    @PostMapping
-//    @RequiresPermissions("customer:create")
-//    @ControllerEndpoint(operation = "新增订单", exceptionMessage = "新增订单失败")
-//    public GwarbmsResponse createOrders(@Valid Orders orders) {
-//        this.ordersService.createOrders(orders);
-//        return new GwarbmsResponse().success();
-//    }
-
     @PostMapping("update")
     @RequiresPermissions("orders:update")
     @ControllerEndpoint(operation = "修改销售单", exceptionMessage = "修改销售单失败")
     public GwarbmsResponse updateOrders(@Valid Orders orders) {
-        if (orders.getOrdersId() == null) {
-            throw new GwarbmsException("销售单ID为空");
-        }
-        int msg=this.ordersService.updateOrders(orders);
-        if(msg==0)
-            return new GwarbmsResponse().fail();
+        this.ordersService.updateOrders(orders);
         return new GwarbmsResponse().success();
     }
 
@@ -87,11 +73,9 @@ public class OrdersController extends BaseController {
 
     @GetMapping("payone/{ordersId}")
     @RequiresPermissions("orders:payone")
-    @ControllerEndpoint(operation = "分期付款", exceptionMessage = "本期付款失败")
+    @ControllerEndpoint(operation = "分期付款", exceptionMessage = "本期收款失败")
     public GwarbmsResponse payoneOrders(@NotBlank(message = "{required}") @PathVariable String ordersId) {
-        int msg=this.ordersService.payoneOrders(ordersId);
-        if(msg==0)
-            return new GwarbmsResponse().fail();
+        this.ordersService.payoneOrders(ordersId);
         return new GwarbmsResponse().success();
     }
 
@@ -100,9 +84,7 @@ public class OrdersController extends BaseController {
     @ControllerEndpoint(operation = "提交订单", exceptionMessage = "提交订单失败")
     public GwarbmsResponse archiveOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
         String[] ids = ordersIds.split(StringPool.COMMA);
-        int msg=this.ordersService.submitOrders(ids);
-        if(msg==0)
-            return new GwarbmsResponse().fail();
+        this.ordersService.submitOrders(ids);
         return new GwarbmsResponse().success();
     }
 
@@ -117,18 +99,16 @@ public class OrdersController extends BaseController {
 
     @GetMapping("pay/{ordersIds}")
     @RequiresPermissions("orders:pay")
-    @ControllerEndpoint(operation = "收款完毕", exceptionMessage = "订单收款未完成")
+    @ControllerEndpoint(operation = "收款完毕", exceptionMessage = "收款失败")
     public GwarbmsResponse payOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
         String[] ids = ordersIds.split(StringPool.COMMA);
-        int msg = this.ordersService.payOrders(ids);
-        if(msg==0)
-            return new GwarbmsResponse().fail();
+        this.ordersService.payOrders(ids);
         return new GwarbmsResponse().success();
     }
 
     @GetMapping("return/{ordersIds}")
     @RequiresPermissions("orders:return")
-    @ControllerEndpoint(operation = "订单退货", exceptionMessage = "订单退货未完成")
+    @ControllerEndpoint(operation = "订单退货", exceptionMessage = "退货失败")
     public GwarbmsResponse returnOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
         String[] ids = ordersIds.split(StringPool.COMMA);
         this.ordersService.returnOrders(ids);
@@ -137,7 +117,7 @@ public class OrdersController extends BaseController {
 
     @GetMapping("delete/{ordersIds}")
     @RequiresPermissions("orders:delete")
-    @ControllerEndpoint(operation = "删除订单", exceptionMessage = "删除订单失败")
+    @ControllerEndpoint(operation = "删除订单", exceptionMessage = "删除失败")
     public GwarbmsResponse deleteOrders(@NotBlank(message = "{required}") @PathVariable String ordersIds) {
         String[] ids = ordersIds.split(StringPool.COMMA);
         this.ordersService.deleteOrders(ids);
