@@ -84,8 +84,7 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void submitOrders(String[] ordersIds){
-        List<String> list = Arrays.asList(ordersIds);
-        for(String id:list){
+        for(String id:ordersIds){
             Orders o = this.baseMapper.findById(Long.valueOf(id));
             if(o.getStorehouse()==null || o.getOrdersaddress()==null || o.getOrdersperiod()==null)
                 throw new GwarbmsException("选中订单中包含未完整填写信息的订单！");
@@ -101,8 +100,7 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void auditOrders(String[] ordersIds){
-        List<String> list = Arrays.asList(ordersIds);
-        for(String id:list){
+        for(String id:ordersIds){
             Orders o = this.baseMapper.findById(Long.valueOf(id));
             if(o.getStatus().equals("0"))
                 throw new GwarbmsException("选中订单中包含未提交订单！");
@@ -118,8 +116,7 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void payOrders(String[] ordersIds){
-        List<String> list = Arrays.asList(ordersIds);
-        for(String id:list){
+        for(String id:ordersIds){
             Orders o = this.baseMapper.findById(Long.valueOf(id));
             if(o.getStatus().equals("4"))
                 throw new GwarbmsException("选中订单中包含已退货的订单！");
@@ -135,8 +132,7 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void returnOrders(String[] ordersIds){
-        List<String> list = Arrays.asList(ordersIds);
-        for(String id:list){
+        for(String id:ordersIds){
             Long ordersId=Long.valueOf(id);
             Orders o=findById(ordersId);
             if(!o.getStatus().equals("2") && !o.getStatus().equals("3") && !o.getStatus().equals("4"))
@@ -151,9 +147,8 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
     //删除
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteOrders(String[] orderIds){
-        List<String> list = Arrays.asList(orderIds);
-        for(String id:list){
+    public void deleteOrders(String[] ordersIds){
+        for(String id:ordersIds){
             Long ordersId=Long.valueOf(id);
             Orders orders=findById(ordersId);
             if(!orders.getStatus().equals("0") && !orders.getStatus().equals("1"))

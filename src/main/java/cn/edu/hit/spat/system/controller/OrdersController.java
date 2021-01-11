@@ -4,7 +4,6 @@ import cn.edu.hit.spat.common.annotation.ControllerEndpoint;
 import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
-import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.system.entity.Customer;
 import cn.edu.hit.spat.system.entity.Orders;
 import cn.edu.hit.spat.system.service.ICustomerService;

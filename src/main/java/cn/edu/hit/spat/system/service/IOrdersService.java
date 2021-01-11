@@ -47,56 +47,56 @@ public interface IOrdersService extends IService<Orders> {
     /**
      * 新增订单
      *
-     * @param orders
+     * @param orders 新增的批发订单信息
      */
     Long createOrders(Orders orders);
 
     /**
      * 提交订单
      *
-     * @param ordersIds
+     * @param ordersIds 提交的批发订单ID
      */
     void submitOrders(String[] ordersIds);
 
     /**
      * 审核订单
      *
-     * @param ordersIds
+     * @param ordersIds 审核的批发订单ID
      */
     void auditOrders(String[] ordersIds);
 
     /**
      * 收款订单
      *
-     * @param ordersIds
+     * @param ordersIds 收款的批发订单ID
      */
     void payOrders(String[] ordersIds);
 
     /**
      * 退货
      *
-     * @param ordersIds
+     * @param ordersIds 退货的批发订单ID
      */
     void returnOrders(String[] ordersIds);
 
     /**
      * 删除订单
      *
-     * @param ordersIds
+     * @param ordersIds 删除的批发订单ID
      */
     void deleteOrders(String[] ordersIds);
 
     /**
      * 修改销售单信息
      *
-     * @param orders orders
+     * @param orders 待修改的批发订单信息
      */
     void updateOrders(Orders orders);
 
     /**
      * 销售单分期收款
      *
-     * @param id ordersID
+     * @param id 该次分期收款的订单ID
      */
     void payoneOrders(String id);
 }
