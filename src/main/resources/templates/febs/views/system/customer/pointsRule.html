@@ -1,0 +1,89 @@
+<style>
+    #points-rule {
+        padding: 20px 25px 25px 0;
+    }
+
+    #points-rule .layui-treeSelect .ztree li a, .ztree li span {
+        margin: 0 0 2px 3px !important;
+    }
+
+    #points-rule #data-permission-tree-block {
+        border: 1px solid #eee;
+        border-radius: 2px;
+        padding: 3px 0;
+    }
+
+    #points-rule  .layui-treeSelect .ztree li span.button.switch {
+        top: 1px;
+        left: 3px;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: visible !important;
+    }
+</style>
+<div class="layui-fluid" id="points-rule">
+    <form class="layui-form" action="" lay-filter="points-rule-form">
+        <div class="layui-form-item febs-hide">
+            <label class="layui-form-label febs-form-item-require">积分规则id：</label>
+            <div class="layui-input-block">
+                <input type="text" name="pointsRuleId" data-th-id="${pointsRule.pointsRuleId}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">金额：积分</label>
+            <div class="layui-input-block">
+                <input type="text" name="toPoints" data-th-id="${pointsRule.toPoints}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">积分：余额</label>
+            <div class="layui-input-block">
+                <input type="text" name="toBalance" data-th-id="${pointsRule.toBalance}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item febs-hide">
+            <button class="layui-btn" lay-submit="" lay-filter="points-rule-form-submit" id="submit"></button>
+        </div>
+    </form>
+</div>
+
+<script data-th-inline="javascript">
+    layui.use(['febs', 'form', 'formSelects', 'validate', 'treeSelect', 'eleTree'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            form = layui.form,
+            pointsRule = [[${pointsRule}]],
+            $view = $('#points-rule'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        initpointsRuleValue();
+
+        formSelects.render();
+
+        function initpointsRuleValue() {
+            form.val("points-rule-form", {
+                "pointsRuleId": pointsRule.pointsRuleId,
+                "toPoints": pointsRule.toPoints,
+                "toBalance": pointsRule.toBalance,
+            });
+        }
+
+        form.on('submit(points-rule-form-submit)', function (data) {
+            if (febs.nativeEqual(data.field, pointsRule)) {
+                febs.alert.warn('数据未作任何修改！');
+                return false;
+            }
+            febs.post(ctx + 'customer/pointsRule', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('积分规则修改成功');
+            });
+            return false;
+        });
+    });
+</script>

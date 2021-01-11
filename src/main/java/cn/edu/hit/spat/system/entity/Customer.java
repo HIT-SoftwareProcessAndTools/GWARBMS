@@ -47,6 +47,24 @@ public class Customer implements Serializable {
     @TableField("TYPE")
     private String type;
 
+    /**
+     * 是否会员
+     */
+    @TableField("VIP")
+    private String vip;
+
+    /**
+     * 会员积分
+     */
+    @TableField("POINTS")
+    private Long points;
+
+    /**
+     * 存款余额
+     */
+    @TableField("BALANCE")
+    private Long balance;
+
     public Long getId() {
         return customerId;
     }

@@ -2,8 +2,11 @@ package cn.edu.hit.spat.system.service;
 
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.system.entity.Customer;
+import cn.edu.hit.spat.system.entity.PointsRule;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @author XuJian
@@ -30,10 +33,10 @@ public interface ICustomerService extends IService<Customer> {
     /**
      * 通过客户 ID查找客户详细信息
      *
-     * @param customerId 客户 ID
+     * @param customer 客户 ID
      * @return 客户信息
      */
-    Customer findCustomerDetailList(Long customerId);
+    List<Customer> findCustomerList(Customer customer);
 
     /**
      * 新增客户
@@ -55,4 +58,26 @@ public interface ICustomerService extends IService<Customer> {
      * @param customer customer
      */
     void updateCustomer(Customer customer);
+
+    /**
+     * 会员充值
+     *
+     * @param customer customer
+     */
+    void chargeCustomer(Customer customer);
+
+    /**
+     * 积分兑换
+     *
+     * @param customer customer
+     */
+    void exchangeCustomer(Customer customer);
+
+    /**
+     * 计算结账时新的会员积分，但不更新数据库
+     * @param customerId 会员ID
+     * @param payMoney 付款的金额
+     * @return 新的会员积分
+     */
+    Long calcNewPointsWhenPay(Long customerId, Long payMoney);
 }

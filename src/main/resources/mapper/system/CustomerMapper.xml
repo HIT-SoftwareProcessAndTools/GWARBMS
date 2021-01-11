@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.hit.spat.system.mapper.CustomerMapper">
-    <sql id="countCustomerDetailSql" >
+    <sql id="countCustomerDetailSql">
         SELECT
         COUNT(1)
         FROM
@@ -22,6 +22,15 @@
         <if test="customer.type != null and customer.type != ''">
             AND c.type = #{customer.type}
         </if>
+        <if test="customer.vip != null and customer.vip != ''">
+            AND c.vip = #{customer.vip}
+        </if>
+        <if test="customer.points != null and customer.points != '' or customer.points == 0">
+            AND c.points &gt;= #{customer.points}
+        </if>
+        <if test="customer.balance != null and customer.balance != '' or customer.balance == 0">
+            AND c.balance &lt;= #{customer.balance}
+        </if>
     </sql>
 
     <sql id="findCustomerDetailSql">
@@ -30,7 +39,10 @@
         c.name,
         c.gender,
         c.phone,
-        c.type
+        c.type,
+        c.vip,
+        c.points,
+        c.balance
         FROM
         t_customer c
         WHERE 1 = 1
@@ -49,29 +61,39 @@
         <if test="customer.type != null and customer.type != ''">
             AND c.type = #{customer.type}
         </if>
+        <if test="customer.vip != null and customer.vip != ''">
+            AND c.vip = #{customer.vip}
+        </if>
+        <if test="customer.points != null and customer.points != '' or customer.points == 0">
+            AND c.points &gt;= #{customer.points}
+        </if>
+        <if test="customer.balance != null and customer.balance != '' or customer.balance == 0">
+            AND c.balance &lt;= #{customer.balance}
+        </if>
     </sql>
 
-    <select id="countCustomerDetail" parameterType="cn.edu.hit.spat.system.entity.Customer" resultType="long">
+    <select id="countCustomerDetail" parameterType="customer" resultType="long">
         <include refid="countCustomerDetailSql"/>
     </select>
 
-    <select id="findCustomerDetailPage" parameterType="cn.edu.hit.spat.system.entity.Customer" resultType="cn.edu.hit.spat.system.entity.Customer">
+    <select id="findCustomerDetailPage" parameterType="customer" resultType="customer">
         <include refid="findCustomerDetailSql"/>
     </select>
 
-    <select id="findCustomerDetail" parameterType="cn.edu.hit.spat.system.entity.Customer" resultType="cn.edu.hit.spat.system.entity.Customer">
+    <select id="findCustomerDetail" parameterType="customer" resultType="customer">
         <include refid="findCustomerDetailSql"/>
     </select>
 
-    <select id="findByCustomerId" parameterType="long" resultType="cn.edu.hit.spat.system.entity.Customer">
-        SELECT
-        c.customer_id customerId,
-        c.name,
-        c.gender,
-        c.phone,
-        c.type
-        FROM
-        t_customer c
-        WHERE  c.customer_id = #{customerId}
+    <select id="findByCustomerId" parameterType="long" resultType="customer">
+        SELECT c.customer_id customerId,
+               c.name,
+               c.gender,
+               c.phone,
+               c.type,
+               c.vip,
+               c.points,
+               c.balance
+        FROM t_customer c
+        WHERE c.customer_id = #{customerId}
     </select>
 </mapper>

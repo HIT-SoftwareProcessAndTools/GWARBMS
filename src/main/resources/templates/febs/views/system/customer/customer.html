@@ -7,7 +7,7 @@
                         <div class="layui-row">
                             <div class="layui-col-md10">
                                 <div class="layui-form-item">
-                                    <div class="layui-inline">
+                                    <div class="layui-inline febs-hide">
                                         <label class="layui-form-label layui-form-label-sm">客户 ID</label>
                                         <div class="layui-input-inline">
                                             <input type="text" name="customerId" autocomplete="off" class="layui-input">
@@ -45,6 +45,30 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">是否会员</label>
+                                        <div class="layui-input-inline">
+                                            <select name="vip">
+                                                <option value=""></option>
+                                                <option value="0">否</option>
+                                                <option value="1">是</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">积分大于</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="points" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label layui-form-label-sm">余额小于</label>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="balance" autocomplete="off" class="layui-input">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="layui-col-md2 layui-col-sm12 layui-col-xs12 table-action-area">
@@ -55,7 +79,7 @@
                                     <i class="layui-icon">&#xe79b;</i>
                                 </div>
                                 <div class="layui-btn layui-btn-sm layui-btn-primary table-action action-more"
-                                     shiro:hasAnyPermissions="customer:create,customer:update,customer:delete">
+                                     shiro:hasAnyPermissions="customer:create,customer:pointsRule,customer:delete">
                                     <i class="layui-icon">&#xe875;</i>
                                 </div>
                             </div>
@@ -85,6 +109,15 @@
     }}
     <span class="layui-badge febs-bg-{{type.color}}">{{ type.title }}</span>
 </script>
+<script type="text/html" id="customer-vip">
+    {{#
+    var type = {
+    0: {title: '否', color: 'green'},
+    1: {title: '是', color: 'blue'}
+    }[d.vip];
+    }}
+    <span class="layui-badge febs-bg-{{type.color}}">{{ type.title }}</span>
+</script>
 <script type="text/html" id="customer-option">
     <span shiro:lacksPermission="customer:view,customer:update,customer:delete">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
@@ -93,6 +126,10 @@
             class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
     <a lay-event="edit" shiro:hasPermission="customer:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
+    <a lay-event="charge" shiro:hasPermission="customer:update"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe624;</i></a>
+    <a lay-event="exchange" shiro:hasPermission="customer:update"><i
+            class="layui-icon febs-edit-area febs-blue">&#xe609;</i></a>
     <a lay-event="del" shiro:hasPermission="customer:delete"><i
             class="layui-icon febs-edit-area febs-red">&#xe7f9;</i></a>
 </script>
@@ -145,6 +182,19 @@
                         });
                     }
                 }
+                if (name === 'modifyPointsRule') {
+                    febs.modal.open('设定积分规则', 'system/customer/pointsRule', {
+                        area: $(window).width() <= 750 ? '80%' : '50%',
+                        offset: '30px',
+                        btn: ['提交', '取消'],
+                        yes: function (index, layero) {
+                            $('#points-rule').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            layer.closeAll();
+                        }
+                    });
+                }
             },
             options: [{
                 name: 'create',
@@ -154,6 +204,10 @@
                 name: 'delete',
                 title: '删除客户',
                 perms: 'customer:delete'
+            }, {
+                name: 'modifyPointsRule',
+                title: '积分规则',
+                perms: 'customer:pointsRule'
             }]
         });
 
@@ -182,6 +236,41 @@
                         layer.closeAll();
                     }
                 });
+            }
+            if (layEvent === 'charge') {
+                if (data.vip === '0') {
+                    febs.alert.warn('不是会员客户！');
+                }
+                else {
+                    febs.modal.open('会员充值', 'system/customer/charge/' + data.customerId, {
+                        area: $(window).width() <= 750 ? '80%' : '50%',
+                        offset: '30px',
+                        btn: ['提交', '取消'],
+                        yes: function (index, layero) {
+                            $('#customer-charge').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            layer.closeAll();
+                        }
+                    });
+                }
+            }
+            if (layEvent === 'exchange') {
+                if (data.vip === '0') {
+                    febs.alert.warn('不是会员客户！');
+                } else {
+                    febs.modal.open('积分兑换', 'system/customer/exchange/' + data.customerId, {
+                        area: $(window).width() <= 750 ? '90%' : '50%',
+                        offset: '30px',
+                        btn: ['提交', '取消'],
+                        yes: function (index, layero) {
+                            $('#customer-exchange').find('#submit').trigger('click');
+                        },
+                        btn2: function () {
+                            layer.closeAll();
+                        }
+                    });
+                }
             }
         });
 
@@ -219,6 +308,9 @@
                     {title: '性别', templet: '#customer-gender'},
                     {field: 'phone', title: '手机', minWidth: 165},
                     {title: '类型', templet: '#customer-type'},
+                    {title: '是否会员', templet: '#customer-vip'},
+                    {field: 'points', title: '会员积分'},
+                    {field: 'balance', title: '账户余额'},
                     {title: '操作', toolbar: '#customer-option', minWidth: 140}
                 ]]
             });

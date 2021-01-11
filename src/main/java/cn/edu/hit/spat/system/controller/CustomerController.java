@@ -6,7 +6,9 @@ import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.system.entity.Customer;
+import cn.edu.hit.spat.system.entity.PointsRule;
 import cn.edu.hit.spat.system.service.ICustomerService;
+import cn.edu.hit.spat.system.service.IPointsRuleService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,10 +31,12 @@ import java.util.Map;
 public class CustomerController extends BaseController {
 
     private final ICustomerService customerService;
+    private final IPointsRuleService pointsRuleService;
 
     @GetMapping("{customerId}")
     public Customer getCustomer(@NotBlank(message = "{required}") @PathVariable Long customerId) {
-        return this.customerService.findCustomerDetailList(customerId);
+//        return this.customerService.findCustomerDetailList(customerId);
+        return this.customerService.findByCustomerId(customerId);
     }
 
     @GetMapping("list")
@@ -78,6 +82,39 @@ public class CustomerController extends BaseController {
             throw new GwarbmsException("客户ID为空");
         }
         this.customerService.updateCustomer(customer);
+        return new GwarbmsResponse().success();
+    }
+
+    @PostMapping("charge")
+    @RequiresPermissions("customer:update")
+    @ControllerEndpoint(operation = "会员充值", exceptionMessage = "充值失败")
+    public GwarbmsResponse chargeCustomer(@Valid Customer customer) {
+        if (customer.getCustomerId() == null) {
+            throw new GwarbmsException("客户ID为空");
+        }
+        this.customerService.chargeCustomer(customer);
+        return new GwarbmsResponse().success();
+    }
+
+    @PostMapping("exchange")
+    @RequiresPermissions("customer:update")
+    @ControllerEndpoint(operation = "会员积分兑换", exceptionMessage = "兑换失败")
+    public GwarbmsResponse exchangeCustomer(@Valid Customer customer) {
+        if (customer.getCustomerId() == null) {
+            throw new GwarbmsException("客户ID为空");
+        }
+        this.customerService.exchangeCustomer(customer);
+        return new GwarbmsResponse().success();
+    }
+
+    @PostMapping("pointsRule")
+    @RequiresPermissions("customer:pointsRule")
+    @ControllerEndpoint(operation = "设定积分规则", exceptionMessage = "设定失败")
+    public GwarbmsResponse updatePointsRule(@Valid PointsRule pointsRule) {
+        if (pointsRule.getPointsRuleId() == null) {
+            throw new GwarbmsException("规则ID为空");
+        }
+        this.pointsRuleService.updatePointsRule(pointsRule);
         return new GwarbmsResponse().success();
     }
 }

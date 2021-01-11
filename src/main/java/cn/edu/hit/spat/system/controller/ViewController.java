@@ -45,9 +45,10 @@ public class ViewController extends BaseController {
     private final IUserDataPermissionService userDataPermissionService;
     /* 新增数据 */
     private final ICustomerService customerService;
+    private final IPointsRuleService pointsRuleService;
     private final IOrdersService ordersService;
     private final IOrderService orderService;
-    private  final IRetailGoodsService retailGoodsService;
+    private final IRetailGoodsService retailGoodsService;
     private final IGoodsService goodsService;
     private final IGoodsDetailService goodsDetailService;
 
@@ -317,9 +318,34 @@ public class ViewController extends BaseController {
         return GwarbmsUtil.view("system/customer/customerUpdate");
     }
 
+    /* 会员充值 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/charge/{customerId}")
+    @RequiresPermissions("customer:update")
+    public String systemCustomerCharge(@PathVariable Long customerId, Model model) {
+        resolveCustomerModel(customerId, model);
+        return GwarbmsUtil.view("system/customer/customerCharge");
+    }
+
+    /* 积分兑换 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/exchange/{customerId}")
+    @RequiresPermissions("customer:update")
+    public String systemCustomerExchange(@PathVariable Long customerId, Model model) {
+        resolveCustomerModel(customerId, model);
+        return GwarbmsUtil.view("system/customer/customerExchange");
+    }
+
     private void resolveCustomerModel(Long customerId, Model model) {
         Customer customer = this.customerService.findByCustomerId(customerId);
         model.addAttribute("customer", customer);
+    }
+
+    /* 积分规则设定 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/customer/pointsRule")
+    @RequiresPermissions("customer:pointsRule")
+    public String systemCustomerPointsRule(Model model) {
+        PointsRule pointsRule = this.pointsRuleService.findPointsRuleList(new PointsRule()).get(0);
+        model.addAttribute("pointsRule", pointsRule);
+        return GwarbmsUtil.view("system/customer/pointsRule");
     }
 
     /**

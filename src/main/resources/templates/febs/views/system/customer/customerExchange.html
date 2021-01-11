@@ -22,8 +22,8 @@
         overflow: visible !important;
     }
 </style>
-<div class="layui-fluid" id="customer-update">
-    <form class="layui-form" action="" lay-filter="customer-update-form">
+<div class="layui-fluid" id="customer-exchange">
+    <form class="layui-form" action="" lay-filter="customer-exchange-form">
         <div class="layui-form-item febs-hide">
             <label class="layui-form-label febs-form-item-require">客户id：</label>
             <div class="layui-input-block">
@@ -33,31 +33,36 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">客户姓名：</label>
             <div class="layui-input-block">
-                <input type="text" name="name" data-th-id="${customer.name}" autocomplete="off" class="layui-input">
+                <input type="text" name="name" data-th-id="${customer.name}" autocomplete="off" class="layui-input" readonly>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">联系电话：</label>
             <div class="layui-input-block">
-                <input type="tel" name="phone" lay-verify="phone" autocomplete="off" class="layui-input">
+                <input type="tel" name="phone" lay-verify="phone" autocomplete="off" class="layui-input" readonly>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">性别：</label>
-            <div class="layui-input-block">
+            <div class="layui-input-block" readonly>
                 <input type="radio" name="gender" value="男" title="男性">
                 <input type="radio" name="gender" value="女" title="女性">
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">客户类型：</label>
+            <label class="layui-form-label febs-form-item-require">账户余额：</label>
             <div class="layui-input-block">
-                <input type="radio" name="type" value="零售客户" title="零售客户">
-                <input type="radio" name="type" value="批发客户" title="批发客户">
+                <input type="text" name="balance" autocomplete="off" class="layui-input" readonly>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">兑换积分：</label>
+            <div class="layui-input-block">
+                <input type="text" name="points" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item febs-hide">
-            <button class="layui-btn" lay-submit="" lay-filter="customer-update-form-submit" id="submit"></button>
+            <button class="layui-btn" lay-submit="" lay-filter="customer-exchange-form-submit" id="submit"></button>
         </div>
     </form>
 </div>
@@ -70,7 +75,7 @@
             formSelects = layui.formSelects,
             form = layui.form,
             customer = [[${customer}]],
-            $view = $('#customer-update'),
+            $view = $('#customer-charge'),
             validate = layui.validate;
 
         form.verify(validate);
@@ -81,23 +86,20 @@
         formSelects.render();
 
         function initCustomerValue() {
-            form.val("customer-update-form", {
+            form.val("customer-exchange-form", {
                 "customerId": customer.customerId,
                 "name": customer.name,
                 "phone": customer.phone,
                 "gender": customer.gender,
-                "type": customer.type
+                "balance": customer.balance,
+                "points": customer.points,
             });
         }
 
-        form.on('submit(customer-update-form-submit)', function (data) {
-            if (febs.nativeEqual(data.field, customer)) {
-                febs.alert.warn('数据未作任何修改！');
-                return false;
-            }
-            febs.post(ctx + 'customer/update', data.field, function () {
+        form.on('submit(customer-exchange-form-submit)', function (data) {
+            febs.post(ctx + 'customer/exchange', data.field, function () {
                 layer.closeAll();
-                febs.alert.success(customer.name + ' 客户数据修改成功');
+                febs.alert.success(customer.name + ' 客户兑换' + customer.points +'成功');
                 $('#febs-customer').find('#query').click();
             });
             return false;

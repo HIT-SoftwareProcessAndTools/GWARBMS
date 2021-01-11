@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hit.spat.system.mapper.PointsRuleMapper">
+
+    <sql id="findPointsRuleSql">
+        SELECT
+               pr.POINTS_RULE_ID,
+               pr.TO_BALANCE,
+               pr.TO_POINTS
+        FROM
+        t_points_rule pr
+        WHERE 1 = 1
+        <if test="pointsRule.pointsRuleId != null and pointsRule.pointsRuleId != ''">
+            AND pr.POINTS_RULE_ID = #{pointsRule.pointsRuleId}
+        </if>
+        <if test="pointsRule.toBalance != null and pointsRule.toBalance != ''">
+            AND pr.TO_BALANCE = #{pointsRule.toBalance}
+        </if>
+        <if test="pointsRule.toPoints != null and pointsRule.toPoints != ''">
+            AND pr.TO_POINTS = #{pointsRule.toPoints}
+        </if>
+    </sql>
+
+    <select id="findPointsRuleList" parameterType="pointsRule" resultType="pointsRule">
+        <include refid="findPointsRuleSql"/>
+    </select>
+</mapper>
