@@ -197,8 +197,11 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
         Long ordersId=Long.valueOf(id);
         Orders o=findById(ordersId);
         Customer customer=customerService.findByCustomerPhone(Long.valueOf(o.getCustomerPhone()));
-        Double money=o.getOrdersprice()/o.getOrdersperiod();
-        customer.setBalance(customer.getBalance()- money.longValue());
+        if(!customer.getVip().equals("1")){
+            throw new GwarbmsException("该客户非会员客户，只支持现金支付");
+        }
+        double money=o.getOrdersprice()/o.getOrdersperiod();
+        customer.setBalance(customer.getBalance()- (long)money);
         customerService.updateCustomer(customer);
     }
 }
