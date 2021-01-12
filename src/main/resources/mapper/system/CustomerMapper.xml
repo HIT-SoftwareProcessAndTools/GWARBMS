@@ -11,13 +11,13 @@
             AND c.customer_id = #{customer.customerId}
         </if>
         <if test="customer.name != null and customer.name != ''">
-            AND c.name = #{customer.name}
+            AND position (#{customer.name} in c.name) > 0
         </if>
         <if test="customer.gender != null and customer.gender != ''">
             AND c.gender = #{customer.gender}
         </if>
         <if test="customer.phone != null and customer.phone != ''">
-            AND c.phone = #{customer.phone}
+            AND position (#{customer.phone} in c.phone) > 0
         </if>
         <if test="customer.type != null and customer.type != ''">
             AND c.type = #{customer.type}
@@ -50,13 +50,13 @@
             AND c.customer_id = #{customer.customerId}
         </if>
         <if test="customer.name != null and customer.name != ''">
-            AND c.name = #{customer.name}
+            AND position (#{customer.name} in c.name) > 0
         </if>
         <if test="customer.gender != null and customer.gender != ''">
             AND c.gender = #{customer.gender}
         </if>
         <if test="customer.phone != null and customer.phone != ''">
-            AND c.phone = #{customer.phone}
+            AND position (#{customer.phone} in c.phone) > 0
         </if>
         <if test="customer.type != null and customer.type != ''">
             AND c.type = #{customer.type}

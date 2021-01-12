@@ -52,6 +52,12 @@ public class Record implements Serializable {
     @TableField("number")
     private Long number;
 
+    /**
+     * 积压金额
+     */
+    @TableField("value")
+    private Double value;
+
     public Long getId() {
         return recordId;
     }

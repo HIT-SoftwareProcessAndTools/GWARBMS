@@ -14,16 +14,16 @@
             AND r.storage_id = #{record.storageId}
         </if>
         <if test="record.storageName != null and record.storageName != ''">
-            AND r.storage_name = #{record.storageName}
+            AND position (#{record.storageName} in r.storage_name) > 0
         </if>
         <if test="record.goodsId != null and record.goodsId != ''">
             AND r.goods_id = #{record.goodsId}
         </if>
         <if test="record.goodsName != null and record.goodsName != ''">
-            AND r.goods_name = #{record.goodsName}
+            AND position (#{record.goodsName} in r.goods_name) > 0
         </if>
-        <if test="record.number != null and record.number != ''">
-            AND r.number = #{record.number}
+        <if test="record.number != null and record.number != '' or record.number == 0">
+            AND r.number &lt;= #{record.number}
         </if>
     </sql>
 
@@ -34,7 +34,8 @@
         r.storage_name,
         r.goods_id,
         r.goods_name,
-        r.number
+        r.number,
+        r.value
         FROM
         t_storage_goods r
         WHERE 1 = 1
@@ -45,16 +46,19 @@
             AND r.storage_id = #{record.storageId}
         </if>
         <if test="record.storageName != null and record.storageName != ''">
-            AND r.storage_name = #{record.storageName}
+            AND position (#{record.storageName} in r.storage_name) > 0
         </if>
         <if test="record.goodsId != null and record.goodsId != ''">
             AND r.goods_id = #{record.goodsId}
         </if>
         <if test="record.goodsName != null and record.goodsName != ''">
-            AND r.goods_name = #{record.goodsName}
+            AND position (#{record.goodsName} in r.goods_name) > 0
         </if>
-        <if test="record.number != null and record.number != ''">
-            AND r.number = #{record.number}
+        <if test="record.number != null and record.number != '' or record.number == 0">
+            AND r.number &lt;= #{record.number}
+        </if>
+        <if test="record.value != null and record.value != ''">
+            AND r.value = #{record.value}
         </if>
     </sql>
 
@@ -123,4 +127,5 @@
             t_storage_goods r
         WHERE  r.storage_id = #{storageId}
     </select>
+
 </mapper>

@@ -61,4 +61,6 @@ public interface RecordMapper extends BaseMapper<Record> {
      * @return List<Record>
      */
     List<Record> findByStorageId(Long storageId);
+
+    void computerValue();
 }

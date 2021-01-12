@@ -31,16 +31,16 @@
             AND g.goods_id = #{goods.goodsId}
         </if>
         <if test="goods.name != null and goods.name != ''">
-            AND g.name = #{goods.name}
+            AND position (#{goods.name} in g.name) > 0
         </if>
         <if test="goods.purchasePrice != null and goods.purchasePrice != ''">
-            AND g.purchase_price = #{goods.purchasePrice}
+            AND g.purchase_price &lt;= #{goods.purchasePrice}
         </if>
         <if test="goods.wholesalePrice != null and goods.wholesalePrice != ''">
-            AND g.wholesale_price = #{goods.wholesalePrice}
+            AND g.wholesale_price &lt;= #{goods.wholesalePrice}
         </if>
         <if test="goods.retailPrice != null and goods.retailPrice != ''">
-            AND g.retail_price = #{goods.retailPrice}
+            AND g.retail_price &lt;= #{goods.retailPrice}
         </if>
     </sql>
 
@@ -58,16 +58,16 @@
             AND g.goods_id = #{goods.goodsId}
         </if>
         <if test="goods.name != null and goods.name != ''">
-            AND g.name = #{goods.name}
+            AND position (#{goods.name} in g.name) > 0
         </if>
         <if test="goods.purchasePrice != null and goods.purchasePrice != ''">
-            AND g.purchase_price = #{goods.purchasePrice}
+            AND g.purchase_price &lt;= #{goods.purchasePrice}
         </if>
         <if test="goods.wholesalePrice != null and goods.wholesalePrice != ''">
-            AND g.wholesale_price = #{goods.wholesalePrice}
+            AND g.wholesale_price &lt;= #{goods.wholesalePrice}
         </if>
         <if test="goods.retailPrice != null and goods.retailPrice != ''">
-            AND g.retail_price = #{goods.retailPrice}
+            AND g.retail_price &lt;= #{goods.retailPrice}
         </if>
     </sql>
 

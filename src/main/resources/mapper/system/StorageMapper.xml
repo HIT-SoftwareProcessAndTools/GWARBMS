@@ -11,7 +11,7 @@
             AND s.storage_id = #{storage.storageId}
         </if>
         <if test="storage.storageName != null and storage.storageName != ''">
-            AND s.storage_name = #{storage.storageName}
+            AND position (#{storage.storageName} in s.storage_name) > 0
         </if>
     </sql>
 
@@ -26,7 +26,7 @@
             AND s.storage_id = #{storage.storageId}
         </if>
         <if test="storage.storageName != null and storage.storageName != ''">
-            AND s.storage_name = #{storage.storageName}
+            AND position (#{storage.storageName} in s.storage_name) > 0
         </if>
     </sql>
 

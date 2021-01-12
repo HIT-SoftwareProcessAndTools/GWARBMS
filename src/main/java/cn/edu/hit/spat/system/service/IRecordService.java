@@ -96,4 +96,9 @@ public interface IRecordService extends IService<Record> {
     void resetbyGoodsId(String[] goodsIds);
 
     int resetbyGoodsIdandStorage(Long goodsId,String storage,Long num);
+
+    /**
+     * 计算积压资金额
+     */
+    void computerValue();
 }

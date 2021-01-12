@@ -31,6 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> implements IRecordService {
+    private final GoodsServiceImpl goodsService;
 
     @Override
     public Record findByRecordId(Long recordId) {
@@ -107,6 +108,20 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         rec.setNumber(i);
         updateRecord(rec);
         return 1;
+    }
+
+    @Override
+    public void computerValue() {
+        Record record = new Record();
+        List<Record> recordList = this.findRecordList(record);
+        for(Record x : recordList){
+            Long goodsId = x.getGoodsId();
+            Double price;
+            Goods tarGoods = goodsService.findByGoodsId(goodsId);
+            price = tarGoods.getPurchasePrice();
+            x.setValue(price*x.getNumber());
+            updateById(x);
+        }
     }
 
     @Override

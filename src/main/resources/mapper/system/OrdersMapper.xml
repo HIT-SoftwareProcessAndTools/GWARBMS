@@ -8,10 +8,16 @@
         t_order_wholesale u
         WHERE 1 = 1
         <if test="orders.customerName != null and orders.customerName != ''">
-            AND u.customer_name = #{orders.customerName}
+            AND position (#{orders.customerName} in u.customer_name) > 0
+        </if>
+        <if test="orders.customerPhone != null and orders.customerPhone != ''">
+            AND position (#{orders.customerPhone} in u.customer_phone) > 0
         </if>
         <if test="orders.goodsId != null and orders.goodsId != ''">
             AND u.goods_id = #{orders.goodsId}
+        </if>
+        <if test="orders.goodsName != null and orders.goodsName != ''">
+            AND position (#{orders.goodsName} in u.goods_name) > 0
         </if>
         <if test="orders.createTimeFrom != null and orders.createTimeFrom !=''">
             And u.create_time &gt; #{orders.createTimeFrom}
@@ -49,10 +55,16 @@
         t_order_wholesale u
         WHERE 1 = 1
         <if test="orders.customerName != null and orders.customerName != ''">
-            AND u.customer_name = #{orders.customerName}
+            AND position (#{orders.customerName} in u.customer_name) > 0
+        </if>
+        <if test="orders.customerPhone != null and orders.customerPhone != ''">
+            AND position (#{orders.customerPhone} in u.customer_phone) > 0
         </if>
         <if test="orders.goodsId != null and orders.goodsId != ''">
             AND u.goods_id = #{orders.goodsId}
+        </if>
+        <if test="orders.goodsName != null and orders.goodsName != ''">
+            AND position (#{orders.goodsName} in u.goods_name) > 0
         </if>
         <if test="orders.createTimeFrom != null and orders.createTimeFrom !=''">
             And u.create_time &gt; #{orders.createTimeFrom}

@@ -514,6 +514,22 @@ public class ViewController extends BaseController {
         model.addAttribute("record", record);
     }
 
+    /**
+     * statistics function=============================================================================================
+     * @author meizhimin
+     */
+    /* 库存统计 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/inventory")
+    @RequiresPermissions("inventory:view")
+    public String systemInventory() {
+        return GwarbmsUtil.view("system/statistics/inventory");
+    }
 
+    /* 销售统计 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/sale")
+    @RequiresPermissions("sale:view")
+    public String systemSale() {
+        return GwarbmsUtil.view("system/statistics/sale");
+    }
 
 }
