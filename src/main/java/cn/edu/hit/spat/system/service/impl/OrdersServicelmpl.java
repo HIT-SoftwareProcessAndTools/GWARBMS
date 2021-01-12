@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
+import net.sf.jsqlparser.expression.LongValue;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -186,5 +187,18 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
             throw new GwarbmsException("该订单已收取全部款项");
         Double price=orders.getPricepaid()+orders.getOrdersprice()/orders.getOrdersperiod();
         this.baseMapper.updatepricepaidById(id,price);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void paywithCount(String id) {
+        // 销售单使用账户余额分期收款
+        payoneOrders(id);
+        Long ordersId=Long.valueOf(id);
+        Orders o=findById(ordersId);
+        Customer customer=customerService.findByCustomerPhone(Long.valueOf(o.getCustomerPhone()));
+        Double money=o.getOrdersprice()/o.getOrdersperiod();
+        customer.setBalance(customer.getBalance()- money.longValue());
+        customerService.updateCustomer(customer);
     }
 }

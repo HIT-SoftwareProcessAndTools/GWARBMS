@@ -242,9 +242,12 @@
                 });
             }
             if (layEvent === 'payone') {
-                febs.modal.confirm('分期付款', '确定已收取本期款项？', function () {
-                    payoneOrders(data.ordersId);
-                });
+                febs.modal.confirm('分期付款', '是否使用现金支付？', function () {
+                    payoneOrders(data.ordersId);},
+                    function () {
+                        paywithCount(data.ordersId);},
+                    {btn:['是', '否']}
+                );
             }
             if (layEvent === 'edit') {
                 if(data.status!=="0")
@@ -373,6 +376,13 @@
         function payoneOrders(ordersId) {
             febs.get(ctx + 'orders/payone/' + ordersId, null, function () {
                 febs.alert.success('本期收款成功');
+                $query.click();
+            });
+        }
+
+        function paywithCount(ordersId) {
+            febs.get(ctx + 'orders/paywithCount/' + ordersId, null, function () {
+                febs.alert.success('本期收款已从账户存款中扣除');
                 $query.click();
             });
         }

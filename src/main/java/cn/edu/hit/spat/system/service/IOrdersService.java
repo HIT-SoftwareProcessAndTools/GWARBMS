@@ -99,4 +99,11 @@ public interface IOrdersService extends IService<Orders> {
      * @param id 该次分期收款的订单ID
      */
     void payoneOrders(String id);
+
+    /**
+     * 销售单使用账户余额分期收款
+     *
+     * @param id 该次分期收款的订单ID
+     */
+    void paywithCount(String id);
 }

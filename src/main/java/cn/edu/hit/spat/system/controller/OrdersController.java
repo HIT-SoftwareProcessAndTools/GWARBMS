@@ -79,6 +79,14 @@ public class OrdersController extends BaseController {
         return new GwarbmsResponse().success();
     }
 
+    @GetMapping("paywithCount/{ordersId}")
+    @RequiresPermissions("orders:payone")
+    @ControllerEndpoint(operation = "分期付款", exceptionMessage = "本期收款失败")
+    public GwarbmsResponse paywithCount(@NotBlank(message = "{required}") @PathVariable String ordersId) {
+        this.ordersService.paywithCount(ordersId);
+        return new GwarbmsResponse().success();
+    }
+
     @GetMapping("submit/{ordersIds}")
     @RequiresPermissions("orders:submit")
     @ControllerEndpoint(operation = "提交订单", exceptionMessage = "提交订单失败")
