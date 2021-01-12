@@ -96,4 +96,17 @@
         FROM t_customer c
         WHERE c.customer_id = #{customerId}
     </select>
+
+    <select id="findByCustomerPhone" parameterType="long" resultType="customer">
+        SELECT c.customer_id customerId,
+               c.name,
+               c.gender,
+               c.phone,
+               c.type,
+               c.vip,
+               c.points,
+               c.balance
+        FROM t_customer c
+        WHERE c.phone = #{phone} ORDER BY CUSTOMER_ID DESC LIMIT 1
+    </select>
 </mapper>

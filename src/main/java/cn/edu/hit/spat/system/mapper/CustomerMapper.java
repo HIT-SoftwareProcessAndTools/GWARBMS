@@ -40,4 +40,11 @@ public interface CustomerMapper extends BaseMapper<Customer> {
      */
     List<Customer> findCustomerDetail(@Param("customer") Customer customer);
 
+    /**
+     * 通过客户联系方式查找客户
+     *
+     * @param phone 客户联系方式
+     * @return 客户
+     */
+    Customer findByCustomerPhone(Long phone);
 }

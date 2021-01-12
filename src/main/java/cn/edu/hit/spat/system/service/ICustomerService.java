@@ -22,6 +22,14 @@ public interface ICustomerService extends IService<Customer> {
     Customer findByCustomerId(Long customerId);
 
     /**
+     * 通过客户联系方式查找客户
+     *
+     * @param phone 客户联系方式
+     * @return 客户
+     */
+    Customer findByCustomerPhone(Long phone);
+
+    /**
      * 查找客户详细信息
      *
      * @param request request

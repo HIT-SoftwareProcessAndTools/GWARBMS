@@ -6,10 +6,7 @@ import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.common.utils.SortUtil;
 import cn.edu.hit.spat.system.entity.*;
 import cn.edu.hit.spat.system.mapper.OrdersMapper;
-import cn.edu.hit.spat.system.service.IGoodsService;
-import cn.edu.hit.spat.system.service.IOrdersService;
-import cn.edu.hit.spat.system.service.IRecordService;
-import cn.edu.hit.spat.system.service.IStorageService;
+import cn.edu.hit.spat.system.service.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -34,6 +31,7 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     private final IGoodsService goodsService;
     private final IRecordService recordService;
+    private final ICustomerService customerService;
 
     @Override
     public Orders findById(Long ordersId) {
@@ -106,9 +104,14 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
                 throw new GwarbmsException("选中订单中包含未提交订单！");
             if(!o.getStatus().equals("1"))
                 throw new GwarbmsException("选中订单中包含已审核！");
-            this.baseMapper.updatestateById(id,Orders.STATUS_PAYING);
             if(recordService.resetbyGoodsIdandStorage(o.getGoodsId(),o.getStorehouse(),o.getGoodsNum())==0)
                 throw new GwarbmsException("选中订单中存在货品库存不足的订单！");
+            Customer customer=customerService.findByCustomerPhone(Long.valueOf(o.getCustomerPhone()));
+            if(customer.getVip().equals("1")){
+                customer.setPoints(customerService.calcNewPointsWhenPay(customer.getId(),o.getOrdersprice().longValue()));
+                customerService.updateCustomer(customer);
+            }
+            this.baseMapper.updatestateById(id,Orders.STATUS_PAYING);
         }
     }
 

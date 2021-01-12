@@ -57,6 +57,13 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
     }
 
     @Override
+    public Customer findByCustomerPhone(Long phone){
+        Customer c=this.baseMapper.findByCustomerPhone(phone);
+        System.out.println(c.getName());
+        return c;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void createCustomer(Customer customer) {
         //customer.setPurchasingDate(new Date());
