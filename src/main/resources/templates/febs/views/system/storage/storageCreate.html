@@ -21,7 +21,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">仓库名：</label>
             <div class="layui-input-block">
-                <input type="text" name="storageName" autocomplete="off" class="layui-input">
+                <input type="text" name="storageName" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -37,8 +37,10 @@
             febs = layui.febs,
             layer = layui.layer,
             formSelects = layui.formSelects,
+            validate = layui.validate,
             form = layui.form;
 
+        form.verify(validate);
         form.render();
 
         formSelects.render();
