@@ -51,10 +51,24 @@ public class RecordController extends BaseController {
         return new GwarbmsResponse().success().data(dataTable);
     }
 
+    @GetMapping("getDesStorage")
+    public List<Storage> DesStorageList() {
+        return this.storageService.findAllStorage();
+    }
+
+    @GetMapping("getAllGoods")
+    public List<Goods> GoodsList() {
+        Goods goods = new Goods();
+        return this.goodsService.findGoods(goods);
+    }
+
     @PostMapping
     @RequiresPermissions("record:create")
     @ControllerEndpoint(operation = "新货品入库", exceptionMessage = "新货品入库失败")
     public GwarbmsResponse createRecord(@Valid Record record) {
+        if (record.getNumber()<=0){
+            throw new GwarbmsException("入库数量必须>0 ！");
+        }
         Storage tarStorage = this.storageService.findByStorageId(record.getStorageId());
         Goods goods = this.goodsService.findByGoodsId(record.getGoodsId());
         if(tarStorage == null){
@@ -73,6 +87,7 @@ public class RecordController extends BaseController {
         }
         record.setStorageName(tarStorage.getStorageName());
         record.setGoodsName(goods.getName());
+        record.setValue(0.0);
         this.recordService.createRecord(record);
         return new GwarbmsResponse().success();
     }
@@ -126,6 +141,9 @@ public class RecordController extends BaseController {
     @RequiresPermissions("record:trans")
     @ControllerEndpoint(operation = "货品转移", exceptionMessage = "货品转移失败")
     public GwarbmsResponse transRecord(@Valid StorageTrans storageTrans) {
+        if (storageTrans.getSourceStorageName().equals(storageTrans.getDesStorageName())) {
+            throw new GwarbmsException("不能向自己转移！");
+        }
         if (storageTrans.getNumber()<=0) {
             throw new GwarbmsException("转移数量必须>0 ！");
         }
@@ -139,7 +157,6 @@ public class RecordController extends BaseController {
         record.setGoodsId(storageTrans.getGoodsId());
         record.setStorageName(storageTrans.getSourceStorageName());
         List<Record> records = this.recordService.findRecordList(record);
-
         if (storageTrans.getNumber()>records.get(0).getNumber()) {
             throw new GwarbmsException("转移数量不能大于库存数量！");
         }

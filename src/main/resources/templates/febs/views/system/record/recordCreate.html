@@ -19,15 +19,21 @@
 <div class="layui-fluid" id="record-add" lay-title="新货品入库">
     <form class="layui-form" action="" lay-filter="record-add-form">
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">目的仓库ID：</label>
+            <label class="layui-form-label febs-form-item-require">目标仓库：</label>
             <div class="layui-input-block">
-                <input type="text" name="storageId" autocomplete="off" class="layui-input">
+<!--                <input type="text" name="storageId" autocomplete="off" class="layui-input">-->
+                <select id="storageId" name="storageId">
+                    <option value="">全部</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">货品ID：</label>
+            <label class="layui-form-label febs-form-item-require">货品：</label>
             <div class="layui-input-block">
-                <input type="text" name="goodsId" autocomplete="off" class="layui-input">
+<!--                <input type="text" name="goodsId" autocomplete="off" class="layui-input">-->
+                <select id="goodsId" name="goodsId">
+                    <option value="">全部</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
@@ -51,8 +57,41 @@
             formSelects = layui.formSelects,
             form = layui.form;
 
-        form.render();
-
+        // form.render();
+        $.ajax({
+            //动态获取下拉选项的接口，返回数据主要是id+name
+            url: ctx + 'record/getDesStorage',
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                let str="<option value=''>全部</option>";
+                for(let i of data){
+                    //组装数据
+                    str+=`<option value='${i.storageId}'>${i.storageName}</option>`;
+                }
+                //jquery赋值方式
+                $("#storageId").html(str);
+                //重新渲染生效
+                form.render();
+            }
+        });
+        $.ajax({
+            //动态获取下拉选项的接口，返回数据主要是id+name
+            url: ctx + 'record/getAllGoods',
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                let str="<option value=''>全部</option>";
+                for(let i of data){
+                    //组装数据
+                    str+=`<option value='${i.goodsId}'>${i.name}</option>`;
+                }
+                //jquery赋值方式
+                $("#goodsId").html(str);
+                //重新渲染生效
+                form.render();
+            }
+        });
         formSelects.render();
 
         form.on('submit(record-add-form-submit)', function (data) {
