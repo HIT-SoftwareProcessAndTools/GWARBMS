@@ -26,5 +26,33 @@ public class RetailGoods implements Serializable{
     @TableField("goods_id")
     private Long goodsId;
 
+    /**
+     * 商品数量
+     */
+    @TableField("number")
+    private Long number;
 
+    /**
+     * 销售类型，0销售，1赠送，2打折
+     */
+    @TableField("type")
+    private String type;
+
+    /**
+     * 折扣系数
+     */
+    @TableField("discount")
+    private Long discount;
+
+    /**
+     * 商品名称
+     */
+    @TableField(exist = false)
+    private String goodsName;
+
+    /**
+     * 商品价格
+     */
+    @TableField(exist = false)
+    private String retailPrice;
 }

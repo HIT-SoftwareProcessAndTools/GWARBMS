@@ -21,6 +21,10 @@
     .layui-layer-page .layui-layer-content {
         overflow: visible !important;
     }
+
+    #goods-retail-table {
+        margin-left: 30px;
+    }
 </style>
 <div class="layui-fluid" id="order-add" lay-title="新增零售销售单">
     <form class="layui-form" action="" lay-filter="order-add-form">
@@ -37,43 +41,31 @@
             </div>
         </div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">商品编号</label>
-            <div class="layui-input-block">
-                <input type="text" name="goodsId" autocomplete="off" class="layui-input">
-            </div>
-        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label febs-form-item-require">商品编号</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" name="goodsId" autocomplete="off" class="layui-input">-->
+<!--            </div>-->
+<!--        </div>-->
 
-        <div class="layui-button">
-            <button class="layui-btn layui-btn-xs" onclick="showgoods()">查看商品信息</button>
-        </div>
-        <br>
+<!--        <div class="layui-button">-->
+<!--            <button class="layui-btn layui-btn-xs" onclick="showgoods()">查看商品信息</button>-->
+<!--        </div>-->
+
+
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="order-add-form-submit" id="submit"></button>
             <button type="reset" class="layui-btn" id="reset"></button>
         </div>
     </form>
+
+    <div id="goods-retail-table">
+        <table class="layui-hide" id="goodsRetailTable" lay-filter="goodsRetailTable"></table>
+    </div>
+
 </div>
 
-<script>
-    function showgoods(){
-        if(document.getElementById("order-goodsId").value === '') {
-            layui.febs.alert.warn('请输入商品编号（eg：1,1,2）！');
-        }
-        else{
-            var goodsIdstring;
-            var goodsshow = null;
-            goodsIdstring = document.getElementById("order-goodsId").value.split(StringPool.COMMA);
-            int i;
-            for(i = 0;i< goodsIdstring.length();i++){
-                var n = Integer.parseInt(goodsIdstring[i]);
-                goodsshow.append('system/goods/'+n);
-            }
-            layui.febs.modal.view('商品信息：', goodsshow, {
-                area: layui.$(window).width() <= 750 ? '95%' : '660px',
-            });}
-    }
-
+<script data-th-inline="none" type="text/javascript">
     layui.use(['febs', 'form', 'formSelects', 'validate','treeSelect','eleTree'], function () {
         var $ = layui.$,
             febs = layui.febs,
@@ -83,8 +75,11 @@
             eleTree = layui.eleTree,
             form = layui.form,
             $view = $('#order-add'),
-            validate = layui.validate,
+            table = layui.table,
+            tableIns,
+            validate = layui.validate;
 
+        form.verify(validate);
         form.render();
 
         formSelects.render();
@@ -98,5 +93,100 @@
             });
             return false;
         });
+
+        //执行一个 table 实例
+        table.render({
+            elem: '#goodsRetailTable'
+            ,toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+            ,data: [{
+                "goodsId": "1",
+                "goodsName": "范例",
+                "retailPrice": "100",
+                "number": "2",
+                "type": "折",
+                "discount": "0.9"
+            }]
+            ,cols: [[
+                {type: 'checkbox'},
+                {field: 'goodsId',title: '货品ID'},
+                {field: 'goodsName',title: '货品名'},
+                {field: 'retailPrice', title: "零售价格"},
+                {field: 'number',title: '数量'},
+                {field: 'type',title: '销售类型'},
+                {field: 'discount',title: '折扣系数'}
+            ]]
+        });
+
+        //监听头工具栏事件
+        table.on('toolbar(test)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'add':
+                    layer.msg('添加');
+                    break;
+                case 'update':
+                    if(data.length === 0){
+                        layer.msg('请选择一行');
+                    } else if(data.length > 1){
+                        layer.msg('只能同时编辑一个');
+                    } else {
+                        layer.alert('编辑 [id]：'+ checkStatus.data[0].id);
+                    }
+                    break;
+                case 'delete':
+                    if(data.length === 0){
+                        layer.msg('请选择一行');
+                    } else {
+                        layer.msg('删除');
+                    }
+                    break;
+            };
+        });
     });
+   /* function showgoods(){
+        if(document.getElementById("order-goodsId").value === '') {
+            layui.febs.alert.warn('请输入商品编号（eg：1,1,2）！');
+        }
+        else{
+            var goodsIdstring;
+            var goodsshow = null;
+            goodsIdstring = document.getElementById("order-goodsId").value.split(StringPool.COMMA);
+            var i;
+            for(i = 0;i< goodsIdstring.length();i++){
+                var n = Integer.parseInt(goodsIdstring[i]);
+                goodsshow.append('system/goods/'+n);
+            }
+            layui.febs.modal.view('商品信息：', goodsshow, {
+                area: layui.$(window).width() <= 750 ? '95%' : '660px',
+            });
+        }
+    }
+
+    layui.use(['febs', 'form', 'formSelects', 'validate','treeSelect','eleTree'], function () {
+        var $ = layui.$,
+            febs = layui.febs,
+            layer = layui.layer,
+            formSelects = layui.formSelects,
+            treeSelect = layui.treeSelect,
+            eleTree = layui.eleTree,
+            form = layui.form,
+            $view = $('#order-add'),
+            validate = layui.validate;
+
+        form.verify(validate);
+        form.render();
+
+        formSelects.render();
+
+
+        form.on('submit(order-add-form-submit)', function (data) {
+            febs.post(ctx + 'order', data.field, function () {
+                layer.closeAll();
+                febs.alert.success('新增零售销售单成功！');
+                $('#febs-order').find('#query').click();
+            });
+            return false;
+        });
+    });*/
 </script>
