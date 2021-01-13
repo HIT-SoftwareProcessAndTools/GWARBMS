@@ -95,6 +95,12 @@ public class Orders implements Serializable {
     private Double pricepaid;
 
     /**
+     * 待支付金额
+     */
+    @TableField(exist = false)
+    private Double rest;
+
+    /**
      * 订单分期数
      */
     @TableField("orders_period")

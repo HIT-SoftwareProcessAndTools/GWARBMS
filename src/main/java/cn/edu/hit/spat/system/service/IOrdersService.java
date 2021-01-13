@@ -28,6 +28,8 @@ public interface IOrdersService extends IService<Orders> {
      */
     IPage<Orders> findOrdersDetailList(Orders orders, QueryRequest request);
 
+    IPage<Orders> findPayOrdersDetailList(Orders orders, QueryRequest request);
+
     /**
      * 通过客户名查找批发销售单详细信息
      *
@@ -106,4 +108,5 @@ public interface IOrdersService extends IService<Orders> {
      * @param id 该次分期收款的订单ID
      */
     void paywithCount(String id);
+
 }
