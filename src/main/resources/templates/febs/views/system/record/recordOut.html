@@ -25,35 +25,35 @@
 <div class="layui-fluid" id="record-out" lay-title="货品出库">
     <form class="layui-form" action="" lay-filter="record-out-form">
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">记录ID：</label>
+            <label class="layui-form-label ">记录ID：</label>
             <div class="layui-input-block">
                 <input type="text" name="recordId" data-th-value="${record.recordId}" class="layui-input"
                        readOnly>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">仓库ID：</label>
+            <label class="layui-form-label ">仓库ID：</label>
             <div class="layui-input-block">
                 <input type="text" name="storageId" data-th-value="${record.storageId}" class="layui-input"
                        readOnly>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">仓库名：</label>
+            <label class="layui-form-label ">仓库名：</label>
             <div class="layui-input-block">
                 <input type="text" name="storageName" data-th-value="${record.storageName}" class="layui-input"
                        readOnly>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">货品ID：</label>
+            <label class="layui-form-label ">货品ID：</label>
             <div class="layui-input-block">
                 <input type="text" name="goodsId" data-th-value="${record.goodsId}" class="layui-input"
                        readOnly>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">货品名：</label>
+            <label class="layui-form-label ">货品名：</label>
             <div class="layui-input-block">
                 <input type="text" name="goodsName" data-th-value="${record.goodsName}" class="layui-input"
                        readOnly>
@@ -63,7 +63,7 @@
             <label class="layui-form-label febs-form-item-require">出库数量：</label>
             <div class="layui-input-block">
                 <input type="text" name="number" data-th-id="${record.number}" autoComplete="off"
-                       class="layui-input">
+                       class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -79,8 +79,10 @@
             layer = layui.layer,
             form = layui.form,
             record = [[${record}]],
+            validate = layui.validate,
             $view = $('#record-out');
 
+        form.verify(validate);
         form.render();
         initVehicleValue();
 

@@ -22,7 +22,7 @@
             <label class="layui-form-label febs-form-item-require">目标仓库：</label>
             <div class="layui-input-block">
 <!--                <input type="text" name="storageId" autocomplete="off" class="layui-input">-->
-                <select id="storageId" name="storageId">
+                <select id="storageId" name="storageId" lay-verify="required">
                     <option value="">全部</option>
                 </select>
             </div>
@@ -31,7 +31,7 @@
             <label class="layui-form-label febs-form-item-require">货品：</label>
             <div class="layui-input-block">
 <!--                <input type="text" name="goodsId" autocomplete="off" class="layui-input">-->
-                <select id="goodsId" name="goodsId">
+                <select id="goodsId" name="goodsId" lay-verify="required">
                     <option value="">全部</option>
                 </select>
             </div>
@@ -39,7 +39,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">入库数量：</label>
             <div class="layui-input-block">
-                <input type="text" name="number" autocomplete="off" class="layui-input">
+                <input type="text" name="number" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -55,9 +55,10 @@
             febs = layui.febs,
             layer = layui.layer,
             formSelects = layui.formSelects,
-            form = layui.form;
+            form = layui.form,
+            validate = layui.validate;
 
-        // form.render();
+        form.verify(validate);
         $.ajax({
             //动态获取下拉选项的接口，返回数据主要是id+name
             url: ctx + 'record/getDesStorage',
