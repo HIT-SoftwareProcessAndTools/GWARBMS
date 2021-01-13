@@ -37,7 +37,7 @@
 </style>
 <div class="layui-fluid" id="febs-customer-detail" lay-title="客户信息">
     <div id="customer-info-wrapper">
-        <div class="customer-info">
+        <div class="customer-info" id="customer-info-content">
             <div><span class="layui-icon layui-icon-user"></span> 姓名：
                 [[${customer.name}]]
             </div>
@@ -53,3 +53,21 @@
         </div>
     </div>
 </div>
+
+<script data-th-inline="javascript">
+    layui.use([], function () {
+        var $ = layui.$,
+            customer = [[${customer}]];
+        if (customer === null)
+            return false;
+        var str = ""; //定义用于拼接的字符串
+        if (customer.vip === '0'){
+            str = "<div><span class=\"layui-icon layui-icon-tips\"></span> 会员：否</div>";
+        } else {
+            str = "<div><span class=\"layui-icon layui-icon-tips\"></span> 会员：是</div>" +
+                 "<div><span class=\"layui-icon layui-icon-note\"></span> 会员积分: " + customer.points + "</div>" +
+                "<div><span class=\"layui-icon layui-icon-note\"></span> 账户余额: " + customer.balance + "</div>";
+        }
+        $("#customer-info-content").append(str);
+    });
+</script>

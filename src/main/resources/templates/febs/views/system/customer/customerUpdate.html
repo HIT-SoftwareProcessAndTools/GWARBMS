@@ -56,6 +56,13 @@
                 <input type="radio" name="type" value="批发客户" title="批发客户">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label febs-form-item-require">会员客户：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="vip" value="0" title="否">
+                <input type="radio" name="vip" value="1" title="是">
+            </div>
+        </div>
         <div class="layui-form-item febs-hide">
             <button class="layui-btn" lay-submit="" lay-filter="customer-update-form-submit" id="submit"></button>
         </div>
@@ -86,7 +93,8 @@
                 "name": customer.name,
                 "phone": customer.phone,
                 "gender": customer.gender,
-                "type": customer.type
+                "type": customer.type,
+                "vip": customer.vip
             });
         }
 
