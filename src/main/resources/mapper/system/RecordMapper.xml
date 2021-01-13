@@ -34,8 +34,7 @@
         r.storage_name,
         r.goods_id,
         r.goods_name,
-        r.number,
-        r.value
+        r.number
         FROM
         t_storage_goods r
         WHERE 1 = 1
@@ -56,9 +55,6 @@
         </if>
         <if test="record.number != null and record.number != '' or record.number == 0">
             AND r.number &lt;= #{record.number}
-        </if>
-        <if test="record.value != null and record.value != ''">
-            AND r.value = #{record.value}
         </if>
     </sql>
 

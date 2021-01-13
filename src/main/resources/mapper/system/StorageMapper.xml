@@ -30,6 +30,18 @@
         </if>
     </sql>
 
+    <sql id="findStoragesDetailSql">
+        SELECT
+        s.storage_id storageId,
+        s.storage_name
+        FROM
+        t_storage s
+        WHERE 1 = 1
+        <if test="storage.storageId != null and storage.storageId != ''">
+            AND s.storage_id != #{storage.storageId}
+        </if>
+    </sql>
+
     <select id="countStorageDetail" parameterType="Storage" resultType="long">
         <include refid="countStorageDetailSql"/>
     </select>
@@ -42,6 +54,10 @@
         <include refid="findStorageDetailSql"/>
     </select>
 
+    <select id="findStoragesDetail" parameterType="Storage" resultType="Storage">
+        <include refid="findStoragesDetailSql"/>
+    </select>
+
     <select id="findByStorageId" parameterType="long" resultType="Storage">
         SELECT
         s.storage_id storageId,
@@ -49,5 +65,14 @@
         FROM
         t_storage s
         WHERE  s.storage_id = #{storageId}
+    </select>
+
+    <select id="findByStorageName" parameterType="String" resultType="Storage">
+        SELECT
+        s.storage_id storageId,
+        s.storage_name
+        FROM
+        t_storage s
+        WHERE  s.storage_name = #{storageName}
     </select>
 </mapper>

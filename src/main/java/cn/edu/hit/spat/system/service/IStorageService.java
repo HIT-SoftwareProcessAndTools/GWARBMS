@@ -21,6 +21,14 @@ public interface IStorageService extends IService<Storage> {
     Storage findByStorageId(Long storageId);
 
     /**
+     * 通过仓库名查找仓库
+     *
+     * @param storageName 仓库名
+     * @return 仓库
+     */
+    Storage findByStorageName(String storageName);
+
+    /**
      * 查找仓库详细信息
      *
      * @param request request
@@ -28,11 +36,18 @@ public interface IStorageService extends IService<Storage> {
      * @return IPage
      */
     IPage<Storage> findStorageDetailList(Storage storage, QueryRequest request);
+
     /**
      * 查找仓库详细信息
      *
      */
     List<Storage> findAllStorage();
+
+    /**
+     * 查找仓库详细信息
+     *
+     */
+    List<Storage> findAllStorage(String storehouse);
 
     /**
      * 通过传递查询条件查找详细信息

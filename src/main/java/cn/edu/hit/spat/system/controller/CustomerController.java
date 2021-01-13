@@ -42,7 +42,6 @@ public class CustomerController extends BaseController {
     @GetMapping("list")
     @RequiresPermissions("customer:view")
     public GwarbmsResponse customerList(Customer customer, QueryRequest request) {
-        System.out.println("here");
         Map<String, Object> dataTable = getDataTable(this.customerService.findCustomerDetailList(customer, request));
         return new GwarbmsResponse().success().data(dataTable);
     }

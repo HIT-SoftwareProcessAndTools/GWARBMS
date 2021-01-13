@@ -32,6 +32,11 @@ public class StorageServiceImpl extends ServiceImpl<StorageMapper, Storage> impl
     }
 
     @Override
+    public Storage findByStorageName(String storageName) {
+        return this.baseMapper.findByStorageName(storageName);
+    }
+
+    @Override
     public IPage<Storage> findStorageDetailList(Storage storage, QueryRequest request) {
         Page<Storage> page = new Page<>(request.getPageNum(), request.getPageSize());
         page.setSearchCount(false);
@@ -43,6 +48,19 @@ public class StorageServiceImpl extends ServiceImpl<StorageMapper, Storage> impl
     public List<Storage> findAllStorage() {
         return this.baseMapper.findStorageDetail(new Storage());
     }
+
+    @Override
+    public List<Storage> findAllStorage(String storehouse) {
+        List<Storage> storagelist=new ArrayList<>();
+        Storage s=findByStorageName(storehouse);
+        if(s!=null){
+        storagelist.add(s);
+        storagelist.addAll(this.baseMapper.findStoragesDetail(s));}
+        else
+            storagelist=this.baseMapper.findStorageDetail(new Storage());
+        return storagelist;
+    }
+
     @Override
     public List<Storage> findStorageList(Storage storage) {
         return this.baseMapper.findStorageDetail(storage);

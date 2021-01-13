@@ -6,8 +6,10 @@ import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.system.entity.Customer;
 import cn.edu.hit.spat.system.entity.Orders;
+import cn.edu.hit.spat.system.entity.Storage;
 import cn.edu.hit.spat.system.service.ICustomerService;
 import cn.edu.hit.spat.system.service.IOrdersService;
+import cn.edu.hit.spat.system.service.IStorageService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +35,7 @@ public class OrdersController extends BaseController {
 
     private final IOrdersService ordersService;
     private final ICustomerService customerService;
+    private final IStorageService storageService;
 
     @GetMapping("{customername}")
     public Orders getOrders(@NotBlank(message = "{required}") @PathVariable String customername) {
@@ -48,6 +52,11 @@ public class OrdersController extends BaseController {
     public GwarbmsResponse ordersList(Orders orders, QueryRequest request) {
         Map<String, Object> dataTable = getDataTable(this.ordersService.findOrdersDetailList(orders, request));
         return new GwarbmsResponse().success().data(dataTable);
+    }
+
+    @GetMapping("getDesStorage/{storehouse}")
+    public List<Storage> DesStorageList(@PathVariable String storehouse) {
+        return this.storageService.findAllStorage(storehouse);
     }
 
     @PostMapping("update")

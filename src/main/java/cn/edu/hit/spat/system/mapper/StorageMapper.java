@@ -20,6 +20,14 @@ public interface StorageMapper extends BaseMapper<Storage> {
      * @return
      */
     Storage findByStorageId(Long storageId);
+
+    /**
+     * 通过仓库名查找仓库
+     *
+     * @param storageName
+     * @return
+     */
+    Storage findByStorageName(String storageName);
     
     /**
      * 查找仓库详细信息
@@ -39,5 +47,13 @@ public interface StorageMapper extends BaseMapper<Storage> {
      * @return List<Storage>
      */
     List<Storage> findStorageDetail(@Param("storage") Storage storage);
+
+    /**
+     * 查找仓库详细信息
+     *
+     * @param storage 仓库对象，用于传递查询条件
+     * @return List<Storage>
+     */
+    List<Storage> findStoragesDetail(@Param("storage") Storage storage);
 
 }

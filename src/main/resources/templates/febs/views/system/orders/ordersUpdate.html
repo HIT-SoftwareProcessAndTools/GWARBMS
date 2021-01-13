@@ -73,12 +73,11 @@
                 <input type="text" name="ordersaddress" data-th-id="${orders.ordersaddress}" autocomplete="off" class="layui-input">
             </div>
         </div>
-        <div class="layui-inline">
+        <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">发货仓库：</label>
-            <div class="layui-input-inline">
-                <select name="storehouse">
-                    <option value="门店库房">门店库房</option>
-                    <option value="大库">大库</option>
+            <div class="layui-input-block">
+                <select id="storehouse" name="storehouse" data-th-value="${orders.storehouse}">
+                    <option value="">请选择</option>
                 </select>
             </div>
         </div>
@@ -133,6 +132,24 @@
             orders = [[${orders}]],
             $view = $('#orders-update'),
             validate = layui.validate;
+
+        $.ajax({
+            //动态获取下拉选项的接口
+            url: ctx + 'orders/getDesStorage/'+orders.storehouse,
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                let str="";
+                for(let i of data){
+                    //组装数据
+                    str+=`<option value='${i.storageName}'>${i.storageName}</option>`;
+                }
+                //jquery赋值方式
+                $("#storehouse").html(str);
+                //重新渲染生效
+                form.render();
+            }
+        });
 
         form.verify(validate);
         form.render();
