@@ -28,8 +28,10 @@
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">发货仓库</label>
-                                        <div class="layui-input-inline">
-                                            <input type="text" name="storehouse" autocomplete="off" class="layui-input">
+                                        <div class="layui-input-block">
+                                            <select id="storehouse" name="storehouse" lay-verify="required">
+                                                <option value="">全部</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="layui-inline">
@@ -124,6 +126,24 @@
             elem: '#orders-createTime',
             range: true,
             trigger: 'click'
+        });
+
+        $.ajax({
+            //动态获取下拉选项的接口，返回数据主要是id+name
+            url: ctx + 'record/getDesStorage',
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                let str="<option value=''>全部</option>";
+                for(let i of data){
+                    //组装数据
+                    str+=`<option value='${i.storageName}'>${i.storageName}</option>`;
+                }
+                //jquery赋值方式
+                $("#storehouse").html(str);
+                //重新渲染生效
+                form.render();
+            }
         });
 
         dropdown.render({
