@@ -138,6 +138,13 @@ public class ViewController extends BaseController {
         return GwarbmsUtil.view("system/order/orderCreate");
     }
 
+    /* 向零售单添加货品 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/retail/addGoods")
+    @RequiresPermissions("order:retail")
+    public String systemOrderAddGoods() {
+        return GwarbmsUtil.view("system/order/orderAddGoods");
+    }
+
     /* 零售销售单详情 */
     @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/order/detail/{orderId}")
     @RequiresPermissions("order:view")
