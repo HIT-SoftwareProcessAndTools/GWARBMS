@@ -69,12 +69,11 @@
                 id: 'goodsTable',
                 url: ctx + 'goods/list/'+document.getElementById("goods").value,
                 cols: [[
-                    {type: 'checkbox'},
                     {field: 'goodsId', title: '货品 ID', minWidth: 100},
                     {field: 'name', title: '货品名'},
                     {field: 'purchasePrice', title: '进货价格'},
                     {field: 'wholesalePrice', title: '批发价格'},
-                    {title: '操作', toolbar: '#goods-option', minWidth: 140}
+                    {title: '查看货品详情', toolbar: '#goods-option', minWidth: 140}
                 ]]
             });
         }
