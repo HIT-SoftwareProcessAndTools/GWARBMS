@@ -58,7 +58,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">货物数量：</label>
             <div class="layui-input-block">
-                <input type="text" name="goodsNum" data-th-id="${orders.goodsNum}" autocomplete="off" class="layui-input">
+                <input type="text" name="goodsNum" data-th-id="${orders.goodsNum}" autocomplete="off" class="layui-input"
+                lay-verify="positiveNumber">
             </div>
         </div>
         <div class="layui-form-item febs-hide">

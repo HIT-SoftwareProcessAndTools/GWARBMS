@@ -32,6 +32,9 @@ public interface OrdersMapper extends BaseMapper<Orders> {
 
     long countOrdersDetail(@Param("orders") Orders orders);
 
+    long countPayOrdersDetail(@Param("orders") Orders orders);
+
+    <T> IPage<Orders> findPayOrdersDetailPage(Page<T> page, @Param("orders") Orders orders);
     /**
      * 查找零售销售单详细信息
      *
@@ -56,4 +59,5 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      *
      */
     void updatepricepaidById(String id,Double price);
+
 }

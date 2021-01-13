@@ -52,6 +52,21 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
         SortUtil.handlePageSort(request, page, "ordersId", GwarbmsConstant.ORDER_ASC, false);
         return this.baseMapper.findOrdersDetailPage(page, orders);
     }
+
+    @Override
+    public IPage<Orders> findPayOrdersDetailList(Orders orders, QueryRequest request) {
+        if (StringUtils.isNotBlank(orders.getCreateTimeFrom()) &&
+                StringUtils.equals(orders.getCreateTimeFrom(), orders.getCreateTimeTo())) {
+            orders.setCreateTimeFrom(orders.getCreateTimeFrom() + " 00:00:00");
+            orders.setCreateTimeTo(orders.getCreateTimeTo() + " 23:59:59");
+        }
+        Page<Orders> page = new Page<>(request.getPageNum(), request.getPageSize());
+        page.setSearchCount(false);
+        page.setTotal(baseMapper.countPayOrdersDetail(orders));
+        SortUtil.handlePageSort(request, page, "ordersId", GwarbmsConstant.ORDER_ASC, false);
+        return this.baseMapper.findPayOrdersDetailPage(page, orders);
+    }
+
     @Override
     public Orders findOrdersDetailList(String customerName) {
         Orders param = new Orders();
@@ -165,13 +180,18 @@ public class OrdersServicelmpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Transactional(rollbackFor = Exception.class)
     public void updateOrders(Orders orders) {
         // 修改销售单
+        if(orders.getGoodsId()!=null){
         Goods goods=goodsService.findByGoodsId(orders.getGoodsId());
         if(goods==null)
             throw new GwarbmsException("该货品ID不存在！");
-        orders.setOrdersprice(goods.getWholesalePrice()*orders.getGoodsNum());
+        if(!goods.getName().equals(orders.getGoodsName()))
+            throw new GwarbmsException("该货品ID与货品名不对应！");
+        if(orders.getGoodsNum()!=null){
+            orders.setOrdersprice(goods.getWholesalePrice()*orders.getGoodsNum());
+            orders.setOrdersprofile((goods.getWholesalePrice()-goods.getPurchasePrice())*orders.getGoodsNum());
+        }
         orders.setCreateTime(orders.getCreateTime());
-        orders.setOrdersprofile((goods.getWholesalePrice()-goods.getPurchasePrice())*orders.getGoodsNum());
-        orders.setGoodsName(goods.getName());
+        orders.setGoodsName(goods.getName());}
         updateById(orders);
     }
 

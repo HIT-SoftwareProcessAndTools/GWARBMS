@@ -91,6 +91,104 @@
         <include refid="findOrdersDetailSql"/>
     </select>
 
+    <sql id="countPayOrdersDetailSql" >
+        SELECT
+        COUNT(1)
+        FROM
+        t_order_wholesale u
+        WHERE 1 = 1
+        <if test="orders.customerName != null and orders.customerName != ''">
+            AND position (#{orders.customerName} in u.customer_name) > 0
+        </if>
+        <if test="orders.customerPhone != null and orders.customerPhone != ''">
+            AND position (#{orders.customerPhone} in u.customer_phone) > 0
+        </if>
+        <if test="orders.goodsId != null and orders.goodsId != ''">
+            AND u.goods_id = #{orders.goodsId}
+        </if>
+        <if test="orders.goodsName != null and orders.goodsName != ''">
+            AND position (#{orders.goodsName} in u.goods_name) > 0
+        </if>
+        <if test="orders.createTimeFrom != null and orders.createTimeFrom !=''">
+            And u.create_time &gt; #{orders.createTimeFrom}
+        </if>
+        <if test="orders.createTimeTo!= null and orders.createTimeTo !=''">
+            And u.create_time &lt; #{orders.createTimeTo}
+        </if>
+        <if test="orders.status != null and orders.status != ''">
+            AND u.status = #{orders.status}
+        </if>
+        <if test="orders.status != null and orders.status != ''">
+            AND u.status != 4
+        </if>
+        <if test="orders.ordersaddress != null and orders.ordersaddress != ''">
+            AND u.orders_address = #{orders.ordersaddress}
+        </if>
+        <if test="orders.storehouse != null and orders.storehouse != ''">
+            AND u.storehouse = #{orders.storehouse}
+        </if>
+    </sql>
+    <sql id="findPayOrdersDetailSql">
+        SELECT
+        u.orders_id ordersId,
+        u.customer_name customerName,
+        u.customer_phone customerPhone,
+        u.status status,
+        u.create_time createTime,
+        u.goods_id goodsId,
+        u.goods_name goodsName,
+        u.goods_num goodsNum,
+        u.orders_address ordersaddress,
+        u.price_paid pricepaid,
+        u.orders_price ordersprice,
+        u.orders_profile ordersprofile,
+        u.storehouse storehouse,
+        u.orders_period ordersperiod,
+        u.orders_price-u.price_paid AS rest
+        FROM
+        t_order_wholesale u
+        WHERE 1 = 1
+        <if test="orders.customerName != null and orders.customerName != ''">
+            AND position (#{orders.customerName} in u.customer_name) > 0
+        </if>
+        <if test="orders.customerPhone != null and orders.customerPhone != ''">
+            AND position (#{orders.customerPhone} in u.customer_phone) > 0
+        </if>
+        <if test="orders.goodsId != null and orders.goodsId != ''">
+            AND u.goods_id = #{orders.goodsId}
+        </if>
+        <if test="orders.goodsName != null and orders.goodsName != ''">
+            AND position (#{orders.goodsName} in u.goods_name) > 0
+        </if>
+        <if test="orders.createTimeFrom != null and orders.createTimeFrom !=''">
+            And u.create_time &gt; #{orders.createTimeFrom}
+        </if>
+        <if test="orders.createTimeTo!= null and orders.createTimeTo !=''">
+            And u.create_time &lt; #{orders.createTimeTo}
+        </if>
+        <if test="orders.status != null and orders.status != ''">
+            AND u.status = #{orders.status}
+        </if>
+        <if test="orders.status != null and orders.status != ''">
+            AND u.status != 4
+        </if>
+        <if test="orders.ordersaddress != null and orders.ordersaddress != ''">
+            AND u.orders_address = #{orders.ordersaddress}
+        </if>
+        <if test="orders.storehouse != null and orders.storehouse != ''">
+            AND u.storehouse = #{orders.storehouse}
+        </if>
+--         ORDER BY ordersId DESC
+    </sql>
+
+    <select id="countPayOrdersDetail" parameterType="cn.edu.hit.spat.system.entity.Orders" resultType="long">
+        <include refid="countPayOrdersDetailSql"/>
+    </select>
+
+    <select id="findPayOrdersDetailPage" parameterType="cn.edu.hit.spat.system.entity.Orders" resultType="cn.edu.hit.spat.system.entity.Orders">
+        <include refid="findPayOrdersDetailSql"/>
+    </select>
+
     <select id="findOrdersDetail" parameterType="cn.edu.hit.spat.system.entity.Orders" resultType="cn.edu.hit.spat.system.entity.Orders">
         <include refid="findOrdersDetailSql"/>
     </select>
