@@ -3,6 +3,7 @@ package cn.edu.hit.spat.system.service.impl;
 import cn.edu.hit.spat.common.authentication.ShiroRealm;
 import cn.edu.hit.spat.common.entity.GwarbmsConstant;
 import cn.edu.hit.spat.common.entity.QueryRequest;
+import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.common.utils.Md5Util;
 import cn.edu.hit.spat.common.utils.SortUtil;
 import cn.edu.hit.spat.system.entity.*;
@@ -80,32 +81,40 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createOrder(Order order) {
-        // 保存零售单和商品关联关系
-        String[] goodsIds = order.getGoodsId().split(StringPool.COMMA);
-        List<String> goodsname = findgoodsName(goodsIds);
-        Double price = getprice(goodsIds);
-        order.setName(goodsname);
-        order.setOrderPrice(price);
+        order.setOrderPrice(getprice(order.getRetailGoodsList()));
         order.setCreateTime(new Date());
         save(order);
-        setRetailandGoods(order, goodsIds);
-        recordService.resetbyGoodsId(goodsIds);
-
+        for (RetailGoods rg: order.getRetailGoodsList()){
+            rg.setOrderId(order.getId());
+            if (!(rg.getType().equals("售") || rg.getType().equals("折") || rg.getType().equals("赠")))
+                throw new GwarbmsException("存在非法销售类型！");
+            Record record = new Record(); //构造查询条件
+            record.setGoodsId(rg.getGoodsId());
+            record.setStorageId(new Long(1));
+            List<Record> records = this.recordService.findRecordList(record);
+            if (records == null)
+                throw new GwarbmsException(rg.getGoodsName() + "在门店没有库存!");
+            else {
+                record = records.get(0);
+                if (record.getNumber() < rg.getNumber())
+                    throw new GwarbmsException(rg.getGoodsName() + "在门店库存不足！");
+                else {
+                    record.setNumber(record.getNumber() - rg.getNumber());
+                    this.recordService.updateRecord(record);
+                }
+            }
+        }
+        retailGoodsService.createRetailGoods(order.getRetailGoodsList());
     }
 
-    private Double getprice(String[] goodsIds) {
-        List<Double> p = new ArrayList<>();
-        Arrays.stream(goodsIds).forEach(goodsId -> {
-            Goods newgood = goodsService.findByGoodsId(Long.valueOf(goodsId));
-            p.add(newgood.getRetailPrice());
-        });
-        System.out.println(p);
-        int i=0;
+    private Double getprice(List<RetailGoods> retailGoodsList) {
         Double sum = 0.0;
-        for(i=0;i< p.size();i++){
-            sum = sum +p.get(i);
+        for (RetailGoods rg: retailGoodsList){
+            if (rg.getType().equals("售"))
+                sum += rg.getRetailPrice() * rg.getNumber();
+            else if (rg.getType().equals("折"))
+                sum += rg.getRetailPrice() * rg.getNumber() * rg.getDiscount();
         }
-        System.out.println(sum);
         return sum;
     }
 
@@ -135,7 +144,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         List<String> list = Arrays.asList(orderIds);
         // 删除订单
         this.removeByIds(list);
-
     }
 
     @Override

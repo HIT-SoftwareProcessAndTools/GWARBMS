@@ -6,8 +6,10 @@ import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.exception.GwarbmsException;
 import cn.edu.hit.spat.system.entity.Order;
+import cn.edu.hit.spat.system.entity.RetailGoods;
 import cn.edu.hit.spat.system.service.IOrderService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.extension.api.R;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,7 +45,6 @@ public class OrderController extends BaseController {
         return this.orderService.findOrderDetailList(customername);
     }
 
-
     /**
      * 查看零售销售单详细信息，只有销售人员可以查看订单详细信息。需要配置权限user:view"
      * @param order 订单编号
@@ -57,13 +60,31 @@ public class OrderController extends BaseController {
 
     /**
      * 新增零售销售单，零售销售单不用审核。 销售人员拥有权限order:retail
-     * @param order 销售单对象
+     * @param message 销售单对象
      * @return
      */
     @PostMapping
     @RequiresPermissions("order:retail")
     @ControllerEndpoint(operation = "新增零售单", exceptionMessage = "新增零售单失败")
-    public GwarbmsResponse addOrder(@Valid Order order) {
+    public GwarbmsResponse addOrder(@Valid String customerName, @Valid String customerPhone, @Valid String message) {
+        Order order = new Order();
+        order.setCustomerName(customerName);
+        order.setCustomerPhone(customerPhone);
+        List<RetailGoods> retailGoodsList = new ArrayList<>();
+        String[] messages = message.split(StringPool.SEMICOLON);
+        System.out.println(messages.length);
+        for (int i=1; i<messages.length; i++){
+            String[] goods = messages[i].split(StringPool.COMMA);
+            RetailGoods retailGoods = new RetailGoods();
+            retailGoods.setGoodsId(Long.valueOf(goods[0]));
+            retailGoods.setNumber(Long.valueOf(goods[1]));
+            retailGoods.setType(goods[2]);
+            retailGoods.setDiscount(Double.valueOf(goods[3]));
+            retailGoods.setGoodsName(goods[4]);
+            retailGoods.setRetailPrice(Double.valueOf(goods[5]));
+            retailGoodsList.add(retailGoods);
+        }
+        order.setRetailGoodsList(retailGoodsList);
         this.orderService.createOrder(order);
         return new GwarbmsResponse().success();
     }

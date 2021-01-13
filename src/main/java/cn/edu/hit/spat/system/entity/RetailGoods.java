@@ -33,7 +33,7 @@ public class RetailGoods implements Serializable{
     private Long number;
 
     /**
-     * 销售类型，0销售，1赠送，2打折
+     * 销售类型，售/折/赠
      */
     @TableField("type")
     private String type;
@@ -42,7 +42,7 @@ public class RetailGoods implements Serializable{
      * 折扣系数
      */
     @TableField("discount")
-    private Long discount;
+    private Double discount;
 
     /**
      * 商品名称
@@ -54,5 +54,5 @@ public class RetailGoods implements Serializable{
      * 商品价格
      */
     @TableField(exist = false)
-    private String retailPrice;
+    private Double retailPrice;
 }

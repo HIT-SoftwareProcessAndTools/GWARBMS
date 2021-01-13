@@ -154,14 +154,8 @@ public class ViewController extends BaseController {
     }
     private void resolveOrderModel(Long orderId, Model model) {
         Order order = this.orderService.findByOrderId(orderId);
-        String[] goodsIdbyretail = this.retailGoodsService.findByOrderId(orderId.toString()).split(StringPool.COMMA);
-        List<String> goodsname = new ArrayList<>();
-
-        Arrays.stream(goodsIdbyretail).forEach(gId -> {
-            Goods newgood = goodsService.findByGoodsId(Long.valueOf(gId));
-            goodsname.add(newgood.getName());
-        });
-        order.setName(goodsname);
+        List<RetailGoods> retailGoodsList = this.retailGoodsService.findByOrderId(orderId);
+        order.setRetailGoodsList(retailGoodsList);
         model.addAttribute("order", order);
     }
 

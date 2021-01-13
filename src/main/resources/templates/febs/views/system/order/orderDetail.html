@@ -53,18 +53,13 @@
 <script data-th-inline="javascript">
     layui.use([], function () {
         var $ = layui.$,
-            names = [[${order.name}]];
-        console.log(names);
-        if (names === null)
+            retailGoods = [[${order.retailGoodsList}]];
+        if (retailGoods === null)
             return false;
-        var str = "商品：";
-        for (var i = 0; i < names.length; i++) {
-
-            str = str + names[i]+"; ";
-
+        for (var i=0; i< retailGoods.length; i++){
+            var str = "<div><span class=\"layui-icon layui-icon-component\"></span>  商品："
+                + retailGoods[i].goodsName + " * " + retailGoods[i].number + "</div>";
+            $("#order-info-content").append(str);
         }
-        str = "<div><span class=\"layui-icon layui-icon-component\"></span> "
-            + str + "</div>"
-        $("#order-info-content").append(str);
     });
 </script>

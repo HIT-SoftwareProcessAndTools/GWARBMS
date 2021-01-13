@@ -14,7 +14,7 @@ public interface IRetailGoodsService extends IService<RetailGoods> {
      * @param orderId 零售单单id
      * @return 关联关系
      */
-    String findByOrderId(String orderId);
+    List<RetailGoods> findByOrderId(Long orderId);
 
     /**
      * 通过货品ID查找关联关系
@@ -24,6 +24,5 @@ public interface IRetailGoodsService extends IService<RetailGoods> {
      */
     String findByGoodsId(String goodsId);
 
-
-
+    void createRetailGoods(List<RetailGoods> retailGoodsList);
 }
