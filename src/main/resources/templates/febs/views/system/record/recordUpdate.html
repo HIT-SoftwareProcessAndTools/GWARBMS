@@ -101,7 +101,7 @@
             febs.post(ctx + 'record/update', data.field, function () {
                 layer.closeAll();
                 // data.field是在页面中输入的数据,record是原来表单中的对象
-                febs.alert.success('记录 ' + record.recordId + ' 的数据修改成功！');
+                febs.alert.success("入库成功！");
                 $('#febs-record').find('#query').click();
             });
             return false;

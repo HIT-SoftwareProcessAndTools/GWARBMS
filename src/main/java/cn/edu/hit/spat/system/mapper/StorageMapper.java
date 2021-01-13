@@ -49,11 +49,18 @@ public interface StorageMapper extends BaseMapper<Storage> {
     List<Storage> findStorageDetail(@Param("storage") Storage storage);
 
     /**
-     * 查找仓库详细信息
+     * 查找仓库详细信息--精确查找
+     *
+     * @param storage 仓库对象，用于传递查询条件
+     * @return List<Storage>
+     */
+    List<Storage> findExactStorageDetail(@Param("storage") Storage storage);
+
+    /**
+     * 查找仓库详细信息--模糊查找
      *
      * @param storage 仓库对象，用于传递查询条件
      * @return List<Storage>
      */
     List<Storage> findStoragesDetail(@Param("storage") Storage storage);
-
 }

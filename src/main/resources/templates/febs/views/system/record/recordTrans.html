@@ -110,7 +110,7 @@
             febs.post(ctx + 'record/trans', data.field, function () {
                 console.log(data.field);
                 layer.closeAll();
-                febs.alert.success('货品成功转移');
+                febs.alert.success('调拨成功！');
                 $('#febs-record').find('#query').click();
             });
             return false;

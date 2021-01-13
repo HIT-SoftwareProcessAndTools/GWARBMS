@@ -50,13 +50,20 @@ public interface IStorageService extends IService<Storage> {
     List<Storage> findAllStorage(String storehouse);
 
     /**
-     * 通过传递查询条件查找详细信息
+     * 通过传递查询条件查找详细信息--模糊查找
      *
      * @param storage 仓库 ID
      * @return 信息
      */
     List<Storage> findStorageList(Storage storage);
 
+    /**
+     * 通过传递查询条件查找详细信息--精确查找
+     *
+     * @param storage 仓库 ID
+     * @return 信息
+     */
+    List<Storage> findExactStorageList(Storage storage);
     /**
      * 新增
      *
