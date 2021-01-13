@@ -55,4 +55,11 @@ public class StatisticsController extends BaseController {
         Map<String, Object> dataTable = getDataTable(this.ordersService.findOrdersDetailList(orders, request));
         return new GwarbmsResponse().success().data(dataTable);
     }
+
+    @GetMapping("pay")
+    @RequiresPermissions("pay:view")
+    public GwarbmsResponse payList(Orders orders, QueryRequest request) {
+        Map<String, Object> dataTable = getDataTable(this.ordersService.findPayOrdersDetailList(orders, request));
+        return new GwarbmsResponse().success().data(dataTable);
+    }
 }

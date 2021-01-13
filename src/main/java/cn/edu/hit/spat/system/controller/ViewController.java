@@ -539,4 +539,12 @@ public class ViewController extends BaseController {
         return GwarbmsUtil.view("system/statistics/sale");
     }
 
+    /* 客户结款统计 */
+    @GetMapping(GwarbmsConstant.VIEW_PREFIX + "system/pay")
+    @RequiresPermissions("pay:view")
+    public String systemPay() {
+        return GwarbmsUtil.view("system/statistics/pay");
+    }
+
+
 }
