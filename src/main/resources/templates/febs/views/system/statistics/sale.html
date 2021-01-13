@@ -68,7 +68,7 @@
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
-            sortObject = {field: 'recordId', type: null},
+            sortObject = {field: 'ordersprofile', type: null},
             tableIns,
             createTimeFrom,
             createTimeTo;
@@ -116,7 +116,7 @@
                     {field: 'customerName', title: '客户姓名'},
                     {field: 'customerPhone', title: '手机号'},
                     {field: 'goodsName', title: '货品名'},
-                    {field: 'ordersprofile', title: '利润', totalRow: true},
+                    {field: 'ordersprofile', title: '利润', totalRow: true, sort: true},
                 ]]
             });
         }

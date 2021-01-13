@@ -47,7 +47,7 @@
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
-            sortObject = {field: 'recordId', type: null},
+            sortObject = {field: 'value', type: null},
             tableIns;
         form.render();
 
@@ -80,11 +80,13 @@
                 elem: $view.find('table'),
                 id: 'inventoryTable',
                 url: ctx + 'statistics/inventory',
+                totalRow: true,
                 cols: [[
+                    {totalRowText: '合计', width: 60},
                     {field: 'storageName', title: '仓库名'},
                     {field: 'goodsName', title: '货品名'},
-                    {field: 'number', title: '数量'},
-                    {field: 'value', title: '积压资金额'},
+                    {field: 'number', title: '数量', totalRow: true},
+                    {field: 'value', title: '积压资金额', totalRow: true, sort: true},
                 ]]
             });
         }

@@ -54,7 +54,7 @@
             $query = $view.find('#query'),
             $reset = $view.find('#reset'),
             $searchForm = $view.find('form'),
-            sortObject = {field: 'recordId', type: null},
+            sortObject = {field: 'rest', type: null},
             tableIns,
             createTimeFrom,
             createTimeTo;
@@ -104,7 +104,7 @@
                     {field: 'createTime', title: '订单日期'},
                     {field: 'ordersprice', title: '需支付'},
                     {field: 'pricepaid', title: '已支付'},
-                    {field: 'rest', title: '待支付', totalRow: true},
+                    {field: 'rest', title: '待支付', totalRow: true, sort: true},
                 ]]
             });
         }

@@ -30,6 +30,21 @@
         </if>
     </sql>
 
+    <sql id="findExactStorageDetailSql">
+        SELECT
+        s.storage_id storageId,
+        s.storage_name
+        FROM
+        t_storage s
+        WHERE 1 = 1
+        <if test="storage.storageId != null and storage.storageId != ''">
+            AND s.storage_id = #{storage.storageId}
+        </if>
+        <if test="storage.storageName != null and storage.storageName != ''">
+            AND s.storage_name = #{storage.storageName}
+        </if>
+    </sql>
+
     <sql id="findStoragesDetailSql">
         SELECT
         s.storage_id storageId,
@@ -52,6 +67,10 @@
 
     <select id="findStorageDetail" parameterType="Storage" resultType="Storage">
         <include refid="findStorageDetailSql"/>
+    </select>
+
+    <select id="findExactStorageDetail" parameterType="Storage" resultType="Storage">
+        <include refid="findExactStorageDetailSql"/>
     </select>
 
     <select id="findStoragesDetail" parameterType="Storage" resultType="Storage">

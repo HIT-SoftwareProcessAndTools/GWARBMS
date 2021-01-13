@@ -71,7 +71,7 @@ public class StorageController extends BaseController {
         Storage tar = new Storage();
         tar.setStorageName(storage.getStorageName());
         // 查询仓库名是否已经存在
-        List<Storage> storages = storageService.findStorageList(tar);
+        List<Storage> storages = storageService.findExactStorageList(tar);
         if(CollectionUtils.isNotEmpty(storages)){
             throw new GwarbmsException("该仓库名已经存在，请重新输入！");
         }

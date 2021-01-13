@@ -65,7 +65,12 @@ public class StorageServiceImpl extends ServiceImpl<StorageMapper, Storage> impl
     public List<Storage> findStorageList(Storage storage) {
         return this.baseMapper.findStorageDetail(storage);
     }
-    
+
+    @Override
+    public List<Storage> findExactStorageList(Storage storage) {
+        return this.baseMapper.findExactStorageDetail(storage);
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void createStorage(Storage storage) {
