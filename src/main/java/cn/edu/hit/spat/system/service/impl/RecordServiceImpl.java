@@ -154,6 +154,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordMapper, Record> impleme
         }else{
             desRecord.setNumber(number);
             desRecord.setStorageId(desStorageId);
+            desRecord.setValue(0.0);
             createRecord(desRecord);
             updateById(sourceRecord);
         }

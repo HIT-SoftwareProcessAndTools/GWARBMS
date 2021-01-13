@@ -48,8 +48,11 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">目的仓库名：</label>
             <div class="layui-input-block">
-                <input type="text" name="desStorageName"  autoComplete="off"
-                       class="layui-input">
+                <select id="desStorageName" name="desStorageName">
+                    <option value="">全部</option>
+                </select>
+<!--                <input type="text" name="desStorageName"  autoComplete="off"-->
+<!--                       class="layui-input">-->
             </div>
         </div>
         <div class="layui-form-item">
@@ -72,10 +75,26 @@
             layer = layui.layer,
             form = layui.form,
             record = [[${record}]],
-            allStorage = [[${allStorage}]],
             $view = $('#record-trans');
 
-        form.render();
+        // form.render();
+        $.ajax({
+            //动态获取下拉选项的接口，返回数据主要是id+name
+            url: ctx + 'record/getDesStorage',
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                let str="<option value=''>全部</option>";
+                for(let i of data){
+                    //组装数据
+                    str+=`<option value='${i.storageName}'>${i.storageName}</option>`;
+                }
+                //jquery赋值方式
+                $("#desStorageName").html(str);
+                //重新渲染生效
+                form.render();
+            }
+        });
         initVehicleValue();
 
         function initVehicleValue() {
@@ -83,13 +102,14 @@
                 "goodsId": record.goodsId,
                 "goodsName": record.goodsName,
                 "sourceStorageName": record.storageName,
-                "desStorageName":'',
+                "desStorageName": record.storageName,
                 "number": 0,
             });
         }
 
         form.on('submit(record-trans-form-submit)', function (data) {
             febs.post(ctx + 'record/trans', data.field, function () {
+                console.log(data.field);
                 layer.closeAll();
                 febs.alert.success('货品成功转移');
                 $('#febs-record').find('#query').click();
