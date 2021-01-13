@@ -29,7 +29,7 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">发货仓库</label>
                                         <div class="layui-input-block">
-                                            <select id="storehouse" name="storehouse" lay-verify="required">
+                                            <select id="storage" name="storehouse" lay-verify="required">
                                                 <option value="">全部</option>
                                             </select>
                                         </div>
@@ -140,7 +140,7 @@
                     str+=`<option value='${i.storageName}'>${i.storageName}</option>`;
                 }
                 //jquery赋值方式
-                $("#storehouse").html(str);
+                $("#storage").html(str);
                 //重新渲染生效
                 form.render();
             }
