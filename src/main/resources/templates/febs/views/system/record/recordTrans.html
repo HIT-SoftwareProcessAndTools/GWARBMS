@@ -25,21 +25,21 @@
 <div class="layui-fluid" id="record-trans" lay-title="货品转移">
     <form class="layui-form" action="" lay-filter="record-trans-form">
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">货品ID：</label>
+            <label class="layui-form-label ">货品ID：</label>
             <div class="layui-input-block">
                 <input type="text" name="goodsId" data-th-value="${record.goodsId}" class="layui-input"
                        readOnly>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">货品名：</label>
+            <label class="layui-form-label ">货品名：</label>
             <div class="layui-input-block">
                 <input type="text" name="goodsName" data-th-value="${record.goodsName}" class="layui-input"
                        readOnly>
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">源仓库名：</label>
+            <label class="layui-form-label ">源仓库名：</label>
             <div class="layui-input-block">
                 <input type="text" name="sourceStorageName" data-th-value="${record.storageName}" class="layui-input"
                        readOnly>
@@ -48,18 +48,16 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">目的仓库名：</label>
             <div class="layui-input-block">
-                <select id="desStorageName" name="desStorageName">
+                <select id="desStorageName" name="desStorageName" lay-verify="required">
                     <option value="">全部</option>
                 </select>
-<!--                <input type="text" name="desStorageName"  autoComplete="off"-->
-<!--                       class="layui-input">-->
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">转移数量：</label>
             <div class="layui-input-block">
                 <input type="text" name="number"  autoComplete="off"
-                       class="layui-input">
+                       class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -75,9 +73,10 @@
             layer = layui.layer,
             form = layui.form,
             record = [[${record}]],
+            validate = layui.validate,
             $view = $('#record-trans');
 
-        // form.render();
+        form.verify(validate);
         $.ajax({
             //动态获取下拉选项的接口，返回数据主要是id+name
             url: ctx + 'record/getDesStorage',

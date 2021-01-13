@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
@@ -48,8 +49,8 @@ public class GoodsController extends BaseController {
 
 
     @GetMapping("{goodsId}")
-    public Goods getGoods(@NotBlank(message = "{required}") @PathVariable Long goodsId) {
-        return this.goodsService.findGoodsDetailList(goodsId);
+    public GwarbmsResponse getGoods(@NotNull(message = "{required}") @PathVariable Long goodsId) {
+        return new GwarbmsResponse().success().data(this.goodsService.findGoodsDetailList(goodsId));
     }
 
     @GetMapping("list")

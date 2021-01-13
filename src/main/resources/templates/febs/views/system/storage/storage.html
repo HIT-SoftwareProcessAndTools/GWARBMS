@@ -45,8 +45,6 @@
     <span shiro:lacksPermission="storage:view">
         <span class="layui-badge-dot febs-bg-orange"></span> 无权限
     </span>
-    <a lay-event="detail" shiro:hasPermission="storage:view"><i
-            class="layui-icon febs-edit-area febs-green">&#xe7a5;</i></a>
     <a lay-event="edit" shiro:hasPermission="storage:update"><i
             class="layui-icon febs-edit-area febs-blue">&#xe7a4;</i></a>
     <a lay-event="del" shiro:hasPermission="storage:delete"><i
@@ -116,11 +114,6 @@
         table.on('tool(storageTable)', function (obj) {
             var data = obj.data,
                 layEvent = obj.event;
-            if (layEvent === 'detail') {
-                febs.modal.view('仓库信息', 'system/storage/detail/' + data.storageId, {
-                    area: $(window).width() <= 750 ? '95%' : '660px'
-                });
-            }
             if (layEvent === 'edit') {
                 febs.modal.open('修改仓库', 'system/storage/update/' + data.storageId, {
                     area: $(window).width() <= 750 ? '90%' : '50%',

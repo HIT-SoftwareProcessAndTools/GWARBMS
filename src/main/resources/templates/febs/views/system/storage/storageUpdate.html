@@ -25,7 +25,7 @@
 <div class="layui-fluid" id="storage-update" lay-title="修改仓库">
     <form class="layui-form" action="" lay-filter="storage-update-form">
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">仓库ID：</label>
+            <label class="layui-form-label ">仓库ID：</label>
             <div class="layui-input-block">
                 <input type="text" name="storageId" data-th-value="${storage.storageId}" class="layui-input" readonly>
             </div>
@@ -33,7 +33,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">仓库名：</label>
             <div class="layui-input-block">
-                <input type="text" name="storageName" data-th-id="${storage.storageName}" autocomplete="off" class="layui-input">
+                <input type="text" name="storageName" data-th-id="${storage.storageName}" autocomplete="off" class="layui-input" lay-verify="required">
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -49,8 +49,10 @@
             layer = layui.layer,
             form = layui.form,
             storage = [[${storage}]],
+            validate = layui.validate,
             $view = $('#storage-update');
 
+        form.verify(validate);
         form.render();
         initVehicleValue();
 
