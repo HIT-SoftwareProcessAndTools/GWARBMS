@@ -22,7 +22,6 @@ public class Order implements Serializable {
 
     private static final long serialVersionUID = -4352868070794165001L;
 
-
     /**
      * 零售销售单 ID
      */
@@ -42,25 +41,17 @@ public class Order implements Serializable {
     @TableField("customer_phone")
     private String customerPhone;
 
-
     /**
      * 零售销售单价格
      */
     @TableField("order_price")
     private Double orderPrice;
 
-
     /**
-     * 订单商品ID
+     * 订单商品项
      */
-    @ExcelField(value = "商品ID")
     @TableField(exist = false)
-    private String goodsId;
-
-
-    @TableField(exist = false)
-    private List<String> name;
-
+    private List<RetailGoods> retailGoodsList;
 
     /**
      * 创建时间
@@ -73,8 +64,6 @@ public class Order implements Serializable {
 
     @TableField(exist = false)
     private String createTimeTo;
-
-
 
     public Long getId() {
         return orderId;

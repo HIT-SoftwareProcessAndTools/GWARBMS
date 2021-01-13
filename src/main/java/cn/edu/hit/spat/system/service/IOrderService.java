@@ -2,8 +2,11 @@ package cn.edu.hit.spat.system.service;
 
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.system.entity.Order;
+import cn.edu.hit.spat.system.entity.RetailGoods;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * @author Xuqian

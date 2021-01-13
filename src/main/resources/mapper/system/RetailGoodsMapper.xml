@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.hit.spat.system.mapper.RetailGoodsMapper">
+    <select id="findByOrderId" parameterType="long" resultType="retailGoods">
+        SELECT rg.order_id,
+               rg.goods_id,
+               rg.type,
+               rg.discount,
+               rg.number
+        FROM t_retail_goods rg
+        WHERE rg.order_id = #{orderId}
+    </select>
+
+</mapper>
