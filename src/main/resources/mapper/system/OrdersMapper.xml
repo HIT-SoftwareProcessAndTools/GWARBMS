@@ -81,7 +81,7 @@
         <if test="orders.storehouse != null and orders.storehouse != ''">
             AND u.storehouse = #{orders.storehouse}
         </if>
---         ORDER BY ordersId DESC
+         ORDER BY ordersId DESC
     </sql>
     <select id="countOrdersDetail" parameterType="cn.edu.hit.spat.system.entity.Orders" resultType="long">
         <include refid="countOrdersDetailSql"/>
@@ -178,7 +178,7 @@
         <if test="orders.storehouse != null and orders.storehouse != ''">
             AND u.storehouse = #{orders.storehouse}
         </if>
---         ORDER BY ordersId DESC
+         ORDER BY ordersId DESC
     </sql>
 
     <select id="countPayOrdersDetail" parameterType="cn.edu.hit.spat.system.entity.Orders" resultType="long">
