@@ -134,16 +134,16 @@
             var value = obj.value //得到修改后的值
                 ,data = obj.data //得到所在行所有键值
                 ,field = obj.field; //得到字段
-            if(value<=0 && field==="number"){
-                layer.msg("数量必须>0!");
-                value = 1;
-                table.reload("goodsRetailTable", { data: table.cache["goodsRetailTable"] });
-            }
-            if((value>1.00 || value<0.0) && field==="discount"){
-                layer.msg("折扣必须在0到1之间");
-                value = 1.0;
-                table.reload("goodsRetailTable", { data: table.cache["goodsRetailTable"] });
-            }
+            // if(value<=0 && field==="number"){
+            //     layer.msg("数量必须>0!");
+            //     value = 1;
+            //     table.reload("goodsRetailTable", { data: table.cache["goodsRetailTable"] });
+            // }
+            // if((value>1.00 || value<0.0) && field==="discount"){
+            //     layer.msg("折扣必须在0到1之间");
+            //     value = 1.0;
+            //     table.reload("goodsRetailTable", { data: table.cache["goodsRetailTable"] });
+            // }
             // layer.msg('[ID: '+ data.goodsId +'] ' + field + ' 字段更改为：'+ value);
             console.log(table.cache["goodsRetailTable"]);
         });
