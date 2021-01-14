@@ -87,7 +87,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         for (RetailGoods rg: order.getRetailGoodsList()){
             rg.setOrderId(order.getId());
             if (!(rg.getType().equals("售") || rg.getType().equals("折") || rg.getType().equals("赠")))
-                throw new GwarbmsException("存在非法销售类型！");
+                throw new GwarbmsException("销售类型只允许：“售”、“折”、“赠” ");
             Record record = new Record(); //构造查询条件
             record.setGoodsId(rg.getGoodsId());
             record.setStorageId(new Long(1));

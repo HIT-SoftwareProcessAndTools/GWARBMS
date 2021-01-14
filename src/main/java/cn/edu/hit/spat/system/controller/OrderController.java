@@ -78,10 +78,24 @@ public class OrderController extends BaseController {
         for (int i=1; i<messages.length; i++){
             String[] goods = messages[i].split(StringPool.COMMA);
             RetailGoods retailGoods = new RetailGoods();
+            if (goods[1].equals("") || goods[2].equals("") || goods[3].equals("")){
+                throw new GwarbmsException("必填字段不能为空");
+            }
             retailGoods.setGoodsId(Long.valueOf(goods[0]));
             retailGoods.setNumber(Long.valueOf(goods[1]));
+            System.out.println(4554133);
+            System.out.println(goods[1]);
+            Long number = Long.valueOf(goods[1]);
+            if(number <= 0){
+                throw new GwarbmsException(goods[4]+"的货品数量必须>0");
+            }
             retailGoods.setType(goods[2]);
+
             retailGoods.setDiscount(Double.valueOf(goods[3]));
+            Double discount = Double.valueOf(goods[3]);
+            if(discount > 1 || discount < 0){
+                throw new GwarbmsException(goods[4]+"的折扣必须在0到1之间");
+            }
             retailGoods.setGoodsName(goods[4]);
             retailGoods.setRetailPrice(Double.valueOf(goods[5]));
             retailGoodsList.add(retailGoods);
