@@ -29,10 +29,10 @@
             AND u.status = #{orders.status}
         </if>
         <if test="orders.ordersaddress != null and orders.ordersaddress != ''">
-            AND u.orders_address = #{orders.ordersaddress}
+            AND position (#{orders.ordersaddress} in u.orders_address) > 0
         </if>
         <if test="orders.storehouse != null and orders.storehouse != ''">
-            AND u.storehouse = #{orders.storehouse}
+            AND position (#{orders.storehouse} in u.storehouse) > 0
         </if>
     </sql>
     <sql id="findOrdersDetailSql">
@@ -76,10 +76,10 @@
             AND u.status = #{orders.status}
         </if>
         <if test="orders.ordersaddress != null and orders.ordersaddress != ''">
-            AND u.orders_address = #{orders.ordersaddress}
+            AND position (#{orders.ordersaddress} in u.orders_address) > 0
         </if>
         <if test="orders.storehouse != null and orders.storehouse != ''">
-            AND u.storehouse = #{orders.storehouse}
+            AND position (#{orders.storehouse} in u.storehouse) > 0
         </if>
          ORDER BY ordersId DESC
     </sql>
