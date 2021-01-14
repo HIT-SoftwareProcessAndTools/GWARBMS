@@ -5,8 +5,10 @@ import cn.edu.hit.spat.common.controller.BaseController;
 import cn.edu.hit.spat.common.entity.GwarbmsResponse;
 import cn.edu.hit.spat.common.entity.QueryRequest;
 import cn.edu.hit.spat.common.exception.GwarbmsException;
+import cn.edu.hit.spat.system.entity.Goods;
 import cn.edu.hit.spat.system.entity.Order;
 import cn.edu.hit.spat.system.entity.RetailGoods;
+import cn.edu.hit.spat.system.service.IGoodsService;
 import cn.edu.hit.spat.system.service.IOrderService;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.api.R;
@@ -34,7 +36,7 @@ import java.util.Map;
 public class OrderController extends BaseController {
 
     private final IOrderService orderService;
-
+    private final IGoodsService goodsService;
     /**
      * 根据客户信息查看零售销售单
      * @param customername
@@ -119,4 +121,9 @@ public class OrderController extends BaseController {
         return new GwarbmsResponse().success();
     }
 
+    @GetMapping("getAllGoods")
+    public List<Goods> GoodsList() {
+        Goods goods = new Goods();
+        return this.goodsService.findGoods(goods);
+    }
 }

@@ -19,9 +19,12 @@
 <div class="layui-fluid" id="add-goods" lay-title="添加订单货品">
     <form class="layui-form" action="" lay-filter="add-goods-form">
         <div class="layui-form-item">
-            <label class="layui-form-label febs-form-item-require">货品ID：</label>
+            <label class="layui-form-label febs-form-item-require">货品：</label>
             <div class="layui-input-block">
-                <input type="text" id="goods-id" name="goodsId" autocomplete="off" class="layui-input">
+<!--                <input type="text" id="goods-id" name="goodsId" autocomplete="off" class="layui-input">-->
+                <select id="goodsId" name="goodsId" lay-verify="required">
+                    <option value="">全部</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item febs-hide">
@@ -37,9 +40,28 @@
             febs = layui.febs,
             layer = layui.layer,
             formSelects = layui.formSelects,
-            form = layui.form;
+            form = layui.form,
+            validate = layui.validate;
 
-        form.render();
+        form.verify(validate);
+        // form.render();
+        $.ajax({
+            //动态获取下拉选项的接口，返回数据主要是id+name
+            url: ctx + 'order/getAllGoods',
+            dataType: 'json',
+            type: 'get',
+            success: function (data) {
+                let str="<option value=''>全部</option>";
+                for(let i of data){
+                    //组装数据
+                    str+=`<option value='${i.goodsId}'>${i.name}</option>`;
+                }
+                //jquery赋值方式
+                $("#goodsId").html(str);
+                //重新渲染生效
+                form.render();
+            }
+        });
         formSelects.render();
 
         form.on('submit(add-goods-form-submit)', function (data) {
