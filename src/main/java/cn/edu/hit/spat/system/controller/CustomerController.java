@@ -60,6 +60,7 @@ public class CustomerController extends BaseController {
     @RequiresPermissions("customer:create")
     @ControllerEndpoint(operation = "新增客户", exceptionMessage = "新增客户失败")
     public GwarbmsResponse createCustomer(@Valid Customer customer) {
+        customer.setVip("0");
         this.customerService.createCustomer(customer);
         return new GwarbmsResponse().success();
     }
