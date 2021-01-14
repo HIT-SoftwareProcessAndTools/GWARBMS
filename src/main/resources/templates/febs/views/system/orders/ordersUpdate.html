@@ -103,7 +103,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label febs-form-item-require">订单期数：</label>
             <div class="layui-input-block">
-                <input type="text" name="ordersperiod" data-th-value="${orders.ordersperiod}" class="layui-input">
+                <input type="text" name="ordersperiod" data-th-value="${orders.ordersperiod}" class="layui-input"
+                       lay-verify="positiveNumber">
             </div>
         </div>
         <div class="layui-form-item febs-hide">

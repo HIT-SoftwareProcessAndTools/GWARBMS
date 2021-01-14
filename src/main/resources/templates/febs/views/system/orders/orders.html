@@ -10,39 +10,49 @@
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">客户姓名</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="customerName" autocomplete="on"
-                                                   class="layui-input">
+                                            <label>
+                                                <input type="text" name="customerName" autocomplete="on" class="layui-input">
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="layui-inline">
-                                        <label class="layui-form-label layui-form-label-sm">货品ID</label>
+                                        <label class="layui-form-label layui-form-label-sm">货品名称</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="goodsId" autocomplete="off" class="layui-input">
+                                            <label>
+                                                <input type="text" name="goodsName" autocomplete="off" class="layui-input">
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">收货地址</label>
                                         <div class="layui-input-inline">
-                                            <input type="text" name="ordersaddress" autocomplete="off" class="layui-input">
+                                            <label>
+                                                <input type="text" name="ordersaddress" autocomplete="off" class="layui-input">
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">发货仓库</label>
                                         <div class="layui-input-block">
+                                            <label>
                                             <select id="storage" name="storehouse" lay-verify="required">
                                                 <option value="">全部</option>
                                             </select>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">创建时间</label>
                                         <div class="layui-input-inline">
+                                            <label>
                                             <input type="text" name="time" id="orders-createTime" class="layui-input">
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="layui-inline">
                                         <label class="layui-form-label layui-form-label-sm">状态</label>
                                         <div class="layui-input-inline">
+                                            <label>
                                             <select name="status">
                                                 <option value=""></option>
                                                 <option value="0">保存可修改</option>
@@ -51,6 +61,7 @@
                                                 <option value="3">收款完成</option>
                                                 <option value="4">退货</option>
                                             </select>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -148,14 +159,14 @@
 
         dropdown.render({
             elem: $view.find('.action-more'),
-            click: function (name, elem, event) {
+            click: function (name) {
                 var checkStatus = table.checkStatus('ordersTable');
                 if (name === 'create') {
                     febs.modal.open('新增订单', 'system/order/wholesale/create', {
                         btn: ['提交'],
                         area: $(window).width() <= 750 ? '95%' : '50%',
                         offset: '30px',
-                        yes: function (index, layero) {
+                        yes: function () {
                             $('#customer-create').find('#submit').trigger('click');
                         }
                     });
@@ -277,7 +288,7 @@
                     area: $(window).width() <= 750 ? '90%' : '50%',
                     offset: '30px',
                     btn: ['提交', '取消'],
-                    yes: function (index, layero) {
+                    yes: function () {
                         $('#orders-update').find('#submit').trigger('click');
                     },
                     btn2: function () {
@@ -329,7 +340,7 @@
                     {type: 'checkbox'},
                     {field: 'ordersId', title: '销售单号'},
                     {field: 'customerName', title: '客户姓名'},
-                    {field: 'goodsId', title: '货品ID'},
+                    {field: 'goodsName', title: '货品名称'},
                     {field: 'goodsNum', title: '货品数量'},
                     {field: 'createTime', title: '创建时间', minWidth: 180, sort: true},
                     {field: 'ordersprice', title: '订单价格', sort: true},
