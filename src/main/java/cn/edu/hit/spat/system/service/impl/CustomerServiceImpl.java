@@ -67,6 +67,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer> i
     @Transactional(rollbackFor = Exception.class)
     public void createCustomer(Customer customer) {
         //customer.setPurchasingDate(new Date());
+        if(this.baseMapper.findByCustomerPhone(customer.getPhone())!=null)
+            throw new GwarbmsException("该手机号已注册！");
         save(customer);
     }
 
